@@ -11,5 +11,14 @@ import { Component } from '@angular/core';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  isDarkMode = false;
 
+  constructor() { }
+
+  ngOnInit(): void { }
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    document.documentElement.classList.toggle('dark', this.isDarkMode);
+  }
 }

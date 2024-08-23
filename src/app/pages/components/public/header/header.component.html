@@ -14,6 +14,41 @@
 
     <!-- Right-aligned Icons -->
     <div class="ml-auto flex items-center space-x-2 pl-2">
+        <!-- Light/Dark Theme Icons -->
+        <button (click)="toggleTheme()"
+            class="group flex items-center p-2 justify-between w-full hover:bg-white outline-none rounded-[8px] transition-all duration-300 ease-in-out">
+            <div class="flex items-center gap-3">
+                <svg *ngIf="!isDarkMode"
+                    class="h-6 w-6 text-slate-500 transition-colors duration-300 ease-in-out group-hover:text-gray-700"
+                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <circle cx="12" cy="12" r="3" />
+                    <line x1="12" y1="5" x2="12" y2="3" />
+                    <line x1="17" y1="7" x2="18.4" y2="5.6" />
+                    <line x1="19" y1="12" x2="21" y2="12" />
+                    <line x1="17" y1="17" x2="18.4" y2="18.4" />
+                    <line x1="12" y1="19" x2="12" y2="21" />
+                    <line x1="7" y1="17" x2="5.6" y2="18.4" />
+                    <line x1="6" y1="12" x2="4" y2="12" />
+                    <line x1="7" y1="7" x2="5.6" y2="5.6" />
+                </svg>
+                <svg *ngIf="isDarkMode"
+                    class="h-6 w-6 text-slate-500 transition-colors duration-300 ease-in-out group-hover:text-gray-700"
+                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="2" x2="12" y2="6" />
+                    <line x1="12" y1="18" x2="12" y2="22" />
+                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+                    <line x1="2" y1="12" x2="6" y2="12" />
+                    <line x1="18" y1="12" x2="22" y2="12" />
+                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+                </svg>
+            </div>
+        </button>
+
         <!-- Language Selector -->
         <button
             class="group flex items-center p-2 justify-between w-full hover:bg-white outline-none rounded-[8px] transition-all duration-300 ease-in-out">
