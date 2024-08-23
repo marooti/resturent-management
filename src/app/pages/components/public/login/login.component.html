@@ -1,0 +1,129 @@
+<ng-template #FormTemplate>
+    <div class="lg:col-span-2 max-w-lg w-full p-6 mx-auto">
+        <!-- Logo -->
+        <h1 class="w-12 text-4xl font-extrabold leading-tight tracking-tight">
+            Softfords
+        </h1>
+        <!-- / -->
+        <div class="mt-8 text-4xl font-extrabold leading-tight tracking-tight">Sign in</div>
+        <div class="mt-0.5 flex items-baseline font-medium">
+            <div>Don't have an account?</div>
+            <a [routerLink]="routeService.signup"
+                class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">
+                Register here
+            </a>
+        </div>
+        <div class="mt-8 bg-blue-100 text-blue-800 p-4 rounded border border-blue-200">
+            <div class="flex items-center">
+                <div class="flex-grow">
+                    Welcome back to <strong>Softfords</strong>. Please enter your credentials to sign in and access your
+                    account.
+                </div>
+                <button class="ml-2 text-blue-500 hover:text-blue-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill-rule="evenodd"
+                            d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                            clip-rule="evenodd">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit(); $event.preventDefault();" class="mt-8">
+            <!-- Email Field -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                <input id="email" type="email" formControlName="email" autocomplete="off"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+            </div>
+            <!-- / -->
+
+            <!-- Password Field -->
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <div class="relative">
+                    <input id="password" type="password" formControlName="password" autocomplete="off" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                </div>
+            </div>
+            <!-- / -->
+
+            <!-- Remember Me Checkbox -->
+            <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center">
+                    <input id="remember-me" type="checkbox" formControlName="rememberMe"
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                </div>
+                <a class="text-sm font-medium text-blue-500 hover:underline" [routerLink]="routeService.forgotPassword">
+                    Forgot password?
+                </a>
+            </div>
+            <!-- / -->
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="mt-6 w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Sign in
+            </button>
+
+            <!-- Social Login Options -->
+            <div class="mt-8 flex items-center">
+                <div class="flex-grow border-t border-gray-300"></div>
+                <div class="mx-2 text-gray-500">Or continue with</div>
+                <div class="flex-grow border-t border-gray-300"></div>
+            </div>
+            <div class="mt-8 flex items-center space-x-4">
+                <button type="button"
+                    class="flex-auto border border-gray-300 text-gray-500 hover:text-gray-700 py-2 px-4 rounded-md flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="2"
+                            stroke="currentColor" d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1v0h3z">
+                        </path>
+                    </svg>
+                </button>
+                <button type="button"
+                    class="flex-auto border border-gray-300 text-gray-500 hover:text-gray-700 py-2 px-4 rounded-md flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="2"
+                            stroke="currentColor"
+                            d="M23 3c-.9.642-1.943 1.164-3.063 1.509l-.077.021A4.48 4.48 0 0012 7.47v.063-.003 1a10.646 10.646 0 01-8.977-4.496l-.022-.033s-4 9 5 13A11.54 11.54 0 01.978 19l.023.001c9 5 20 0 20-11.5a4.5 4.5 0 00-.085-.859l.005.029a7.717 7.717 0 002.069-3.617l.011-.053z">
+                        </path>
+                    </svg>
+                </button>
+                <button type="button"
+                    class="flex-auto border border-gray-300 text-gray-500 hover:text-gray-700 py-2 px-4 rounded-md flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="2"
+                            stroke="currentColor"
+                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.36 3.36 0 00-.941-2.611l.001.001c3.14-.35 6.44-1.54 6.44-7a5.422 5.422 0 00-1.502-3.752L20 4.77a4.97 4.97 0 00.32-1.773c.14-.56.093-1.15-.19-1.657C19.542.626 19.077.387 18.53.208 17.584.043 16.607 0 15.633 0h-2.24C9.243 0 7.233.592 5.46 1.536 3.673 2.472 2.073 3.929 1.28 5.707 1.09 6.026 1 6.362 1 6.7c.11 1.978.504 3.942 1.18 5.708.693 1.894 1.568 3.747 2.623 5.445.577.878 1.2 1.65 1.894 2.41.4.41.85.797 1.332 1.155.356.292.721.587 1.116.859L12 18v-3a2 2 0 012-2h2a2 2 0 012 2v3a9.87 9.87 0 001.057-.5C19.927 17.832 22 14.807 22 11.5c0-2.042-.868-3.99-2.305-5.365-.905-.808-1.882-1.36-2.995-1.803L16 2h1a3 3 0 013 3c.322 0 .643.019.957.056.214.037.428.089.641.15a5.506 5.506 0 01.839.258l.083.057c.528.342.998.759 1.42 1.228.246.23.478.477.701.741.527.578.993 1.177 1.44 1.806.442.622.854 1.26 1.307 1.892.217.31.426.622.646.936a7.054 7.054 0 01-.579.566c-.448.48-.902.99-1.38 1.507-.726.786-1.497 1.57-2.282 2.372-1.18 1.148-2.43 2.239-3.642 3.415-2.086 2.138-4.036 4.481-5.755 6.978a4.974 4.974 0 00-1.12-.258H11a5.503 5.503 0 00-4.5 2.5z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<div class="w-full">
+    <div class="flex">
+        <div class="h-screen max-w-full flex-col justify-between px-[30px] pt-[30px] pb-[40px] bg-cover bg-no-repeat lg:flex hidden 
+            bg-[url('/static/images/public/banner_img_login.webp')] bg-no-repeat bg-center w-[60vw]">
+            <div class="text-white z-10">
+                <h1 class="text-5xl leading-[59px] font-medium">
+                    <span class="text-[#3E51E5]">
+                        Sign in
+                    </span>
+                </h1>
+                <p class="font-medium mb-[73px] text-[#3E51E5]"> Be the hero. Save the day. </p>
+            </div>
+            <div>
+                <p class="font-normal text-base text-[#ffffff]">©2024 Softfords, Inc. All Rights Reserved</p>
+            </div>
+        </div>
+
+        <div class="min-w-0 flex flex-col flex-grow m-auto">
+            <ng-container [ngTemplateOutlet]="FormTemplate"></ng-container>
+        </div>
+    </div>
+</div>
