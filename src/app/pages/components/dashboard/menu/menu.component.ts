@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
@@ -41,4 +42,31 @@ export class MenuComponent {
     },
 
   ]
+
+  constructor() {
+    this.calculateTotal(); // Initial calculation
+  }
+
+  value: any = '8';
+  quantity: number = 1;
+  unitPrice: number = 100; // Set your product price here
+  totalPrice: number = 0;
+  priceWithoutTax: any;
+  increment() {
+    this.quantity++;
+    this.calculateTotal();
+  }
+
+  decrement() {
+    if (this.quantity > 1) {
+      this.quantity--;
+      this.calculateTotal();
+    }
+  }
+
+  calculateTotal() {
+    const taxRate = 0.12; // 12% tax
+    this.priceWithoutTax = this.quantity * this.unitPrice;
+    this.totalPrice = this.priceWithoutTax + (this.priceWithoutTax * taxRate);
+  }
 }
