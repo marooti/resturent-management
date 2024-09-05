@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MessagesLayoutComponent } from './messages-layout.component';
+import { TimeLogsSheetComponent } from './time-logs-sheet.component';
 
-describe('MessagesLayoutComponent', () => {
-  let component: MessagesLayoutComponent;
-  let fixture: ComponentFixture<MessagesLayoutComponent>;
+describe('TimeLogsSheetComponent', () => {
+  let component: TimeLogsSheetComponent;
+  let fixture: ComponentFixture<TimeLogsSheetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MessagesLayoutComponent]
+      imports: [TimeLogsSheetComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MessagesLayoutComponent);
+    fixture = TestBed.createComponent(TimeLogsSheetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

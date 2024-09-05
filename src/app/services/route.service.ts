@@ -24,9 +24,6 @@ export class RouteService {
     return RoutesEnum.DASHBOARD;
   }
 
-  get messages() {
-    return RoutesEnum.MESSAGES;
-  }
 
   get security() {
     return RoutesEnum.SECURITY;
