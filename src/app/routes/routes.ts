@@ -6,12 +6,13 @@ export const dashData: Routes = [
         path: 'dashboard',
         loadChildren: () => import('../pages/components/dashboard/dashboard-layout/dashboard-routing.module').then(m => m.DashboardRoutingModule),
     },
+  
     {
-        path: 'about',
-        loadChildren: () => import('../pages/components/about/about-routing.module').then(m => m.AboutRoutingModule),
+        path: 'setting',
+        loadChildren: () => import('../pages/components/setting/setting-routing.module').then(m => m.SettingRoutingModule),
     },
     {
-        path: 'acitivity',
-        loadChildren: () => import('../pages/components/activity/activity-routing.module').then(m => m.ActivityRoutingModule),
+        path: 'all-chat',
+        loadChildren: () => import('../pages/components/all-chat/all-chat-routing.module').then(m => m.AllChatRoutingModule),
     },
 ]
