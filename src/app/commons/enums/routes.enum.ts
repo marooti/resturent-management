@@ -1,10 +1,4 @@
 export enum RoutesEnum {
-    LOGIN = '',
-    SIGNUP = 'signup',
-    FORGOT_PASSWORD = 'forgot-password',
-    DASHBOARD = 'dashboard',
-    MESSAGES = 'messages',
-    SECURITY = 'security',
-    SETTINGS = 'settings',
+    DASHBOARD = '',
     NOT_FOUND = '404'
 }

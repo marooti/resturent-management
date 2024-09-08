@@ -1,0 +1,42 @@
+:host::ng-deep{
+
+    .p-dialog-header {
+      padding: 10px 17px 7px 24px;
+  }
+  .p-dialog{
+    background-color: var(--green-400);
+    border-radius: 10px;
+  }
+  
+
+  .p-dialog-content {
+    padding-bottom: 12px;
+}
+}
+
+
+
+.btn.accept {
+  background-color: #28a745;
+  color: var(--surface-0);	
+}
+
+ .btn.accept:hover {
+  background-color: #218838;
+}
+
+.btn.reject {
+  background-color: #dc3545;
+  color: var(--surface-0);	
+}
+
+ .btn.reject:hover {
+  background-color: #c82333;
+}
+.chat-dialog-actions{
+  display: flex;
+  gap: 10px;
+}
+.container{
+    display: none;
+}

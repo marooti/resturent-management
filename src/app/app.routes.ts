@@ -7,28 +7,8 @@ import { PageNotFoundComponent } from './pages/components/page-not-found/page-no
 
 export const routes: Routes = [
     {
-        path: RoutesEnum.LOGIN,
-        loadComponent: () => import('./pages/components/dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent)
-    },
-    {
-        path: RoutesEnum.SIGNUP,
-        loadComponent: () => import('./pages/components/public/signup/signup.component').then(m => m.SignupComponent)
-    },
-    {
-        path: RoutesEnum.FORGOT_PASSWORD,
-        loadComponent: () => import('./pages/components/public/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
-    },
-    {
         path: RoutesEnum.DASHBOARD,
         loadComponent: () => import('./pages/components/dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent)
-    },
-    {
-        path: RoutesEnum.SECURITY,
-        loadComponent: () => import('./pages/components/security-layout/security-layout.component').then(m => m.SecurityLayoutComponent)
-    },
-    {
-        path: RoutesEnum.SETTINGS,
-        loadComponent: () => import('./pages/components/settings-layout/settings-layout.component').then(m => m.SettingsLayoutComponent)
     },
     {
         path: '**',

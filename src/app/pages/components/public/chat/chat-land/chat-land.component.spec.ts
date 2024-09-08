@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsLayoutComponent } from './settings-layout.component';
+import { ChatLandComponent } from './chat-land.component';
 
-describe('SettingsLayoutComponent', () => {
-  let component: SettingsLayoutComponent;
-  let fixture: ComponentFixture<SettingsLayoutComponent>;
+describe('ChatLandComponent', () => {
+  let component: ChatLandComponent;
+  let fixture: ComponentFixture<ChatLandComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsLayoutComponent]
+      imports: [ChatLandComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SettingsLayoutComponent);
+    fixture = TestBed.createComponent(ChatLandComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

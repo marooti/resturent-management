@@ -1,3 +1,19 @@
-<div class="flex flex-col min-h-screen w-full">
-    <router-outlet></router-outlet>
+
+<div class="flex flex-col h-screen">
+
+    <div class="flex flex-1 overflow-hidden p-2">
+        <!-- Sidebar -->
+        <aside class=" rounded-xl  bg-gray-700 text-white transition-width duration-300 ease-in-out overflow-hidden">
+            <app-project-sidebar></app-project-sidebar>
+        </aside>
+
+        <!-- Content -->
+        <main class="flex-1 p-4 pt-0 bg-white overflow-auto">
+            <div>
+                <app-header></app-header>
+            </div>
+            <router-outlet></router-outlet>
+        </main>
+    </div>
 </div>
+<div #ccpElement [ngClass]="{'ccp-container': true, 'hidden': !showCcp}"></div>

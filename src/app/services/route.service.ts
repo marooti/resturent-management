@@ -8,28 +8,10 @@ export class RouteService {
 
   constructor() { }
 
-  get login() {
-    return RoutesEnum.LOGIN;
-  }
-
-  get signup() {
-    return RoutesEnum.SIGNUP;
-  }
-
-  get forgotPassword() {
-    return RoutesEnum.FORGOT_PASSWORD;
-  }
-
   get dashboard() {
     return RoutesEnum.DASHBOARD;
   }
 
 
-  get security() {
-    return RoutesEnum.SECURITY;
-  }
 
-  get settings() {
-    return RoutesEnum.SETTINGS;
-  }
 }

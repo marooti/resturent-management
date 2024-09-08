@@ -1,0 +1,25 @@
+<div class="incoming-call-dialog" *ngIf="isIncomingCall && !isCallAccepted && !isCallMissed">
+
+    <p-dialog header="New Incoming Call" [closeOnEscape]="false" [blockScroll]="true" [(visible)]="isIncomingCall"
+        modal="modal" [responsive]="true" [dismissableMask]="false"
+        [style]="{'top': '20px', 'position': 'fixed', width: '38rem'}">
+        <div class="dialog-content">
+            <p>You have an incoming call. Would you like to accept or reject?</p>
+            <div class="chat-dialog-actions">
+                <button pButton type="button" class="btn accept" label="Accept" (click)="acceptCall()">Accept</button>
+                <button pButton type="button" class="btn reject" label="Reject" (click)="rejectCall()">Reject</button>
+            </div>
+        </div>
+    </p-dialog>
+</div>
+<div *ngIf="isCallAccepted">
+    <button (click)="endCall()">End Call</button>
+</div>
+<!-- Show the recall button only if the call was missed -->
+<div *ngIf="!isCallAccepted && isCallMissed">
+    <button (click)="setAgentAvailable()">Recall</button>
+</div>
+<!-- Rest of your component's HTML -->
+<div class="container">
+    <div id="ccpContainer"></div>
+</div>

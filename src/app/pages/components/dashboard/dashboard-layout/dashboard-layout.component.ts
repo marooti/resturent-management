@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ProjectSidebarComponent } from '../../project-sidebar/project-sidebar.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
 import { HeaderComponent } from '../../public/header/header.component';
 
 @Component({
@@ -8,7 +7,6 @@ import { HeaderComponent } from '../../public/header/header.component';
   standalone: true,
   imports: [
     ProjectSidebarComponent,
-    DashboardComponent,
     HeaderComponent,
   ],
   templateUrl: './dashboard-layout.component.html',
