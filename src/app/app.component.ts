@@ -4,11 +4,13 @@ import { Router, RouterModule } from '@angular/router';
 import { ProjectSidebarComponent } from './pages/components/project-sidebar/project-sidebar.component';
 import { HeaderComponent } from './pages/components/public/header/header.component';
 import { AmazonConnectService } from '@services/amazonConnectService.service';
+import { SharedModule } from './Shared/shared.module';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule, ProjectSidebarComponent, HeaderComponent],
+  imports: [CommonModule, RouterModule,SharedModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
