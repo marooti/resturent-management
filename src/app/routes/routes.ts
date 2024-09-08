@@ -15,4 +15,8 @@ export const dashData: Routes = [
         path: 'all-chat',
         loadChildren: () => import('../pages/components/all-chat/all-chat-routing.module').then(m => m.AllChatRoutingModule),
     },
+    {
+        path: 'home',
+        loadChildren: () => import('../../app/pages/components/Home/home-routing.module').then(m => m.HomeRoutingModule),
+    },
 ]
