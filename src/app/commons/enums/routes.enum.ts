@@ -1,4 +1,5 @@
 export enum RoutesEnum {
-    DASHBOARD = '',
+    Login = '',
+    DASHBOARD = 'dashboard',
     NOT_FOUND = '404'
 }

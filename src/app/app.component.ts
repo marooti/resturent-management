@@ -13,7 +13,7 @@ import { AmazonConnectService } from '@services/amazonConnectService.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'workasio';
+  title = 'Omni-Interact';
   @ViewChild('ccpElement') ccpElement!: ElementRef;
   showCcp = false;
   isLoggedIn = false;
