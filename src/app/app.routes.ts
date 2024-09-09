@@ -8,7 +8,7 @@ import { PageNotFoundComponent } from './pages/components/page-not-found/page-no
 export const routes: Routes = [
     {
         path: RoutesEnum.LOGIN,
-        loadComponent: () => import('./pages/components/dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent)
+        loadComponent: () => import('./pages/components/public/login/login.component').then(m => m.LoginComponent)
     },
     {
         path: RoutesEnum.SIGNUP,

@@ -14,7 +14,7 @@ import { RouteService } from '@services/route.service';
   styleUrls: ['./project-sidebar.component.scss']
 })
 export class ProjectSidebarComponent {
-  sidebarOpen = true;
+  sidebarOpen = false;
 
   constructor(
     public routeService: RouteService,
