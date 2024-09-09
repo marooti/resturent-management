@@ -48,7 +48,7 @@
                         </p-calendar>
                     </div>
                     <div class="pl-3">
-                        <button type="button" (click)="addTimelog()"
+                        <button type="button"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
                             Search
                         </button>
@@ -61,11 +61,11 @@
 
         <!-- Weekly Data Table -->
         <div class="data-table h-full">
-            <p-table [value]="[days]"  scrollHeight="flex"
-                class="p-datatable-gridlines p-datatable-striped">
+            <p-table [value]="[days]" scrollHeight="flex" class="p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
                     <tr class="p-2 bg-[#349ce4]">
-                        <th *ngFor="let day of days" class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">{{ day }}</th>
+                        <th *ngFor="let day of days" class="bg-[#1c4c74] p-3 text-white w-[300px]"
+                            style="min-width: 300px !important;">{{ day }}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body">
