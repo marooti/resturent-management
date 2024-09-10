@@ -5,9 +5,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
+import { CheckingDetailComponent } from "../checking-detail/checking-detail.component";
 interface TimelogEntry {
   date: any; // Use appropriate type if you know it (e.g., Date or Timestamp)
   issueName: string;
@@ -35,7 +36,8 @@ interface WeeklyData {
     CalendarModule,
     FormsModule,
     CommonModule,
-  ],
+    CheckingDetailComponent
+],
   templateUrl: './time-logs-sheet.component.html',
   styleUrls: ['./time-logs-sheet.component.scss']
 })
@@ -165,4 +167,6 @@ export class TimeLogsSheetComponent implements OnInit {
         console.error('Error adding data: ', error);
       });
   }
+
+
 }

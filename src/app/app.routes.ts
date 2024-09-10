@@ -23,6 +23,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/components/dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent)
     },
     {
+        path: RoutesEnum.CHECKING_DETAIL,
+        loadComponent: () => import('./pages/components/checkingtime/checking-layout/checking-layout.component').then(m => m.CheckingLayoutComponent)
+    },
+    {
         path: RoutesEnum.SECURITY,
         loadComponent: () => import('./pages/components/security-layout/security-layout.component').then(m => m.SecurityLayoutComponent)
     },
