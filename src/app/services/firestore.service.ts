@@ -94,4 +94,31 @@ export class FirestoreService {
     // Get the collection data as an Observable
     return collectionData(usersCollection, { idField: 'id' }); // Add idField to include the document ID with the data
   }
+
+
+  async checkin(name: string, day: string, data: any): Promise<void> {
+    const docRef = doc(this.firestore, "attendancePortal", name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+      let dataName = 'data'
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      // Append new data to the existing date
+      existingData[day]['data'].push(data);
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+
+  }
 }

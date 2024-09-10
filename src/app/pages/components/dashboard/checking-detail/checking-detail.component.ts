@@ -6,6 +6,9 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { ProjectSidebarComponent } from "../../project-sidebar/project-sidebar.component";
+import { FirestoreService } from '@services/firestore.service';
+import { Firestore } from 'firebase/firestore';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-checking-detail',
@@ -18,20 +21,23 @@ import { ProjectSidebarComponent } from "../../project-sidebar/project-sidebar.c
     FormsModule,
     CommonModule,
     ProjectSidebarComponent
-],
+  ],
   templateUrl: './checking-detail.component.html',
   styleUrl: './checking-detail.component.scss'
 })
 export class CheckingDetailComponent implements OnInit {
 
-  checking: any[]=[
-    {date: 12-12-24 , time: 12-50}
+  checking: any[] = [
+    { date: 12 - 12 - 24, time: 12 - 50 }
   ];
   locathostData: any;
   checkingstatus: boolean = false;
 
   profileData: any;
 
+  constructor() {
+
+  }
   ngOnInit() {
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData)
@@ -65,7 +71,7 @@ getlocation(){
 }
 }
 
-  checkin(){
+  checkin() {
     const currentDate = new Date();
     const time = currentDate.toTimeString();
     const date = currentDate.toDateString();
@@ -74,8 +80,23 @@ this.getlocation();
     console.log('checkin Time, timezone', time);
     console.log('checkin Day , Date:', date);
     this.checkingstatus = true;
+    const data = {
+      checkInTime: time,
+      name: this.profileData.name,
+      checkOutTime: '',
+      date: date,
+    }
+    
+    // this.firestoreService.checkin(this.profileData.username, date, data)
+    //   .then(() => {
+    //     console.log('Data added successfully');
+
+    //   })
+    //   .catch(error => {
+    //     console.error('Error adding data: ', error);
+    //   });
   }
-  checkout(){
+  checkout() {
     const currentDate = new Date();
     const time = currentDate.toTimeString()
     const date = currentDate.toDateString()
