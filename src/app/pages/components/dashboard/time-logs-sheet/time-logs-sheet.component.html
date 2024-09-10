@@ -48,7 +48,7 @@
                         </p-calendar>
                     </div>
                     <div class="pl-3">
-                        <button type="button"
+                        <button type="button" (click)="searchRecord()"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
                             Search
                         </button>
@@ -118,14 +118,14 @@
             </div>
         </div> -->
         <div class="align-items-center mt-3">
-            <label class="text-sm ">Project</label>
+            <label class="text-sm ">Project <span class="text-red-500">*</span></label>
             <div class="mt-1">
                 <p-dropdown [options]="issueName" [(ngModel)]="issueNameVlaue" optionValue="name" optionLabel="name"
                     placeholder="Select a Project" />
             </div>
         </div>
         <div class="align-items-center mt-3">
-            <label class="text-sm ">Date</label>
+            <label class="text-sm ">Date <span class="text-red-500">*</span></label>
             <div class="mt-1">
                 <p-calendar [(ngModel)]="dateOf" [readonlyInput]="true" inputId="range">
                 </p-calendar>
@@ -137,7 +137,7 @@
             <div class="mt-1">
                 <input type="text" pInputText [(ngModel)]="timeSpent" placeholder="Enter your time" />
             </div>
-            <label class="text-xs ">Enter a Duration (e.g. 3w 4d 12h)</label>
+            <label class="text-xs ">Enter a Duration (e.g. 3m 12h)</label>
         </div>
         <div class="align-items-center mt-3">
             <label class="text-sm ">Start Time <span class="text-red-500">*</span></label>
@@ -148,7 +148,7 @@
         </div>
 
         <div class="align-items-center mt-3">
-            <label class="text-sm ">Description</label>
+            <label class="text-sm ">Description <span class="text-red-500">*</span></label>
             <div class="mt-1">
                 <textarea id="message" rows="4"
                     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -258,6 +258,10 @@
                             <div class="p-3 ">
                                 <div *ngFor="let data of data?.data">
                                     <div class="p-2  pt-0 bg-slate-100 my-1 pb-3">
+                                        <div>
+
+                                            <span class="font-medium">Project: </span> {{data.issueName}}
+                                        </div>
                                         <div>
                                             <span class="font-medium">Time Spent: </span> {{data.spentTame}}
                                         </div>

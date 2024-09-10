@@ -25,7 +25,6 @@ interface WeeklyData {
   [key: string]: TimelogData;
 }
 
-
 @Component({
   selector: 'app-time-logs-sheet',
   standalone: true,
@@ -69,6 +68,7 @@ export class TimeLogsSheetComponent implements OnInit {
   projects$: Observable<any[]>;
   processedData: any[] = [];
   grandTotalTime: any;
+  apiData: any;
 
 
   constructor(private firestoreService: FirestoreService, private firestore: Firestore) {
@@ -87,6 +87,46 @@ export class TimeLogsSheetComponent implements OnInit {
     console.log("this is localhost data :", this.profileData.username);
     this.fetchTimelogData(this.profileData.username);
     this.getproducts();
+  }
+
+  searchRecord() {
+    console.log("this is date for you:", this.rangeDates);
+
+    // Define options for formatting dates
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+
+    // Format start and end dates
+    const startDate = this.rangeDates[0].toLocaleDateString('en-US', options);
+    const endDate = this.rangeDates[1].toLocaleDateString('en-US', options);
+
+    console.log("Start Date:", startDate, "End Date", endDate);
+    console.log("this is api data :", this.apiData);
+
+    // Convert formatted dates back to Date objects
+    const start = new Date(this.rangeDates[0]);
+    const end = new Date(this.rangeDates[1]);
+
+    // Define the type for the filtered data
+    type ApiData = { [key: string]: { data: any[] } };
+
+    // Ensure apiData has the correct type
+    const apiData = this.apiData as ApiData;
+
+    // Filter API data
+    const filteredData = Object.keys(apiData)
+      .map(key => ({
+        date: new Date(key),
+        data: apiData[key].data
+      }))
+      .filter(item => item.date >= start && item.date <= end)
+      .reduce((acc: ApiData, item) => {
+        acc[item.date.toDateString()] = { data: item.data };
+        return acc;
+      }, {} as ApiData);
+
+    console.log("Filtered Data:", filteredData);
+    this.processTimelogData(filteredData);
+    this.processTimelo(filteredData);
   }
 
   getproducts() {
@@ -112,6 +152,7 @@ export class TimeLogsSheetComponent implements OnInit {
     this.firestoreService.getTimelog(name)
       .then((data) => {
         console.log('Timelog data:', data); // Log data for verification
+        this.apiData = data;
         this.processTimelogData(data);
         this.processTimelo(data);
       })
@@ -207,7 +248,7 @@ export class TimeLogsSheetComponent implements OnInit {
 
   addTimelog() {
     console.log("this is value for ", this.startTime, this.description, this.dateOf, this.employeeName, this.issueNameVlaue, this.timeSpent,)
-    // let dayname = new Date('Fri Sep 06 2024 00:00:00 GMT+0500');
+
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
     console.log("This is date format:", formattedDate);
@@ -221,7 +262,14 @@ export class TimeLogsSheetComponent implements OnInit {
       startTime: this.startTime,
       description: this.description
     };
+    for (const [key, value] of Object.entries(data)) {
+      if (value === null || value === undefined || value.toString().trim() === '') {
+        console.log(`Warning: ${key} is ${value}`);
+        return;
+      }
+    }
     console.log("this is finally responce:", data);
+    return;
     this.firestoreService.addTimelog(name, day, data)
       .then(() => {
         console.log('Data added successfully');
