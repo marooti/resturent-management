@@ -121,4 +121,38 @@ export class FirestoreService {
     }
 
   }
+
+  async checkOut(name: string, day: string, data: any): Promise<void> {
+    const docRef = doc(this.firestore, "attendancePortal", name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      // Check if the entry already exists (assuming each entry has a unique 'id' property)
+      const existingIndex = existingData[day]['data'].findIndex((entry: any) => entry.id === data.id);
+
+      if (existingIndex !== -1) {
+        // If the entry exists, update it
+        existingData[day]['data'][existingIndex] = data;
+      } else {
+        // If it doesn't exist, append it
+        existingData[day]['data'].push(data);
+      }
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  }
+
 }

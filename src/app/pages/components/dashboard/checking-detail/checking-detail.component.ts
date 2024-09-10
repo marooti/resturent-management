@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { ProjectSidebarComponent } from "../../project-sidebar/project-sidebar.component";
 import { FirestoreService } from '@services/firestore.service';
-import { Firestore } from 'firebase/firestore';
+import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -36,7 +36,7 @@ export class CheckingDetailComponent implements OnInit {
 
   profileData: any;
 
-  constructor() {
+  constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
 
   }
   ngOnInit() {
@@ -62,16 +62,17 @@ export class CheckingDetailComponent implements OnInit {
       checkOutTime: '',
       date: date,
     }
-    
-    // this.firestoreService.checkin(this.profileData.username, date, data)
-    //   .then(() => {
-    //     console.log('Data added successfully');
 
-    //   })
-    //   .catch(error => {
-    //     console.error('Error adding data: ', error);
-    //   });
+    this.firestoreService.checkin(this.profileData.username, date, data)
+      .then(() => {
+        console.log('Data added successfully');
+
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
   }
+
   checkout() {
     const currentDate = new Date();
     const time = currentDate.toTimeString()
@@ -80,5 +81,20 @@ export class CheckingDetailComponent implements OnInit {
     console.log('checkout Time, timezone', time);
     console.log('checkout Day , Date:', date);
     this.checkingstatus = false;
+    const data = {
+      checkInTime: time,
+      name: this.profileData.name,
+      checkOutTime: time,
+      date: date,
+    }
+
+    this.firestoreService.checkOut(this.profileData.username, date, data)
+      .then(() => {
+        console.log('Data added successfully');
+
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
   }
 }
