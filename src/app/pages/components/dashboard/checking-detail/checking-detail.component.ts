@@ -31,7 +31,6 @@ export class CheckingDetailComponent implements OnInit {
     { date: 12 - 12 - 24, time: 12 - 50 }
   ];
   locathostData: any;
-
   checkingstatus: boolean = false;
 
   profileData: any;
@@ -46,12 +45,37 @@ export class CheckingDetailComponent implements OnInit {
     this.checking;
   }
 
-
+getlocation(){
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition): void => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+            const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+            fetch(url).then(response => response.json()).then(data=>{
+              if (data && data.address) {
+                const locationName = `${data.address.city || ''}, ${data.address.country || ''}`;
+                console.log("Location Name:", data.display_name);
+            } else {
+                console.error("Unable to find location.");
+            }
+            })
+        },
+        (error: GeolocationPositionError): void => {
+            console.error("Error getting location:", error.message);
+        }
+    );
+} else {
+    console.log("Geolocation is not supported by this browser.");
+}
+}
 
   checkin() {
     const currentDate = new Date();
     const time = currentDate.toTimeString();
     const date = currentDate.toDateString();
+this.getlocation();
     console.log("username :", this.profileData.username);
     console.log('checkin Time, timezone', time);
     console.log('checkin Day , Date:', date);
