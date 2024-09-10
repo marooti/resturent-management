@@ -23,7 +23,9 @@ export class RouteService {
   get dashboard() {
     return RoutesEnum.DASHBOARD;
   }
-
+get checkingdetail(){
+  return RoutesEnum.CHECKING_DETAIL;
+}
 
   get security() {
     return RoutesEnum.SECURITY;

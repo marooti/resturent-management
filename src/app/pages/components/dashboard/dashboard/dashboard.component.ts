@@ -4,6 +4,7 @@ import { NpsProgressbarComponent } from '../gadgets/nps-progressbar/nps-progress
 import { NpsStatisticsComponent } from '../gadgets/nps-statistics/nps-statistics.component';
 import { TeamStatisticsComponent } from '../gadgets/team-statistics/team-statistics.component';
 import { TimeLogsSheetComponent } from '../time-logs-sheet/time-logs-sheet.component';
+import { CheckingDetailComponent } from "../checking-detail/checking-detail.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -13,8 +14,9 @@ import { TimeLogsSheetComponent } from '../time-logs-sheet/time-logs-sheet.compo
     NpsProgressbarComponent,
     NpsStatisticsComponent,
     TeamStatisticsComponent,
-    TimeLogsSheetComponent
-  ],
+    TimeLogsSheetComponent,
+    CheckingDetailComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

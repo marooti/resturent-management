@@ -3,6 +3,7 @@ export enum RoutesEnum {
     SIGNUP = 'signup',
     FORGOT_PASSWORD = 'forgot-password',
     DASHBOARD = 'dashboard',
+    CHECKING_DETAIL= 'checking-detail',
     MESSAGES = 'messages',
     SECURITY = 'security',
     SETTINGS = 'settings',
