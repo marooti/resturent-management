@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FirestoreService } from '@services/firestore.service';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
@@ -7,6 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, formatDate } from '@angular/common';
 import { Observable } from 'rxjs';
+import jsPDF from 'jspdf';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { CheckingDetailComponent } from "../checking-detail/checking-detail.component";
 interface TimelogEntry {
@@ -48,6 +49,7 @@ export class TimeLogsSheetComponent implements OnInit {
   weeklyData: { [key: string]: any[] } = {};
   days: string[] = [];
   rangeDates: any;
+  @ViewChild('htmlData') el!: ElementRef;
 
   employeeDropdown: any[] = [
     { name: 'Muhammad Imran' },
@@ -67,6 +69,9 @@ export class TimeLogsSheetComponent implements OnInit {
   locathostData: any;
   profileData: any
   projects$: Observable<any[]>;
+  processedData: any[] = [];
+  grandTotalTime: any;
+
 
   constructor(private firestoreService: FirestoreService, private firestore: Firestore) {
     const today = new Date();
@@ -110,6 +115,7 @@ export class TimeLogsSheetComponent implements OnInit {
       .then((data) => {
         console.log('Timelog data:', data); // Log data for verification
         this.processTimelogData(data);
+        this.processTimelo(data);
       })
       .catch((error) => {
         console.error('Error fetching timelog data:', error);
@@ -136,8 +142,69 @@ export class TimeLogsSheetComponent implements OnInit {
     console.log('Days:', this.days);
   }
 
+  processTimelo(data: any) {
+    this.processedData = []; // Initialize the processed data array
 
+    let grandTotalHours = 0; // Initialize variables for total hours and minutes
+    let grandTotalMinutes = 0;
 
+    // Iterate through each key in the data (e.g., "Mon, Sep 09, 2024")
+    for (const date in data) {
+      if (data.hasOwnProperty(date)) {
+        const entry = data[date];
+
+        // Calculate the total spent time for the day
+        let totalHours = 0;
+        let totalMinutes = 0;
+
+        entry.data.forEach((log: any) => {
+          const timeString = log.spentTame.toLowerCase();
+
+          // Match for hours and minutes
+          const hourMatch = timeString.match(/(\d+)h/);
+          const minuteMatch = timeString.match(/(\d+)m/);
+
+          if (hourMatch) {
+            totalHours += parseFloat(hourMatch[1]);
+          }
+          if (minuteMatch) {
+            totalMinutes += parseFloat(minuteMatch[1]);
+          }
+        });
+
+        // Convert total minutes to hours if over 60
+        totalHours += Math.floor(totalMinutes / 60);
+        totalMinutes = totalMinutes % 60;
+
+        // Update grand totals
+        grandTotalHours += totalHours;
+        grandTotalMinutes += totalMinutes;
+
+        // Format total time as 'Xh Ym'
+        const totalSpendTime = `${totalHours}h ${totalMinutes}m`;
+
+        // Create a new object for the processed data format
+        const formattedEntry = {
+          date: date,
+          totalSpendTime: totalSpendTime.trim(), // Trim to remove any extra spaces
+          data: entry.data,
+        };
+
+        // Push the formatted entry to the processed data array
+        this.processedData.push(formattedEntry);
+      }
+    }
+
+    // Convert grand total minutes to hours if over 60
+    grandTotalHours += Math.floor(grandTotalMinutes / 60);
+    grandTotalMinutes = grandTotalMinutes % 60;
+
+    const grandTotalTime = `${grandTotalHours}h ${grandTotalMinutes}m`;
+    console.log('Processed Timelog Data:', this.processedData);
+    console.log('Total time spent for all entries:', grandTotalTime);
+    this.grandTotalTime = grandTotalTime;
+    // Assign the processed data to a variable or do any further processing here
+  }
 
 
   addTimelog() {
@@ -169,4 +236,22 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
 
+  onSelectionChange() {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: 'a3',
+    });
+    const htmlData = document.getElementById('htmlData');
+    // console.log("Pdf Image:", htmlData);
+    if (htmlData) {
+      pdf.html(htmlData, {
+        margin: [23, 0, 50, 0],
+        callback: (pdf: any) => {
+          pdf.save('timelogssheet.pdf');
+
+        }
+      });
+    }
+  }
 }

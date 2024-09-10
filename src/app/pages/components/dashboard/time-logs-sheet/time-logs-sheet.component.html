@@ -22,7 +22,7 @@
                         <button type="button" (click)="showdialog()"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Time
                             Log</button>
-                        <button type="button"
+                        <button type="button" (click)="onSelectionChange()"
                             class="text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  rounded-lg text-sm px-3 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
                             <svg class="w-11 h-5 text-gray-400 dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
@@ -169,3 +169,111 @@
     </div>
 
 </p-dialog>
+
+
+
+<div class="container m-auto " style="display: none;">
+    <div class="row m-auto">
+        <div class="col-12 px-4  m-auto" style="width:840px !important; " id="htmlData">
+
+            <div class="pb-2 w-full flex justify-between w-100">
+                <div class="m-auto " style="width: 300px !important;">
+                    <div>
+                        <span class="text-xl font-bold text-color m-auto">
+                            Weakly Report
+                        </span>
+                    </div>
+                </div>
+                <div class="justify-end flex w-full m-auto pl-3">
+                    <div>
+                        <img src="/assets/logo.png" alt="" width="230px" height="40px">
+                    </div>
+                </div>
+            </div>
+            <!-- Report Details is Bellow -->
+            <ng-container>
+                <!-- <ng-container *ngIf="report"> -->
+                <div class="report-detial shadow-1 mb-3 border-round-md bg-slate-100">
+                    <!-- Site Details & shift deatils -->
+                    <div class="site-details">
+                        <div class="col-12 flex justify-between p-3 border-round-md bg-slate-100">
+                            <div class="w-4 flex justify-between w-full">
+                                <div class="w-full">
+                                    <div class="my-2"> <span class="text-xl font-semibold text-900">Weakly Report</span>
+                                    </div>
+                                    <div>
+                                        <div class="flex align-items-center mb-1">
+                                            <div>
+                                                <span class="pr-2 text-sm text-color">Date :</span>
+                                            </div>
+                                            <span class="text-color text-sm">
+                                                {{profileData?.name}}
+                                            </span>
+                                        </div>
+                                        <div class="flex align-items-center">
+                                            <div>
+                                                <span class="text-color pr-2 text-sm">Total Time :
+                                                </span>
+                                            </div>
+                                            <span class="text-color text-sm">
+                                                {{grandTotalTime}}
+                                            </span>
+                                        </div>
+                                        <div class="flex align-items-center mb-1">
+                                            <div>
+                                                <span class="text-color pr-2 text-sm ">Total Hours :</span>
+                                            </div>
+                                            <span class="text-color text-sm">
+                                                <ng-container>
+                                                    40h
+                                                </ng-container> </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div>
+            </div>
+            <table class="table table-bordered w-full">
+                <tr class="table-primary" class="header bg-[#1c4c74]" style=" border-radius: 5px;">
+                    <th style="width: 20%;" class="p-3 pt-0 text-white text-lg font-medium">Date</th>
+                    <th style="width: 20%;" class="p-3 pt-0 text-white text-lg font-medium">Total Time</th>
+                    <th class="p-3 pt-0 text-white text-lg font-medium" style="width: 60%;">Description</th>
+
+                </tr>
+                <ng-container>
+                    <tr style="border-bottom: 1px solid #f0eeee !important;" *ngFor="let data of processedData">
+                        <th style="width: 20%;">
+                            {{data?.date}}
+                        </th>
+                        <th style="width: 20%;">
+                            {{data?.totalSpendTime}}
+                        </th>
+
+                        <td style="width: 60%;">
+                            <div class="p-3 ">
+                                <div *ngFor="let data of data?.data">
+                                    <div class="p-2  pt-0 bg-slate-100 my-1 pb-3">
+                                        <div>
+                                            <span class="font-medium">Time Spent: </span> {{data.spentTame}}
+                                        </div>
+                                        <div>
+                                            <span class="font-medium">Description: </span>
+                                            {{data.description}}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </ng-container>
+            </table>
+        </div>
+    </div>
+</div>
