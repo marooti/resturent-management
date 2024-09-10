@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { CheckingDetailComponent } from "../checking-detail/checking-detail.component";
+import { ToastrService } from '@services/toastr.service';
 interface TimelogEntry {
   date: any; // Use appropriate type if you know it (e.g., Date or Timestamp)
   issueName: string;
@@ -37,7 +38,7 @@ interface WeeklyData {
     FormsModule,
     CommonModule,
     CheckingDetailComponent
-],
+  ],
   templateUrl: './time-logs-sheet.component.html',
   styleUrls: ['./time-logs-sheet.component.scss']
 })
@@ -73,7 +74,7 @@ export class TimeLogsSheetComponent implements OnInit {
   apiData: any;
 
 
-  constructor(private firestoreService: FirestoreService, private firestore: Firestore) {
+  constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     const today = new Date();
     this.dateOf = today;
     this.todayDate = today.toDateString();
@@ -267,11 +268,11 @@ export class TimeLogsSheetComponent implements OnInit {
     for (const [key, value] of Object.entries(data)) {
       if (value === null || value === undefined || value.toString().trim() === '') {
         console.log(`Warning: ${key} is ${value}`);
+        this.toaster.showError('Incorrect Required');
         return;
       }
     }
     console.log("this is finally responce:", data);
-    return;
     this.firestoreService.addTimelog(name, day, data)
       .then(() => {
         console.log('Data added successfully');
