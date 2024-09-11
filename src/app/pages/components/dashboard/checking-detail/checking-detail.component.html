@@ -67,40 +67,32 @@
 
         <!-- Weekly Data Table -->
         <div class="data-table h-full">
-            <p-table scrollHeight="flex" class="p-datatable-gridlines p-datatable-striped">
+            <p-table scrollHeight="flex" [value]="[days]" class="p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
                     <tr class="p-2 bg-[#349ce4]">
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">checking
-                            time and date</th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
+                            Time and Date</th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
+                            Time and Date</th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
+                            Time and Date</th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
+                            Time and Date</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-checking>
-                    <tr>
+                <ng-template pTemplate="body">
+                    <tr *ngFor="let day of days">
                         <td class="w-[300px !important]">
-                            <div class="p-3">
-                                <div>
-                                    <div>
-                                        <div class="bg-slate-100 p-2 m-1 rounded-md">
-                                            <div class="entry">
-                                                <div>
-                                                    <span class="font-semibold text-sm">{{checking.date}}</span>
-                                                </div>
-                                                <div>
-                                                    <span class="text-xs">day</span>
-                                                </div>
-                                                <div class="text-right text-sm font-semibold">
-                                                    <span>states</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <ng-template #noData>
-                                    <div class="text-gray-500">
-                                        No data available
-                                    </div>
-                                </ng-template>
-                            </div>
+                            {{day.name}}
+                        </td>
+                        <td class="w-[300px !important]">
+                            {{day.date}}
+                        </td>
+                        <td class="w-[300px !important]">
+                            {{day.checkInTime}}
+                        </td>
+                        <td class="w-[300px !important]">
+                            {{day.checkOutTime}}
                         </td>
                     </tr>
                 </ng-template>

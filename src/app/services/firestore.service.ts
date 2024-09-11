@@ -155,4 +155,21 @@ export class FirestoreService {
     }
   }
 
+  async getAttendanceRecord(name: string): Promise<any> {
+    const docRef = doc(this.firestore, 'attendancePortal', name);
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();  // Return the document data
+      } else {
+        console.log('No such document!');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error getting document: ', error);
+      return null;
+    }
+  }
+
 }
