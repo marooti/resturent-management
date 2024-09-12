@@ -68,6 +68,7 @@ export class TimeLogsSheetComponent implements OnInit {
   apiData: any;
   updateBtn = false;
   index: any;
+  isProcessing: boolean = false;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     const today = new Date();
     this.dateOf = today;
@@ -244,7 +245,7 @@ export class TimeLogsSheetComponent implements OnInit {
   addTimelog() {
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
-    const time = this.startTime.toTimeString().split(' ')[0];
+    const time = this.startTime?.toTimeString()?.split(' ')[0];
     const day = formattedDate;
     const name = this.profileData.username;
     const data = {
@@ -261,15 +262,22 @@ export class TimeLogsSheetComponent implements OnInit {
       }
     }
 
+    if (this.isProcessing) {
+      return;  // Exit if already processing
+    }
+    this.isProcessing = true;
     // const index = 1;
     this.firestoreService.addTimelog(name, day, data)
       .then(() => {
         this.toaster.showSuccess('Data added successfully');
         this.visible = false;
+        this.isProcessing = false;
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
         console.error('Error adding data: ', error);
+        this.isProcessing = false;
+
       });
   }
 
@@ -338,16 +346,21 @@ export class TimeLogsSheetComponent implements OnInit {
       startTime: time,
       description: this.description
     };
-
+    if (this.isProcessing) {
+      return;  // Exit if already processing
+    }
+    this.isProcessing = true;
     console.log("this is value:", data, day, name, this.dateOf);
     this.firestoreService.updateTimelog(name, day, data, this.index)
       .then(() => {
-        this.toaster.showSuccess('Deleted successfully');
+        this.toaster.showSuccess('Updated successfully');
         this.visible = false;
+        this.isProcessing = false;
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
         console.error('Error adding data: ', error);
+        this.isProcessing = false;
       });
 
 
