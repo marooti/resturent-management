@@ -51,12 +51,6 @@ export class TimeLogsSheetComponent implements OnInit {
   rangeDates: any;
   @ViewChild('htmlData') el!: ElementRef;
 
-  employeeDropdown: any[] = [
-    { name: 'Muhammad Imran' },
-    { name: 'Awais Arshad' },
-    { name: 'Hassan Subhani' },
-  ];
-
   issueName: any;
 
   visible: boolean = false;
@@ -72,8 +66,8 @@ export class TimeLogsSheetComponent implements OnInit {
   processedData: any[] = [];
   grandTotalTime: any;
   apiData: any;
-
-
+  updateBtn = false;
+  index: any;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     const today = new Date();
     this.dateOf = today;
@@ -85,37 +79,34 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   ngOnInit() {
+    const today = new Date();
+    const lastSunday = new Date(today.setDate(today.getDate() - today.getDay())); // Last week's Sunday
+    const lastFriday = new Date(lastSunday);
+    lastFriday.setDate(lastSunday.getDate() + 5); // Last week's Friday
+
+    this.rangeDates = [lastSunday, lastFriday]; // Set rangeDat
+    console.log("this is range:", this.rangeDates);
+
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData)
-    console.log("this is localhost data :", this.profileData.username);
-    this.fetchTimelogData(this.profileData.username);
     this.getproducts();
+    this.fetchTimelogData(this.profileData.username);
   }
 
   searchRecord() {
-    console.log("this is date for you:", this.rangeDates);
 
-    // Define options for formatting dates
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
 
-    // Format start and end dates
     const startDate = this.rangeDates[0].toLocaleDateString('en-US', options);
     const endDate = this.rangeDates[1].toLocaleDateString('en-US', options);
 
-    console.log("Start Date:", startDate, "End Date", endDate);
-    console.log("this is api data :", this.apiData);
-
-    // Convert formatted dates back to Date objects
     const start = new Date(this.rangeDates[0]);
     const end = new Date(this.rangeDates[1]);
 
-    // Define the type for the filtered data
     type ApiData = { [key: string]: { data: any[] } };
 
-    // Ensure apiData has the correct type
     const apiData = this.apiData as ApiData;
 
-    // Filter API data
     const filteredData = Object.keys(apiData)
       .map(key => ({
         date: new Date(key),
@@ -127,7 +118,7 @@ export class TimeLogsSheetComponent implements OnInit {
         return acc;
       }, {} as ApiData);
 
-    console.log("Filtered Data:", filteredData);
+
     this.processTimelogData(filteredData);
     this.processTimelo(filteredData);
   }
@@ -135,14 +126,13 @@ export class TimeLogsSheetComponent implements OnInit {
   getproducts() {
     this.projects$.subscribe(data => {
       this.issueName = data;
-      console.log('Projects:', data);
     });
   }
 
   getAllUserProfiles() {
     this.firestoreService.getAllUserProfiles().subscribe(
       (data) => {
-        console.log('Timelog data:', data); // Log data for verification
+
         this.processTimelogData(data);
       });
   }
@@ -152,12 +142,33 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   fetchTimelogData(name: string) {
-    this.firestoreService.getTimelog(name)
+    this.visible = false;
+    this.updateBtn = false;
+    this.issueNameVlaue = null;
+    this.timeSpent = null;
+    this.startTime = null;
+    this.description = null;
+
+    this.firestoreService.getTimelog(this.profileData.username)
       .then((data) => {
-        console.log('Timelog data:', data); // Log data for verification
         this.apiData = data;
-        this.processTimelogData(data);
-        this.processTimelo(data);
+        const start = new Date(this.rangeDates[0]);
+        const end = new Date(this.rangeDates[1]);
+        type ApiData = { [key: string]: { data: any[] } };
+        const apiData = this.apiData as ApiData;
+        const filteredData = Object.keys(apiData)
+          .map(key => ({
+            date: new Date(key),
+            data: apiData[key].data
+          }))
+          .filter(item => item.date >= start && item.date <= end)
+          .reduce((acc: ApiData, item) => {
+            acc[item.date.toDateString()] = { data: item.data };
+            return acc;
+          }, {} as ApiData);
+        this.apiData = filteredData;
+        this.processTimelogData(this.apiData);
+        this.processTimelo(this.apiData);
       })
       .catch((error) => {
         console.error('Error fetching timelog data:', error);
@@ -166,43 +177,34 @@ export class TimeLogsSheetComponent implements OnInit {
 
   processTimelogData(data: any) {
     this.weeklyData = {};
-
-    // Convert object entries to an array and sort by date
     const sortedEntries = Object.entries(data).sort(([dayA, valueA], [dayB, valueB]) => {
       const dateA = new Date(dayA);
       const dateB = new Date(dayB);
-      return dateA.getTime() - dateB.getTime(); // Sort in ascending order
+      return dateA.getTime() - dateB.getTime();
     });
 
-    // Iterate over sorted entries to process the data
     for (const [day, value] of sortedEntries) {
       this.weeklyData[day] = (value as TimelogData).data || [];
     }
 
     this.days = Object.keys(this.weeklyData);
-    console.log('Processed weeklyData:', this.weeklyData);
-    console.log('Days:', this.days);
   }
 
   processTimelo(data: any) {
-    this.processedData = []; // Initialize the processed data array
+    this.processedData = [];
 
-    let grandTotalHours = 0; // Initialize variables for total hours and minutes
+    let grandTotalHours = 0;
     let grandTotalMinutes = 0;
 
-    // Iterate through each key in the data (e.g., "Mon, Sep 09, 2024")
     for (const date in data) {
       if (data.hasOwnProperty(date)) {
         const entry = data[date];
 
-        // Calculate the total spent time for the day
         let totalHours = 0;
         let totalMinutes = 0;
 
         entry.data.forEach((log: any) => {
           const timeString = log.spentTame.toLowerCase();
-
-          // Match for hours and minutes
           const hourMatch = timeString.match(/(\d+)h/);
           const minuteMatch = timeString.match(/(\d+)m/);
 
@@ -214,68 +216,55 @@ export class TimeLogsSheetComponent implements OnInit {
           }
         });
 
-        // Convert total minutes to hours if over 60
         totalHours += Math.floor(totalMinutes / 60);
         totalMinutes = totalMinutes % 60;
-
-        // Update grand totals
         grandTotalHours += totalHours;
         grandTotalMinutes += totalMinutes;
-
-        // Format total time as 'Xh Ym'
         const totalSpendTime = `${totalHours}h ${totalMinutes}m`;
 
-        // Create a new object for the processed data format
+
         const formattedEntry = {
           date: date,
-          totalSpendTime: totalSpendTime.trim(), // Trim to remove any extra spaces
+          totalSpendTime: totalSpendTime.trim(),
           data: entry.data,
         };
 
-        // Push the formatted entry to the processed data array
         this.processedData.push(formattedEntry);
       }
     }
 
-    // Convert grand total minutes to hours if over 60
     grandTotalHours += Math.floor(grandTotalMinutes / 60);
     grandTotalMinutes = grandTotalMinutes % 60;
 
     const grandTotalTime = `${grandTotalHours}h ${grandTotalMinutes}m`;
-    console.log('Processed Timelog Data:', this.processedData);
-    console.log('Total time spent for all entries:', grandTotalTime);
     this.grandTotalTime = grandTotalTime;
-    // Assign the processed data to a variable or do any further processing here
   }
 
 
   addTimelog() {
-    console.log("this is value for ", this.startTime, this.description, this.dateOf, this.employeeName, this.issueNameVlaue, this.timeSpent,)
-
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
-    console.log("This is date format:", formattedDate);
-    console.log("this is date formet:", this.dateOf);
+    const time = this.startTime.toTimeString().split(' ')[0];
     const day = formattedDate;
     const name = this.profileData.username;
     const data = {
-      date: this.dateOf,
+      date: formattedDate,
       issueName: this.issueNameVlaue,
       spentTame: this.timeSpent,
-      startTime: this.startTime,
+      startTime: time,
       description: this.description
     };
     for (const [key, value] of Object.entries(data)) {
       if (value === null || value === undefined || value.toString().trim() === '') {
-        console.log(`Warning: ${key} is ${value}`);
-        this.toaster.showError('Incorrect Required');
+        this.toaster.showError('Please enter the values in the required fields.');
         return;
       }
     }
-    console.log("this is finally responce:", data);
+
+    // const index = 1;
     this.firestoreService.addTimelog(name, day, data)
       .then(() => {
-        console.log('Data added successfully');
+        this.toaster.showSuccess('Data added successfully');
         this.visible = false;
         this.fetchTimelogData(this.profileData.username);
       })
@@ -302,5 +291,112 @@ export class TimeLogsSheetComponent implements OnInit {
         }
       });
     }
+  }
+
+
+  // DeleteIndexValue
+  deleteIndex(entry: any, index: any) {
+    console.log("this vlaue:", entry, "jdd", index);
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
+    const day = entry.date;
+    const name = this.profileData.username;
+    const data = {
+      date: entry.date,
+      issueName: entry.issueName,
+      spentTame: entry.spentTame,
+      startTime: entry.startTime,
+      description: "muhammad imran"
+    };
+
+    console.log("this is value:", data, day, name);
+    this.firestoreService.daleteTimelog(name, day, data, index)
+      .then(() => {
+        this.toaster.showSuccess('Deleted successfully');
+        this.visible = false;
+        this.fetchTimelogData(this.profileData.username);
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
+
+  }
+
+  updateUI() {
+
+    const time = this.startTime.toTimeString().split(' ')[0];
+    console.log("spent Time", time);
+    // UpdateIndexValue
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
+    const day = formattedDate;
+    const name = this.profileData.username;
+    const data = {
+      date: formattedDate,
+      issueName: this.issueNameVlaue,
+      spentTame: this.timeSpent,
+      startTime: time,
+      description: this.description
+    };
+
+    console.log("this is value:", data, day, name, this.dateOf);
+    this.firestoreService.updateTimelog(name, day, data, this.index)
+      .then(() => {
+        this.toaster.showSuccess('Deleted successfully');
+        this.visible = false;
+        this.fetchTimelogData(this.profileData.username);
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
+
+
+
+  }
+
+  update(data: any, index: any) {
+    const timeString = data?.startTime;
+    console.log("this vlaue:", data, "jdd", index, "spent Time", this.startTime);
+    this.index = index;
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, seconds);
+    const dateof = new Date(data.date);
+    console.log("this is value:", date, "this su :", dateof);
+    this.startTime = date;
+    this.issueNameVlaue = data.issueName;
+    this.timeSpent = data.spentTame;
+    this.description = data.description;
+    this.dateOf = dateof;
+    this.visible = true;
+    this.updateBtn = true;
+  }
+
+  // UpdateIndexValue
+  updateIndex(entry: any, index: any) {
+    console.log("this vlaue:", entry, "jdd", index);
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
+    const day = entry.date;
+    const name = this.profileData.username;
+    const data = {
+      date: entry.date,
+      issueName: entry.issueName,
+      spentTame: entry.spentTame,
+      startTime: entry.startTime,
+      description: "muhammad imran"
+    };
+
+    console.log("this is value:", data, day, name);
+    this.firestoreService.updateTimelog(name, day, data, index)
+      .then(() => {
+        this.toaster.showSuccess('Deleted successfully');
+        this.visible = false;
+        this.fetchTimelogData(this.profileData.username);
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
+
   }
 }

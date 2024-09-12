@@ -37,6 +37,72 @@ export class FirestoreService {
     }
   }
 
+  async daleteTimelog(name: string, day: string, data: any, indexToRemove?: number): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      if (typeof indexToRemove === 'number') {
+        // Remove the specific index if indexToRemove is provided
+        existingData[day]['data'].splice(indexToRemove, 1);
+      } else {
+        // Otherwise, append new data to the existing date
+        existingData[day]['data'].push(data);
+      }
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding or updating document: ', error);
+    }
+  }
+
+
+  async updateTimelog(
+    name: string,
+    day: string,
+    data: any,
+    indexToUpdate?: number
+  ): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      if (typeof indexToUpdate === 'number') {
+        // Update the specific index if indexToUpdate is provided
+        existingData[day]['data'][indexToUpdate] = data;
+      } else {
+        // Append new data if no index is provided
+        existingData[day]['data'].push(data);
+      }
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding or updating document: ', error);
+    }
+  }
+
   async getTimelog(name: string): Promise<any> {
     const docRef = doc(this.firestore, this.collectionName, name);
 

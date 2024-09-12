@@ -53,12 +53,12 @@
                             inputId="range">
                         </p-calendar> -->
                     </div>
-                    <div class="pl-3">
+                    <!-- <div class="pl-3">
                         <button type="button"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
                             Search
                         </button>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
@@ -70,28 +70,32 @@
             <p-table scrollHeight="flex" [value]="[days]" class="p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
                     <tr class="p-2 bg-[#349ce4]">
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
-                            Time and Date</th>
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
-                            Time and Date</th>
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
-                            Time and Date</th>
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">Checking
-                            Time and Date</th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            Name
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            Date
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            Check-In
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            Check-Out
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body">
-                    <tr *ngFor="let day of days">
-                        <td class="w-[300px !important]">
+                    <tr *ngFor="let day of days" class="border-b-2">
+                        <td class="w-[300px !important] p-3">
                             {{day.name}}
                         </td>
-                        <td class="w-[300px !important]">
+                        <td class="w-[300px !important] p-3">
                             {{day.date}}
                         </td>
-                        <td class="w-[300px !important]">
-                            {{day.checkInTime}}
+                        <td class="w-[300px !important] p-3">
+                            {{day.checkInTime }}
                         </td>
-                        <td class="w-[300px !important]">
+                        <td class="w-[300px !important] p-3">
                             {{day.checkOutTime}}
                         </td>
                     </tr>

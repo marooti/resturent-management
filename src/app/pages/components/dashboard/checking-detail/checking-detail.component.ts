@@ -8,7 +8,7 @@ import { TableModule } from 'primeng/table';
 import { ProjectSidebarComponent } from "../../project-sidebar/project-sidebar.component";
 import { FirestoreService } from '@services/firestore.service';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from '@services/toastr.service';
 
 @Component({
   selector: 'app-checking-detail',
@@ -26,7 +26,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './checking-detail.component.scss'
 })
 export class CheckingDetailComponent implements OnInit {
-
   checking: any[] = [
     { date: 12 - 12 - 24, time: 12 - 50 }
   ];
@@ -34,15 +33,17 @@ export class CheckingDetailComponent implements OnInit {
   checkingstatus: boolean = false;
   days: any[] = []
   profileData: any;
-
+  todayDate: any;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
 
   }
   ngOnInit() {
     this.locathostData = localStorage.getItem('userProfile');
-    this.profileData = JSON.parse(this.locathostData)
-    console.log("this is localhost data :", this.profileData.username);
+    this.profileData = JSON.parse(this.locathostData);
     this.checking;
+    const currentDate = new Date();
+    const time = currentDate.toTimeString().split(' ')[0];
+    this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
   }
 
@@ -74,12 +75,9 @@ export class CheckingDetailComponent implements OnInit {
 
   checkin() {
     const currentDate = new Date();
-    const time = currentDate.toTimeString();
+    const time = currentDate.toTimeString().split(' ')[0];
     const date = currentDate.toDateString();
-    this.getlocation();
-    console.log("username :", this.profileData.username);
-    console.log('checkin Time, timezone', time);
-    console.log('checkin Day , Date:', date);
+
     this.checkingstatus = true;
     const data = {
       checkInTime: time,
@@ -87,11 +85,10 @@ export class CheckingDetailComponent implements OnInit {
       checkOutTime: '',
       date: date,
     }
-
     this.firestoreService.checkin(this.profileData.username, date, data)
       .then(() => {
-        console.log('Data added successfully');
-
+        this.toaster.showSuccess('Successfully Check-In');
+        this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
         console.error('Error adding data: ', error);
@@ -100,14 +97,15 @@ export class CheckingDetailComponent implements OnInit {
 
   checkout() {
     const currentDate = new Date();
-    const time = currentDate.toTimeString()
-    const date = currentDate.toDateString()
-    console.log("username :", this.profileData.username);
-    console.log('checkout Time, timezone', time);
-    console.log('checkout Day , Date:', date);
-    this.checkingstatus = false;
+    const time = currentDate.toTimeString().split(' ')[0];
+    const date = currentDate.toDateString();
+    const choutTime = this.days.find(product => product.date == date);
+    if (choutTime?.checkOutTime) {
+      this.toaster.showError('you are already checkout');
+      return;
+    }
     const data = {
-      checkInTime: time,
+      checkInTime: choutTime?.checkInTime,
       name: this.profileData.name,
       checkOutTime: time,
       date: date,
@@ -115,7 +113,7 @@ export class CheckingDetailComponent implements OnInit {
 
     this.firestoreService.checkOut(this.profileData.username, date, data)
       .then(() => {
-        console.log('Data added successfully');
+        this.toaster.showError('Successfully Checkout');
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
@@ -126,29 +124,29 @@ export class CheckingDetailComponent implements OnInit {
   fetchTimelogData(name: string) {
     this.firestoreService.getAttendanceRecord(name)
       .then((data) => {
-        console.log('Timelog data:', data);
-
-        // Transform the data into an array format
         const transformedData = this.transformTimelogData(data);
-
-        // Set the transformed data to the component property
         this.days = transformedData;
-        console.log("this is days required:", this.days);
+        const choutTime = this.days.find(product => product.date == this.todayDate);
+        if (choutTime) {
+          this.checkingstatus = true;
+        }
+        else {
+          this.checkingstatus = false;
+        }
+
       })
       .catch((error) => {
         console.error('Error fetching timelog data:', error);
       });
   }
 
-  // Helper function to transform the timelog data
   transformTimelogData(data: any): any[] {
     const result: any[] = [];
 
-    // Iterate over the keys (dates)
     Object.keys(data).forEach((date) => {
-      const dayData = data[date].data; // Assuming 'data' holds the array of log entries
+      const dayData = data[date].data;
 
-      // Push each log entry into the result array
+
       dayData.forEach((entry: any) => {
         result.push({
           name: entry.name,
@@ -159,7 +157,6 @@ export class CheckingDetailComponent implements OnInit {
       });
     });
 
-    console.log("this is required:", result);
     return result;
   }
 
