@@ -113,7 +113,7 @@ export class CheckingDetailComponent implements OnInit {
 
     this.firestoreService.checkOut(this.profileData.username, date, data)
       .then(() => {
-        this.toaster.showError('Successfully Checkout');
+        this.toaster.showSuccess('Successfully Checkout');
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
