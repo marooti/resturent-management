@@ -29,6 +29,7 @@ export class CheckingDetailComponent implements OnInit {
   checking: any[] = [
     { date: 12 - 12 - 24, time: 12 - 50 }
   ];
+  loading: boolean = false;
   locathostData: any;
   checkingstatus: boolean = false;
   days: any[] = []
@@ -74,6 +75,7 @@ export class CheckingDetailComponent implements OnInit {
   }
 
   checkin() {
+    this.loading = true;
     const currentDate = new Date();
     const time = currentDate.toTimeString().split(' ')[0];
     const date = currentDate.toDateString();
@@ -88,14 +90,17 @@ export class CheckingDetailComponent implements OnInit {
     this.firestoreService.checkin(this.profileData.username, date, data)
       .then(() => {
         this.toaster.showSuccess('Successfully Check-In');
+        this.loading = false;
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
+        this.loading = false;
         console.error('Error adding data: ', error);
       });
   }
 
   checkout() {
+    this.loading = true;
     const currentDate = new Date();
     const time = currentDate.toTimeString().split(' ')[0];
     const date = currentDate.toDateString();
@@ -114,14 +119,20 @@ export class CheckingDetailComponent implements OnInit {
     this.firestoreService.checkOut(this.profileData.username, date, data)
       .then(() => {
         this.toaster.showSuccess('Successfully Checkout');
+        this.loading = false;
+
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
+        this.loading = false;
+
         console.error('Error adding data: ', error);
       });
   }
 
   fetchTimelogData(name: string) {
+    this.loading = true;
+
     this.firestoreService.getAttendanceRecord(name)
       .then((data) => {
         const transformedData = this.transformTimelogData(data);
@@ -133,9 +144,13 @@ export class CheckingDetailComponent implements OnInit {
         else {
           this.checkingstatus = false;
         }
+        this.loading = false;
+
 
       })
       .catch((error) => {
+        this.loading = false;
+
         console.error('Error fetching timelog data:', error);
       });
   }

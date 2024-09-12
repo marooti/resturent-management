@@ -15,7 +15,7 @@ import { user } from '@angular/fire/auth';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-
+  loading: boolean = false;
   loginForm: FormGroup;
 
   constructor(
@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   fetchTimelogData(name: string) {
+    this.loading = true;
     this.firestoreService.getuserProfile(name)
       .then((data) => {
         let password = this.loginForm.controls['password'].value;
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit {
           this.toaster.showSuccess('Login Successful');
           this.router.navigate([this.routeService.dashboard]);
           console.log("this login suucessfully:");
-
+          this.loading = false;
           localStorage.setItem('userProfile', JSON.stringify(data));
         }
         else {

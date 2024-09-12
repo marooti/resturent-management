@@ -1,4 +1,4 @@
-<div class="w-full relative h-full">
+<div class="w-full relative h-full" [ngClass]="{'dull-bg': loading}">
     <div class="h-full">
         <!-- Table Header -->
         <div class="header-section flex justify-content-between align-items-center p-2 border-b-2">
@@ -71,19 +71,19 @@
                 <ng-template pTemplate="header">
                     <tr class="p-2 bg-[#349ce4]">
                         <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
-                           <span class="font-normal text-md">Name</span> 
+                            <span class="font-normal text-md">Name</span>
                         </th>
                         <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
-                           <span class="font-normal text-md">Date</span> 
-                            
+                            <span class="font-normal text-md">Date</span>
+
                         </th>
                         <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
-                           <span class="font-normal text-md">Check-In</span> 
-                            
+                            <span class="font-normal text-md">Check-In</span>
+
                         </th>
                         <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
-                           <span class="font-normal text-md">Check-Out</span> 
-                            
+                            <span class="font-normal text-md">Check-Out</span>
+
                         </th>
                     </tr>
                 </ng-template>

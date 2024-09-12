@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { CheckingDetailComponent } from "../checking-detail/checking-detail.component";
 import { ToastrService } from '@services/toastr.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 interface TimelogEntry {
   date: any; // Use appropriate type if you know it (e.g., Date or Timestamp)
   issueName: string;
@@ -37,13 +38,16 @@ interface WeeklyData {
     CalendarModule,
     FormsModule,
     CommonModule,
+    ProgressSpinnerModule,
     CheckingDetailComponent
   ],
   templateUrl: './time-logs-sheet.component.html',
   styleUrls: ['./time-logs-sheet.component.scss']
 })
 export class TimeLogsSheetComponent implements OnInit {
+  errorMessage: string = '';
   todayDate: any;
+  loading: boolean = false;
   dayName: any;
   daysOfWeek: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   weeklyData: { [key: string]: any[] } = {};
@@ -144,6 +148,7 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   fetchTimelogData(name: string) {
+    this.loading = true;
     this.visible = false;
     this.updateBtn = false;
     this.issueNameVlaue = null;
@@ -169,10 +174,12 @@ export class TimeLogsSheetComponent implements OnInit {
             return acc;
           }, {} as ApiData);
         this.apiData = filteredData;
+        this.loading = false;
         this.processTimelogData(this.apiData);
         this.processTimelo(this.apiData);
       })
       .catch((error) => {
+        this.loading = false;
         console.error('Error fetching timelog data:', error);
       });
   }
@@ -244,6 +251,11 @@ export class TimeLogsSheetComponent implements OnInit {
 
 
   addTimelog() {
+    // Call the separate validation function
+    if (!this.validateTimeSpent()) {
+      return; // Exit if validation fails
+    }
+    this.loading = true;
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
     const time = this.startTime?.toTimeString()?.split(' ')[0];
@@ -273,13 +285,38 @@ export class TimeLogsSheetComponent implements OnInit {
         this.toaster.showSuccess('Data added successfully');
         this.visible = false;
         this.isProcessing = false;
+        this.loading = false;
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
         console.error('Error adding data: ', error);
         this.isProcessing = false;
+        this.loading = false;
 
       });
+  }
+
+  validateTimeSpent(): boolean {
+    // Updated regex to accept "h", "m", "h m", or "m"
+    const timeRegex = /^((1[01]|[0-8])h\s*)?([0-5]?[0-8]m)?$/;
+
+    if (!this.timeSpent) {
+      this.toaster.showError('Time is required.');
+      this.loading = false;
+      return false;
+    } else if (!timeRegex.test(this.timeSpent.trim())) {
+      this.toaster.showError('Invalid format. Please enter time like "12h 30m", "2h", or "30m".');
+      this.loading = false;
+      return false;
+    } else {
+      const hours = this.timeSpent.match(/(\d+)h/);
+      if (hours && +hours[1] > 8) {
+        this.toaster.showError('Time cannot exceed 12 hours.');
+        this.loading = false;
+        return false;
+      }
+    }
+    return true; // Valid input
   }
 
 
@@ -305,6 +342,7 @@ export class TimeLogsSheetComponent implements OnInit {
 
   // DeleteIndexValue
   deleteIndex(entry: any, index: any) {
+    this.loading = true;
     console.log("this vlaue:", entry, "jdd", index);
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
@@ -323,16 +361,18 @@ export class TimeLogsSheetComponent implements OnInit {
       .then(() => {
         this.toaster.showSuccess('Deleted successfully');
         this.visible = false;
+        this.loading = false;
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
+        this.loading = false;
         console.error('Error adding data: ', error);
       });
 
   }
 
   updateUI() {
-
+    this.loading = true;
     const time = this.startTime.toTimeString().split(' ')[0];
     console.log("spent Time", time);
     // UpdateIndexValue
@@ -357,11 +397,13 @@ export class TimeLogsSheetComponent implements OnInit {
         this.toaster.showSuccess('Updated successfully');
         this.visible = false;
         this.isProcessing = false;
+        this.loading = false;
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
         console.error('Error adding data: ', error);
         this.isProcessing = false;
+        this.loading = false;
       });
 
 
@@ -386,31 +428,5 @@ export class TimeLogsSheetComponent implements OnInit {
     this.updateBtn = true;
   }
 
-  // UpdateIndexValue
-  updateIndex(entry: any, index: any) {
-    console.log("this vlaue:", entry, "jdd", index);
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
-    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
-    const day = entry.date;
-    const name = this.profileData.username;
-    const data = {
-      date: entry.date,
-      issueName: entry.issueName,
-      spentTame: entry.spentTame,
-      startTime: entry.startTime,
-      description: "muhammad imran"
-    };
 
-    console.log("this is value:", data, day, name);
-    this.firestoreService.updateTimelog(name, day, data, index)
-      .then(() => {
-        this.toaster.showSuccess('Deleted successfully');
-        this.visible = false;
-        this.fetchTimelogData(this.profileData.username);
-      })
-      .catch(error => {
-        console.error('Error adding data: ', error);
-      });
-
-  }
 }

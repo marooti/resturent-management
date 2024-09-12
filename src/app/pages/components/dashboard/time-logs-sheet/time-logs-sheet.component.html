@@ -1,4 +1,4 @@
-<div class="w-full relative h-full">
+<div class="w-full relative h-full" [ngClass]="{'dull-bg': loading}">
     <div class="h-full">
         <!-- Table Header -->
         <div class="header-section flex justify-content-between align-items-center p-2 border-b-2">
@@ -43,9 +43,9 @@
         <div class="header-section flex justify-content-between align-items-center p-2">
             <div class="header-title flex justify-content-between w-[100%]">
                 <div class="flex w-[100%] justify-end">
-                    <div class="w-[200px]">
+                    <div class="border-[0.5px] rounded-md">
                         <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
-                            inputId="range">
+                            [showIcon]="true" inputId="range">
                         </p-calendar>
                     </div>
                     <div class="pl-3">
@@ -147,14 +147,14 @@
         </div> -->
         <div class="align-items-center mt-3">
             <label class="text-sm ">Project <span class="text-red-500">*</span></label>
-            <div class="mt-1">
+            <div class="mt-1 ">
                 <p-dropdown [options]="issueName" [(ngModel)]="issueNameVlaue" optionValue="name" optionLabel="name"
                     placeholder="Select a Project" />
             </div>
         </div>
         <div class="align-items-center mt-3">
             <label class="text-sm ">Date <span class="text-red-500">*</span></label>
-            <div class="mt-1">
+            <div class="mt-1 border-[0.5px] rounded-md">
                 <p-calendar [(ngModel)]="dateOf" [maxDate]="dateTime" [disabled]="updateBtn" [readonlyInput]="true"
                     inputId="range">
                 </p-calendar>
@@ -164,13 +164,17 @@
         <div class="align-items-center mt-3">
             <label class="text-sm ">Time Spent <span class="text-red-500">*</span></label>
             <div class="mt-1">
-                <input type="text" pInputText [(ngModel)]="timeSpent" placeholder="Enter your time" />
+                <input type="text" pInputText [(ngModel)]="timeSpent" 
+                    placeholder="Enter your time" />
             </div>
-            <label class="text-xs ">Enter a Duration (e.g. 3m 12h)</label>
+            <label class="text-xs ">Enter a Duration (e.g. 12h 3m )</label>
+            <div *ngIf="errorMessage" class="text-danger">
+                <small>{{ errorMessage }}</small>
+            </div>
         </div>
         <div class="align-items-center mt-3">
             <label class="text-sm ">Start Time <span class="text-red-500">*</span></label>
-            <div class="mt-1">
+            <div class="mt-1 border-[0.5px] rounded-md">
                 <p-calendar inputId="calendar-timeonly" [(ngModel)]="startTime" hourFormat="12" class="w-[100%]"
                     placeholder="Enter your start time" [timeOnly]="true"></p-calendar>
             </div>
