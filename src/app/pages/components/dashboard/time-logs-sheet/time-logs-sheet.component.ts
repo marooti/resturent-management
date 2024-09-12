@@ -50,7 +50,7 @@ export class TimeLogsSheetComponent implements OnInit {
   days: string[] = [];
   rangeDates: any;
   @ViewChild('htmlData') el!: ElementRef;
-
+  dateTime = new Date();
   issueName: any;
 
   visible: boolean = false;
@@ -70,6 +70,7 @@ export class TimeLogsSheetComponent implements OnInit {
   index: any;
   isProcessing: boolean = false;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
+    this.dateTime.setDate(this.dateTime.getDate() + 0);
     const today = new Date();
     this.dateOf = today;
     this.todayDate = today.toDateString();

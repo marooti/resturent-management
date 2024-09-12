@@ -20,10 +20,10 @@
                         </button> -->
 
                         <button type="button" (click)="showdialog()"
-                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Time
+                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:hover:bg-[#1c4c74] dark:focus:bg-[#1c4c74] h-[35px]">Time
                             Log</button>
                         <button type="button" (click)="onSelectionChange()"
-                            class="text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  rounded-lg text-sm px-3 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
+                            class="text-gray-400 bg-white  focus:outline-none hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74]  rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
                             <svg class="w-11 h-5 text-gray-400 dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -50,7 +50,7 @@
                     </div>
                     <div class="pl-3">
                         <button type="button" (click)="searchRecord()"
-                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
+                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:hover:bg-[#1c4c74] dark:focus:bg-[#1c4c74] h-[35px]">
                             Search
                         </button>
                     </div>
@@ -67,7 +67,10 @@
                     <tr class="p-2 ">
                         <div>
                             <th *ngFor="let day of days" class="bg-[#1c4c74] p-3 text-white w-[300px]"
-                                style="min-width: 300px !important; max-width: 300px !important;">{{ day }}</th>
+                                style="min-width: 300px !important; max-width: 300px !important;">
+
+                                <span class="text-md font-normal">{{day}}</span>
+                            </th>
                         </div>
 
                     </tr>
@@ -152,7 +155,8 @@
         <div class="align-items-center mt-3">
             <label class="text-sm ">Date <span class="text-red-500">*</span></label>
             <div class="mt-1">
-                <p-calendar [(ngModel)]="dateOf" [disabled]="updateBtn" [readonlyInput]="true" inputId="range">
+                <p-calendar [(ngModel)]="dateOf" [maxDate]="dateTime" [disabled]="updateBtn" [readonlyInput]="true"
+                    inputId="range">
                 </p-calendar>
             </div>
         </div>
@@ -167,7 +171,7 @@
         <div class="align-items-center mt-3">
             <label class="text-sm ">Start Time <span class="text-red-500">*</span></label>
             <div class="mt-1">
-                <p-calendar inputId="calendar-timeonly" [(ngModel)]="startTime" class="w-[100%]"
+                <p-calendar inputId="calendar-timeonly" [(ngModel)]="startTime" hourFormat="12" class="w-[100%]"
                     placeholder="Enter your start time" [timeOnly]="true"></p-calendar>
             </div>
         </div>
