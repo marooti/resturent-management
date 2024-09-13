@@ -167,11 +167,13 @@ export class CheckingDetailComponent implements OnInit {
           name: entry.name,
           date: entry.date,
           checkInTime: entry.checkInTime,
-          checkOutTime: entry.checkOutTime
+          checkOutTime: entry.checkOutTime,
+          location: entry.location,
         });
       });
     });
 
+    console.log("Check in detail:", result);
     return result;
   }
 

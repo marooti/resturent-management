@@ -85,6 +85,10 @@
                             <span class="font-normal text-md">Check-Out</span>
 
                         </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            <span class="font-normal text-md">Location</span>
+
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body">
@@ -100,6 +104,9 @@
                         </td>
                         <td class="w-[300px !important] p-3">
                             {{day.checkOutTime}}
+                        </td>
+                        <td class="w-[300px !important] p-3">
+                        {{day.location}}
                         </td>
                     </tr>
                 </ng-template>
