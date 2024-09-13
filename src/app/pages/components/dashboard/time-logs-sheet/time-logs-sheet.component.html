@@ -23,7 +23,7 @@
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:hover:bg-[#1c4c74] dark:focus:bg-[#1c4c74] h-[35px]">Time
                             Log</button>
                         <button type="button" (click)="onSelectionChange()"
-                            class="text-gray-400 bg-white  focus:outline-none hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74]  rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
+                            class="text-gray-400 border-2  focus:outline-none  rounded-lg text-sm px-3 me-2 h-[35px]">
                             <svg class="w-11 h-5 text-gray-400 dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -164,8 +164,7 @@
         <div class="align-items-center mt-3">
             <label class="text-sm ">Time Spent <span class="text-red-500">*</span></label>
             <div class="mt-1">
-                <input type="text" pInputText [(ngModel)]="timeSpent" 
-                    placeholder="Enter your time" />
+                <input type="text" pInputText [(ngModel)]="timeSpent" placeholder="Enter your time" />
             </div>
             <label class="text-xs ">Enter a Duration (e.g. 12h 3m )</label>
             <div *ngIf="errorMessage" class="text-danger">
@@ -207,8 +206,6 @@
     </div>
 
 </p-dialog>
-
-
 
 <div class="container m-auto " style="display: none;">
     <div class="row m-auto">
@@ -259,11 +256,11 @@
                                         </div>
                                         <div class="flex align-items-center mb-1">
                                             <div>
-                                                <span class="text-color pr-2 text-sm ">Total Hours :</span>
+                                                <span class="text-color pr-2 text-sm ">Date Range :</span>
                                             </div>
                                             <span class="text-color text-sm">
                                                 <ng-container>
-                                                    40h
+                                                    {{this.rangeDates[0] | date:'mediumDate'}} - {{this.rangeDates[1] | date:'mediumDate'}}
                                                 </ng-container> </span>
                                         </div>
 
