@@ -103,7 +103,7 @@
                             {{day.checkInTime }}
                         </td>
                         <td class="w-[300px !important] p-3">
-                            {{day.checkOutTime}}
+                            {{day.checkOutTime ? day.checkOutTime : '❌'}}
                         </td>
                         <td class="w-[300px !important] p-3">
                         {{day.location}}

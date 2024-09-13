@@ -107,6 +107,7 @@ export class CheckingDetailComponent implements OnInit {
     const choutTime = this.days.find(product => product.date == date);
     if (choutTime?.checkOutTime) {
       this.toaster.showError('you are already checkout');
+      this.loading = false;
       return;
     }
     const data = {
