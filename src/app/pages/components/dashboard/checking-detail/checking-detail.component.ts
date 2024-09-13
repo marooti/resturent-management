@@ -64,6 +64,11 @@ getlocation(){
         },
         (error: GeolocationPositionError): void => {
             console.error("Error getting location:", error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 1000,
+          maximumAge: 0
         }
     );
 } else {
