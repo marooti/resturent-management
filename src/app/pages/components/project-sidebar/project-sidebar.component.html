@@ -2,22 +2,11 @@
     class="bg-[#1c4c74] text-white h-screen flex flex-col overflow-hidden h-[calc(100vh-80px)]">
 
     <!-- Header -->
-    <header class="flex items-center justify-between p-4 border-b border-gray-700 overflow-hidden">
-        <div class="flex items-center cursor-pointer" *ngIf="sidebarOpen">
-            <span class="text-[16px] font-medium">Tempo</span>
-        </div>
+    <header class="flex items-center justify-center p-2 border-b border-gray-700 overflow-hidden">
+      
         <!-- (click)="toggleSidebar()" -->
         <button class="text-gray-400 focus:outline-none">
-
-            <svg class="h-6 w-6 text-white transition-transform duration-300" [ngClass]="{'rotate-180': sidebarOpen}"
-                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" />
-                <line x1="20" y1="6" x2="9" y2="6" />
-                <line x1="20" y1="12" x2="13" y2="12" />
-                <line x1="20" y1="18" x2="9" y2="18" />
-                <path d="M4 8l4 4l-4 4" />
-            </svg>
+        <img src="../../../../assets/figma.png" alt="" class="w-[35px] h-[30px]">
         </button>
     </header>
 

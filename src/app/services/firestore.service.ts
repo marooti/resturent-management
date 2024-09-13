@@ -37,6 +37,72 @@ export class FirestoreService {
     }
   }
 
+  async daleteTimelog(name: string, day: string, data: any, indexToRemove?: number): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      if (typeof indexToRemove === 'number') {
+        // Remove the specific index if indexToRemove is provided
+        existingData[day]['data'].splice(indexToRemove, 1);
+      } else {
+        // Otherwise, append new data to the existing date
+        existingData[day]['data'].push(data);
+      }
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding or updating document: ', error);
+    }
+  }
+
+
+  async updateTimelog(
+    name: string,
+    day: string,
+    data: any,
+    indexToUpdate?: number
+  ): Promise<void> {
+    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      if (typeof indexToUpdate === 'number') {
+        // Update the specific index if indexToUpdate is provided
+        existingData[day]['data'][indexToUpdate] = data;
+      } else {
+        // Append new data if no index is provided
+        existingData[day]['data'].push(data);
+      }
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding or updating document: ', error);
+    }
+  }
+
   async getTimelog(name: string): Promise<any> {
     const docRef = doc(this.firestore, this.collectionName, name);
 
@@ -121,4 +187,55 @@ export class FirestoreService {
     }
 
   }
+
+  async checkOut(name: string, day: string, data: any): Promise<void> {
+    const docRef = doc(this.firestore, "attendancePortal", name); // Use `name` as `id`
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      // Ensure day and date exist in the data structure
+      if (!existingData[day]) {
+        existingData[day] = {};
+      }
+      if (!existingData[day]['data']) {
+        existingData[day]['data'] = [];
+      }
+
+      // Check if the entry already exists (assuming each entry has a unique 'id' property)
+      const existingIndex = existingData[day]['data'].findIndex((entry: any) => entry.id === data.id);
+
+      if (existingIndex !== -1) {
+        // If the entry exists, update it
+        existingData[day]['data'][existingIndex] = data;
+      } else {
+        // If it doesn't exist, append it
+        existingData[day]['data'].push(data);
+      }
+
+      await setDoc(docRef, existingData, { merge: true });
+      console.log('Document updated with ID: ', name);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  }
+
+  async getAttendanceRecord(name: string): Promise<any> {
+    const docRef = doc(this.firestore, 'attendancePortal', name);
+
+    try {
+      const docSnapshot: DocumentSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();  // Return the document data
+      } else {
+        console.log('No such document!');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error getting document: ', error);
+      return null;
+    }
+  }
+
 }
