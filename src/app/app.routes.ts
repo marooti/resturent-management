@@ -4,6 +4,7 @@ import { RoutesEnum } from './commons/enums/routes.enum';
 
 // COMPONENTS
 import { PageNotFoundComponent } from './pages/components/page-not-found/page-not-found.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,14 @@ export const routes: Routes = [
     {
         path: RoutesEnum.CHECKING_DETAIL,
         loadComponent: () => import('./pages/components/checkingtime/checking-layout/checking-layout.component').then(m => m.CheckingLayoutComponent)
+    },
+    {
+        path: RoutesEnum.ADMIN,
+        loadComponent: () => import('./admin/layout/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
+        children: [
+            {path:'', redirectTo: 'dashboard', pathMatch: 'full' },
+            {path:'dashboard', component: AdminDashboardComponent}
+        ]
     },
     {
         path: RoutesEnum.SECURITY,

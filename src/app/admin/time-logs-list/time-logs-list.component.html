@@ -1,0 +1,42 @@
+ <!-- Weekly Data Table -->
+ <div class="data-table h-full">
+    <h1><strong>Time Logs List</strong> </h1>
+    <p-table scrollHeight="flex" [value]="logs" class="p-datatable-gridlines p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr class="p-2 bg-[#349ce4]">
+                <th class="bg-[#1c4c74] p-3 text-white w-[300px]" >
+                    <span class="font-normal text-md">Name</span>
+                </th>
+                <th class="bg-[#1c4c74] p-3 text-white w-[300px]" >
+                    <span class="font-normal text-md">Date</span>
+
+                </th>
+                <th class="bg-[#1c4c74] p-3 text-white w-[300px]" >
+                    <span class="font-normal text-md">Total time</span>
+
+                </th>
+              
+                <th class="bg-[#1c4c74] p-3 text-white w-[30px]" style="min-width: 80px !important;">
+                    <span class="font-normal text-md">Action</span>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+            <tr *ngFor="let log of logs" class="border-b-2">
+                <td class="w-[300px !important] p-3">
+                    {{log.name}}
+                </td>
+                <td class="w-[300px !important] p-3">
+                    {{log.day}}
+                </td>
+                <td class="w-[300px !important] p-3">
+                    {{log.time}}
+                </td>
+                <td class="w-[300px !important] p-3">
+                    ????
+                </td>
+             
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
