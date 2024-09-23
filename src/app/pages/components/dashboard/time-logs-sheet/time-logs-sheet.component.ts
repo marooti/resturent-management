@@ -100,7 +100,7 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   searchRecord() {
-
+    console.log("this is data :", this.apiData);
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
 
     const startDate = this.rangeDates[0].toLocaleDateString('en-US', options);
@@ -124,6 +124,7 @@ export class TimeLogsSheetComponent implements OnInit {
         return acc;
       }, {} as ApiData);
 
+    console.log("this is data :", filteredData);
 
     this.processTimelogData(filteredData);
     this.processTimelo(filteredData);
@@ -158,22 +159,23 @@ export class TimeLogsSheetComponent implements OnInit {
 
     this.firestoreService.getTimelog(this.profileData.username)
       .then((data) => {
+        console.log("Data of data :", data);
         this.apiData = data;
-        const start = new Date(this.rangeDates[0]);
-        const end = new Date(this.rangeDates[1]);
-        type ApiData = { [key: string]: { data: any[] } };
-        const apiData = this.apiData as ApiData;
-        const filteredData = Object.keys(apiData)
-          .map(key => ({
-            date: new Date(key),
-            data: apiData[key].data
-          }))
-          .filter(item => item.date >= start && item.date <= end)
-          .reduce((acc: ApiData, item) => {
-            acc[item.date.toDateString()] = { data: item.data };
-            return acc;
-          }, {} as ApiData);
-        this.apiData = filteredData;
+        // const start = new Date(this.rangeDates[0]);
+        // const end = new Date(this.rangeDates[1]);
+        // type ApiData = { [key: string]: { data: any[] } };
+        // const apiData = this.apiData as ApiData;
+        // const filteredData = Object.keys(apiData)
+        //   .map(key => ({
+        //     date: new Date(key),
+        //     data: apiData[key].data
+        //   }))
+        //   .filter(item => item.date >= start && item.date <= end)
+        //   .reduce((acc: ApiData, item) => {
+        //     acc[item.date.toDateString()] = { data: item.data };
+        //     return acc;
+        //   }, {} as ApiData);
+        // this.apiData = filteredData;
         this.loading = false;
         this.processTimelogData(this.apiData);
         this.processTimelo(this.apiData);
