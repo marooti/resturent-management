@@ -132,6 +132,7 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   getproducts() {
+    console.log("vfdvf", this.projects$);
     this.projects$.subscribe(data => {
       this.issueName = data;
     });
@@ -365,7 +366,7 @@ export class TimeLogsSheetComponent implements OnInit {
       description: "muhammad imran"
     };
 
-    console.log("this is value:", data, day, name);
+    console.log("this is value:", data, day, name, index);
     this.firestoreService.daleteTimelog(name, day, data, index)
       .then(() => {
         this.toaster.showSuccess('Deleted successfully');

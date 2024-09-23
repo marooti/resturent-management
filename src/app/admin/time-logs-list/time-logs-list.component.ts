@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from '@services/firestore.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from '@services/toastr.service';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-time-logs-list',
@@ -19,24 +21,39 @@ import { TableModule } from 'primeng/table';
     CalendarModule,
     FormsModule,
     CommonModule,
+    InputTextModule
   ],
   templateUrl: './time-logs-list.component.html',
   styleUrl: './time-logs-list.component.scss'
 })
 export class TimeLogsListComponent implements OnInit {
   allData: any;
-  logs: any[] = [
-    { name: 'haris', day: '10 sep', time: '2h30m' },
-    { name: 'haris', day: '11 sep', time: '2h30m' }
 
-  ];
 
-  constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) { }
+  // Time logs 
+  visible: boolean = false;
+  issueName: any;
+  issueNameVlaue: any;
+  projects$!: Observable<any[]>;
+  dateOf: any;
+  namehg: any;
+  entry: any;
+  index: any;
+  description: any;
+  timeSpent: any;
+  startTime: any;
+  constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
+    const today = new Date();
+    this.dateOf = today;
+    const projectsCollection = collection(this.firestore, 'projects');
+    this.projects$ = collectionData(projectsCollection);
+  }
 
   ngOnInit(): void {
     this.getAlldata();
     console.log("all time log")
     this.gettimelogs();
+    this.getproducts();
   }
   gettimelogs() {
     this.firestoreService.getallTimelog().then((data) => {
@@ -47,29 +64,27 @@ export class TimeLogsListComponent implements OnInit {
   getAlldata() {
     console.log("Fetching data...");
 
-    // Get the current date in the format "Mon, Sep 23, 2024"
     const currentDate = new Date().toLocaleDateString('en-US', {
       weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
     });
 
-    console.log("Current Date: ", currentDate); // Debug to ensure correct format
+    console.log("Current Date: ", currentDate);
 
     this.firestoreService.getallData().then((data) => {
-      // Filter the data to only include records that have today's data entries
+
       this.allData = data.map((entry: any) => {
-        // Get all date keys except 'id'
+
         const dateKeys = Object.keys(entry).filter(key => key !== 'id');
 
-        // Check if the current date exists in the dateKeys and extract only that data
+
         const filteredDateData = dateKeys
-          .filter(dateKey => dateKey === currentDate) // Filter for today
+          .filter(dateKey => dateKey === currentDate)
           .reduce((result: any, dateKey: string) => {
-            // Add today's data to the result object
             result[dateKey] = entry[dateKey];
             return result;
           }, {});
 
-        // Only return entries if there's data for today
+
         if (Object.keys(filteredDateData).length > 0) {
           return {
             id: entry.id,
@@ -77,8 +92,8 @@ export class TimeLogsListComponent implements OnInit {
           };
         }
 
-        return null; // Skip entries without today's data
-      }).filter(Boolean); // Filter out null entries
+        return null;
+      }).filter(Boolean);
 
       console.log("Filtered data for current date:", this.allData);
     });
@@ -88,11 +103,10 @@ export class TimeLogsListComponent implements OnInit {
 
 
   getDateKeys(log: any): string[] {
-    return Object.keys(log).filter(key => key !== 'id'); // Return all date keys except 'id'
+    return Object.keys(log).filter(key => key !== 'id');
   }
 
   processTimelo(data: any) {
-    // this.processedData = [];
 
     let grandTotalHours = 0;
     let grandTotalMinutes = 0;
@@ -142,5 +156,91 @@ export class TimeLogsListComponent implements OnInit {
     return grandTotalTime;
   }
 
+
+  // Time
+  showingDialog(namehg: any, entry: any, index: any) {
+    this.description = entry?.description;
+    this.issueNameVlaue = entry?.issueName;
+    this.timeSpent = entry?.spentTame;
+    const timeString = entry?.startTime;
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, seconds);
+    this.startTime = date;
+    this.dateOf = new Date(entry?.date);
+    console.log("ti:", this.description, "this.", this.issueNameVlaue, "hf:", this.startTime);
+    this.namehg = namehg;
+    this.entry = entry;
+    this.index = index;
+    this.visible = true;
+
+  }
+
+  getproducts() {
+    console.log("vfdvf", this.projects$);
+    this.projects$.subscribe(data => {
+      this.issueName = data;
+      console.log("thus iaj:", this.issueName)
+    });
+  }
+
+  // DeleteIndexValue
+  deleteIndex() {
+    console.log("this is data:", this.entry);
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
+    const day = this.entry.date;
+    const name = this.namehg?.id;
+    const data = {
+      date: this.entry.date,
+      issueName: this.entry.issueName,
+      spentTame: this.entry.spentTame,
+      startTime: this.entry.startTime,
+      description: "muhammad imran"
+    };
+
+    console.log("this is value:", data, day, name, this.index);
+    this.firestoreService.daleteTimelog(name, day, data, this.index)
+      .then(() => {
+        this.toaster.showSuccess('Deleted successfully');
+        this.getAlldata();
+        this.visible = false;
+
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
+
+  }
+
+  updateUI() {
+    // this.loading = true;
+    const time = this.startTime.toTimeString().split(' ')[0];
+    console.log("spent Time", time);
+    // UpdateIndexValue
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
+    const day = formattedDate;
+    const name = this.namehg?.id;
+    const data = {
+      date: formattedDate,
+      issueName: this.issueNameVlaue,
+      spentTame: this.timeSpent,
+      startTime: time,
+      description: this.description
+    };
+    console.log("this is value:", data, day, name, this.dateOf);
+    this.firestoreService.updateTimelog(name, day, data, this.index)
+      .then(() => {
+        this.toaster.showSuccess('Updated successfully');
+        this.getAlldata();
+
+        this.visible = false;
+      })
+      .catch(error => {
+        console.error('Error adding data: ', error);
+      });
+
+  }
 
 }
