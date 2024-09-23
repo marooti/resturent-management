@@ -85,6 +85,7 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAlldata();
     const today = new Date();
     const lastSunday = new Date(today.setDate(today.getDate() - today.getDay())); // Last week's Sunday
     const lastFriday = new Date(lastSunday);
@@ -148,6 +149,12 @@ export class TimeLogsSheetComponent implements OnInit {
     this.visible = true;
   }
 
+  getAlldata() {
+    console.log("tbefb");
+    this.firestoreService.getallData().then((data) => {
+      console.log("all data:", data);
+    })
+  }
   fetchTimelogData(name: string) {
     this.loading = true;
     this.visible = false;

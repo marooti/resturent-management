@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, doc, setDoc, getDoc, DocumentSnapshot, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, getDoc, DocumentSnapshot, collection, collectionData, QuerySnapshot, getDocs } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -119,7 +119,7 @@ export class FirestoreService {
       return null;
     }
   }
-  
+
   async getallTimelog(): Promise<any> {
     const docRef = doc(this.firestore, this.collectionName);
 
@@ -254,5 +254,25 @@ export class FirestoreService {
       return null;
     }
   }
+
+  // get all product data 
+  async getallData(): Promise<any> {
+    const colRef = collection(this.firestore, this.collectionName);
+
+    try {
+      const querySnapshot: QuerySnapshot = await getDocs(colRef);
+      const allData = querySnapshot.docs.map(doc => ({
+        id: doc.id, // Include the document ID
+        ...doc.data(), // Include the document data
+      }));
+
+      return allData; // Return all documents' data
+    } catch (error) {
+      console.error('Error getting documents: ', error);
+      return null;
+    }
+  }
+
+
 
 }

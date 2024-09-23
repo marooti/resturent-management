@@ -1,42 +1,74 @@
- <!-- Weekly Data Table -->
- <div class="data-table h-full">
-    <h1><strong>Time Logs List</strong> </h1>
-    <p-table scrollHeight="flex" [value]="logs" class="p-datatable-gridlines p-datatable-striped">
+<!-- Weekly Data Table -->
+<div class="data-table h-full">
+    <div class="mb-3">
+        <span class="text-2xl font-medium ">Time Logs List </span>
+    </div>
+    <p-table scrollHeight="flex" [value]="allData" class="p-datatable-gridlines p-datatable-striped">
         <ng-template pTemplate="header">
             <tr class="p-2 bg-[#349ce4]">
-                <th class="bg-[#1c4c74] p-3 text-white w-[300px]" >
+                <th class="bg-[#1c4c74] p-3 text-white">
                     <span class="font-normal text-md">Name</span>
                 </th>
-                <th class="bg-[#1c4c74] p-3 text-white w-[300px]" >
+                <th class="bg-[#1c4c74] p-3 text-white">
                     <span class="font-normal text-md">Date</span>
 
                 </th>
-                <th class="bg-[#1c4c74] p-3 text-white w-[300px]" >
+                <th class="bg-[#1c4c74] p-3 text-white w-[120px]">
                     <span class="font-normal text-md">Total time</span>
 
                 </th>
-              
-                <th class="bg-[#1c4c74] p-3 text-white w-[30px]" style="min-width: 80px !important;">
-                    <span class="font-normal text-md">Action</span>
+
+                <th class="bg-[#1c4c74] p-3 text-white">
+                    <span class="font-normal text-md">Data</span>
                 </th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body">
-            <tr *ngFor="let log of logs" class="border-b-2">
-                <td class="w-[300px !important] p-3">
-                    {{log.name}}
+        <ng-template pTemplate="body" let-log>
+            <tr class="border-b-2 border-2">
+                <td class=" p-3">
+                    {{ log.id }}
                 </td>
-                <td class="w-[300px !important] p-3">
-                    {{log.day}}
+
+
+                <td class=" p-3" *ngFor="let data of getDateKeys(log)">
+                    {{ data}}
                 </td>
-                <td class="w-[300px !important] p-3">
-                    {{log.time}}
+                <td>
+                    <div>
+                        {{processTimelo(log)}}
+                    </div>
+
                 </td>
-                <td class="w-[300px !important] p-3">
-                    ????
+
+                <td class=" p-3">
+                    <div>
+                        <ng-container *ngFor="let dateKey of getDateKeys(log)">
+                            <ng-container *ngFor="let entry of log[dateKey]?.data">
+                                <div
+                                    class="bg-gray-50 mb-2 p-2 rounded-md hover:bg-[#1c4c74] hover:text-white cursor-pointer">
+                                    <div>
+                                        <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName }}
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-sm">Description :</span> {{ entry.description }}
+                                    </div>
+                                </div>
+
+
+                            </ng-container>
+                        </ng-container>
+                    </div>
+
+
                 </td>
-             
+
+
             </tr>
+
+
         </ng-template>
     </p-table>
 </div>
