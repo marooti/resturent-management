@@ -44,6 +44,8 @@ export class LoginComponent implements OnInit {
         if (password === data.password) {
           this.toaster.showSuccess('Login Successful');
           this.router.navigate([this.routeService.dashboard]);
+          // this.router.navigate([this.routeService.admin]);
+
           console.log("this login suucessfully:");
           this.loading = false;
           localStorage.setItem('userProfile', JSON.stringify(data));
