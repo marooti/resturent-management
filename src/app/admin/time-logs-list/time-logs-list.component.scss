@@ -14,18 +14,18 @@ td {
             outline: 0 none;
             outline-offset: 0;
             box-shadow: 0 0 0 0 #BFDBFE;
-            border-color: #ffffff;
+            border-color: #b39c9c;
         }
 
         .p-inputtext:enabled:focus {
             outline: 0 none;
             outline-offset: 0;
             box-shadow: 0 0 0 0 #BFDBFE;
-            border-color: #ffffff;
+            border-color: #c2bfbf;
         }
 
         input {
-            border: 0px solid rgb(255, 255, 255);
+            border: 0px solid rgb(129, 114, 114);
             padding: 6px;
             border-radius: 6px;
             font-size: 13px;
@@ -82,7 +82,7 @@ td {
     }
 
     .p-dropdown-item {
-        border: 1px solid #f1eeee;
+        border: 1px solid #aca1a1;
         padding: 6px;
         text-align: justify;
     }

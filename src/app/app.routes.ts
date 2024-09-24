@@ -5,6 +5,7 @@ import { RoutesEnum } from './commons/enums/routes.enum';
 // COMPONENTS
 import { PageNotFoundComponent } from './pages/components/page-not-found/page-not-found.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminTimeSheetComponent } from './admin/layout/admin-time-sheet/admin-time-sheet.component';
 
 export const routes: Routes = [
     {
@@ -31,8 +32,9 @@ export const routes: Routes = [
         path: RoutesEnum.ADMIN,
         loadComponent: () => import('./admin/layout/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
         children: [
-            {path:'', redirectTo: 'dashboard', pathMatch: 'full' },
-            {path:'dashboard', component: AdminDashboardComponent}
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', component: AdminDashboardComponent },
+            { path: 'time-sheet', component: AdminTimeSheetComponent }
         ]
     },
     {

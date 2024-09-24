@@ -1,7 +1,24 @@
 <!-- Weekly Data Table -->
 <div class="data-table h-full">
-    <div class="mb-3">
-        <span class="text-2xl font-medium ">Time Logs List </span>
+    <div class="mb-3 flex justify-between">
+        <div>
+            <span class="text-2xl font-medium ">Time Logs List </span>
+        </div>
+        <div class="flex">
+            <!-- <div class="border-[0.5px] rounded-md mx-2">
+                <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" [showIcon]="true"
+                    inputId="range">
+                </p-calendar>
+            </div> -->
+            <div class="mr-2">
+                <p-dropdown [options]="employeeDropdown" [(ngModel)]="employeeName" optionLabel="name"
+                    placeholder="Select a Employee"></p-dropdown>
+            </div>
+            <button type="button" (click)="search()"
+                class="focus:outline-none text-white bg-[#1c4c74] rounded-lg text-sm px-3 me-2 h-[35px]">
+                Search
+            </button>
+        </div>
     </div>
     <p-table scrollHeight="flex" [value]="allData" class="p-datatable-gridlines p-datatable-striped">
         <ng-template pTemplate="header">
@@ -9,7 +26,7 @@
                 <th class="bg-[#1c4c74] p-3 text-white w-[250px]">
                     <span class="font-normal text-md">Name</span>
                 </th>
-                <th class="bg-[#1c4c74] p-3 text-white w-[150px]">
+                <th class="bg-[#1c4c74] p-3 text-white w-[200px]">
                     <span class="font-normal text-md">Date</span>
 
                 </th>
@@ -24,14 +41,14 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-log>
-            <tr>
-                <td class=" p-3">
-                    {{ log.id }}
+            <tr *ngIf="!searchValue">
+                <td class="p-3">
+                    {{getUserName(log.id)}}
                 </td>
-                <td class=" p-3" *ngFor="let data of getDateKeys(log)">
+                <td class="p-3" *ngFor="let data of getDateKeys(log)">
                     {{ data}}
                 </td>
-                <td>
+                <td class="p-3">
                     <div>
                         {{processTimelo(log)}}
                     </div>
@@ -58,6 +75,39 @@
                     </div>
                 </td>
             </tr>
+            <ng-container *ngFor="let data of log?.data">
+                <tr *ngIf="searchValue">
+                    <td>
+                        {{ data.name }}
+                    </td>
+                    <td>
+                        {{ data.date }}
+                    </td>
+                    <td>
+                        <div *ngFor="let spentTime of data?.data">
+                            {{spentTime?.spentTame}}
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <ng-container *ngFor="let entry of data?.data; let i = index">
+                                <div class="bg-gray-50 mb-2 p-2 rounded-md hover:bg-[#1c4c74] hover:text-white cursor-pointer"
+                                    (click)="showingDialog(log ,entry, i)">
+                                    <div>
+                                        <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName }}
+                                    </div>
+                                    <div>
+                                        <span class="font-bold text-sm">Description :</span> {{ entry.description }}
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </td>
+                </tr>
+            </ng-container>
         </ng-template>
     </p-table>
 </div>

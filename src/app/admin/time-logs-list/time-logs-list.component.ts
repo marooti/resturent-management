@@ -10,7 +10,17 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Observable } from 'rxjs';
+interface TimelogEntry {
+  date: string;
+  description: string;
+  issueName: string;
+  spentTame: string;
+  startTime: string;
+}
 
+interface Timelog {
+  data: TimelogEntry[];
+}
 @Component({
   selector: 'app-time-logs-list',
   standalone: true,
@@ -28,8 +38,6 @@ import { Observable } from 'rxjs';
 })
 export class TimeLogsListComponent implements OnInit {
   allData: any;
-
-
   // Time logs 
   visible: boolean = false;
   issueName: any;
@@ -42,6 +50,12 @@ export class TimeLogsListComponent implements OnInit {
   description: any;
   timeSpent: any;
   startTime: any;
+  employeeDropdown: any;
+  rangeDates: any;
+  employeeName: any;
+  searchValue = false;
+  getAllData: any;
+  value: any;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     const today = new Date();
     this.dateOf = today;
@@ -54,6 +68,7 @@ export class TimeLogsListComponent implements OnInit {
     console.log("all time log")
     this.gettimelogs();
     this.getproducts();
+    this.getAllUserProfiles();
   }
   gettimelogs() {
     this.firestoreService.getallTimelog().then((data) => {
@@ -62,21 +77,13 @@ export class TimeLogsListComponent implements OnInit {
   }
 
   getAlldata() {
-    console.log("Fetching data...");
-
     const currentDate = new Date().toLocaleDateString('en-US', {
       weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
     });
-
-    console.log("Current Date: ", currentDate);
-
     this.firestoreService.getallData().then((data) => {
-
+      this.getAllData = data;
       this.allData = data.map((entry: any) => {
-
         const dateKeys = Object.keys(entry).filter(key => key !== 'id');
-
-
         const filteredDateData = dateKeys
           .filter(dateKey => dateKey === currentDate)
           .reduce((result: any, dateKey: string) => {
@@ -95,12 +102,8 @@ export class TimeLogsListComponent implements OnInit {
         return null;
       }).filter(Boolean);
 
-      console.log("Filtered data for current date:", this.allData);
     });
   }
-
-
-
 
   getDateKeys(log: any): string[] {
     return Object.keys(log).filter(key => key !== 'id');
@@ -152,7 +155,6 @@ export class TimeLogsListComponent implements OnInit {
     grandTotalMinutes = grandTotalMinutes % 60;
 
     const grandTotalTime = `${grandTotalHours}h ${grandTotalMinutes}m`;
-    console.log("hhs:", grandTotalTime);
     return grandTotalTime;
   }
 
@@ -168,7 +170,6 @@ export class TimeLogsListComponent implements OnInit {
     date.setHours(hours, minutes, seconds);
     this.startTime = date;
     this.dateOf = new Date(entry?.date);
-    console.log("ti:", this.description, "this.", this.issueNameVlaue, "hf:", this.startTime);
     this.namehg = namehg;
     this.entry = entry;
     this.index = index;
@@ -177,16 +178,13 @@ export class TimeLogsListComponent implements OnInit {
   }
 
   getproducts() {
-    console.log("vfdvf", this.projects$);
     this.projects$.subscribe(data => {
       this.issueName = data;
-      console.log("thus iaj:", this.issueName)
     });
   }
 
   // DeleteIndexValue
   deleteIndex() {
-    console.log("this is data:", this.entry);
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
     const day = this.entry.date;
@@ -199,7 +197,6 @@ export class TimeLogsListComponent implements OnInit {
       description: "muhammad imran"
     };
 
-    console.log("this is value:", data, day, name, this.index);
     this.firestoreService.daleteTimelog(name, day, data, this.index)
       .then(() => {
         this.toaster.showSuccess('Deleted successfully');
@@ -216,7 +213,6 @@ export class TimeLogsListComponent implements OnInit {
   updateUI() {
     // this.loading = true;
     const time = this.startTime.toTimeString().split(' ')[0];
-    console.log("spent Time", time);
     // UpdateIndexValue
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
@@ -229,7 +225,6 @@ export class TimeLogsListComponent implements OnInit {
       startTime: time,
       description: this.description
     };
-    console.log("this is value:", data, day, name, this.dateOf);
     this.firestoreService.updateTimelog(name, day, data, this.index)
       .then(() => {
         this.toaster.showSuccess('Updated successfully');
@@ -243,4 +238,43 @@ export class TimeLogsListComponent implements OnInit {
 
   }
 
+
+  getAllUserProfiles() {
+    this.firestoreService.getAllUser().subscribe(
+      (data) => {
+        this.employeeDropdown = data;
+      });
+  }
+
+  getUserName(username: any) {
+    let name = this.employeeDropdown?.filter((entry: any) => entry?.username === username);
+    return name[0]?.name;
+
+  }
+
+  search() {
+    this.searchValue = true;
+    console.log("Search data:", this.employeeName, "All data :", this.employeeDropdown, this.getAllData);
+    this.value = this.employeeDropdown.filter((name: any) => name.id === this.employeeName.username);
+    console.log("this is:", this.value);
+
+    let valueAll = this.getAllData.filter((name: any) => name.id === this.employeeName.username);
+
+    // Create the payload with dates as indexes
+    let payload = {
+      data: Object.entries(valueAll[0])
+        .filter(([key, value]: [string, Timelog | any]) => key !== 'id' && (value as Timelog)?.data && Array.isArray((value as Timelog).data))
+        .map(([date, value], index) => ({
+          index,
+          date,
+          name: this.value[0]?.name,
+          data: (value as Timelog).data.map((entry: TimelogEntry) => ({ ...entry })) // Entries for the current date
+        }))
+    };
+
+    console.log("Payload:", payload, "this is:", this.value);
+
+    this.allData = [payload];
+    console.log("this is after search:", this.allData);
+  }
 }

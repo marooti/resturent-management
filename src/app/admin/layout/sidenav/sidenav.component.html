@@ -16,7 +16,7 @@
             <ul class="menu-links">
                 <!-- Dashboard -->
                 <li class="relative">
-                    <a routerLink="/admin">
+                    <a a routerLink="/{{routeService.admin}}" pTooltip="Time log" tooltipPosition="right" >
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li class="relative">
-                    <a routerLink="/{{routeService.checkingdetail}}">
+                    <a  routerLink="/admin/time-sheet">
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">

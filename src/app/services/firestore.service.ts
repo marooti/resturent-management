@@ -170,11 +170,10 @@ export class FirestoreService {
       return null;
     }
   }
+
   getAllUserProfiles(): Observable<any[]> {
-    // Reference to the Firestore collection
     const usersCollection = collection(this.firestore, 'products'); // Replace 'users' with your collection name
     console.log(usersCollection)
-    // Get the collection data as an Observable
     return collectionData(usersCollection, { idField: 'id' }); // Add idField to include the document ID with the data
   }
 
@@ -186,7 +185,6 @@ export class FirestoreService {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
       let dataName = 'data'
-      // Ensure day and date exist in the data structure
       if (!existingData[day]) {
         existingData[day] = {};
       }
@@ -194,7 +192,6 @@ export class FirestoreService {
         existingData[day]['data'] = [];
       }
 
-      // Append new data to the existing date
       existingData[day]['data'].push(data);
 
       await setDoc(docRef, existingData, { merge: true });
@@ -273,6 +270,11 @@ export class FirestoreService {
     }
   }
 
+  getAllUser(): Observable<any[]> {
+    const usersCollection = collection(this.firestore, 'users'); // Replace 'users' with your collection name
+    console.log(usersCollection)
+    return collectionData(usersCollection, { idField: 'id' }); // Add idField to include the document ID with the data
+  }
 
 
 }

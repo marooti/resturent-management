@@ -73,6 +73,7 @@ export class TimeLogsSheetComponent implements OnInit {
   updateBtn = false;
   index: any;
   isProcessing: boolean = false;
+  employeeDropdown: any;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     this.dateTime.setDate(this.dateTime.getDate() + 0);
     const today = new Date();
@@ -85,6 +86,7 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAllUserProfiles();
     this.getAlldata();
     const today = new Date();
     const lastSunday = new Date(today.setDate(today.getDate() - today.getDay())); // Last week's Sunday
@@ -139,10 +141,10 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   getAllUserProfiles() {
-    this.firestoreService.getAllUserProfiles().subscribe(
+    this.firestoreService.getAllUser().subscribe(
       (data) => {
-
-        this.processTimelogData(data);
+        this.employeeDropdown = data;
+        console.log("this is user data :", data);
       });
   }
 

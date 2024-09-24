@@ -4,7 +4,7 @@ export enum RoutesEnum {
     FORGOT_PASSWORD = 'forgot-password',
     DASHBOARD = 'dashboard',
     ADMIN = 'admin',
-    CHECKING_DETAIL= 'checking-detail',
+    CHECKING_DETAIL = 'checking-detail',
     MESSAGES = 'messages',
     SECURITY = 'security',
     SETTINGS = 'settings',
