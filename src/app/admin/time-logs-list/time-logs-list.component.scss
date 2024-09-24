@@ -82,18 +82,16 @@ td {
     }
 
     .p-dropdown-item {
-        border: 1px solid #aca1a1;
+        border: 1px solid #ffffff;
         padding: 6px;
         text-align: justify;
     }
 
     .p-datatable-scrollable-table>.p-datatable-thead {
-
         z-index: 0 !important;
     }
 
 }
-
 
 :host::ng-deep {
     ::-webkit-scrollbar {
@@ -122,5 +120,9 @@ td {
         border-radius: 5px !important;
 
         background: #1c4c74 !important;
+    }
+
+    .p-dropdown:not(.p-disabled).p-focus {
+        box-shadow: 0 0 0 0 #BFDBFE;
     }
 }

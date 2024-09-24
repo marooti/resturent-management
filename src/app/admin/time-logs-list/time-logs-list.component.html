@@ -58,7 +58,7 @@
                     <div>
                         <ng-container *ngFor="let dateKey of getDateKeys(log)">
                             <ng-container *ngFor="let entry of log[dateKey]?.data; let i = index">
-                                <div class="bg-gray-50 mb-2 p-2 rounded-md hover:bg-[#1c4c74] hover:text-white cursor-pointer"
+                                <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
                                     (click)="showingDialog(log ,entry, i)">
                                     <div>
                                         <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}
@@ -77,21 +77,21 @@
             </tr>
             <ng-container *ngFor="let data of log?.data">
                 <tr *ngIf="searchValue">
-                    <td>
+                    <td class="p-3">
                         {{ data.name }}
                     </td>
-                    <td>
+                    <td class="p-3">
                         {{ data.date }}
                     </td>
-                    <td>
-                        <div *ngFor="let spentTime of data?.data">
-                            {{spentTime?.spentTame}}
+                    <td class="p-3">
+                        <div>
+                            {{ calculateTotalTime(data) }}
                         </div>
                     </td>
-                    <td>
+                    <td class="p-3">
                         <div>
                             <ng-container *ngFor="let entry of data?.data; let i = index">
-                                <div class="bg-gray-50 mb-2 p-2 rounded-md hover:bg-[#1c4c74] hover:text-white cursor-pointer"
+                                <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
                                     (click)="showingDialog(log ,entry, i)">
                                     <div>
                                         <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}

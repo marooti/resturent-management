@@ -64,66 +64,87 @@
         <div class="data-table h-full">
             <p-table [value]="[days]" scrollHeight="flex" class="p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
-                    <tr class="p-2 ">
-                        <div>
-                            <th *ngFor="let day of days" class="bg-[#1c4c74] p-3 text-white w-[300px]"
-                                style="min-width: 300px !important; max-width: 300px !important;">
+                    <tr class="p-2 bg-[#349ce4]">
+                        <th class="bg-[#1c4c74] p-3 text-white w-[250px]">
+                            <span class="font-normal text-md">Name</span>
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[200px]">
+                            <span class="font-normal text-md">Date</span>
 
-                                <span class="text-md font-normal">{{day}}</span>
-                            </th>
-                        </div>
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[120px]">
+                            <span class="font-normal text-md">Total time</span>
 
+                        </th>
+
+                        <th class="bg-[#1c4c74] p-3 text-white">
+                            <span class="font-normal text-md">Data</span>
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body">
-                    <tr>
-                        <div>
-                            <td *ngFor="let day of days" class="w-[300px]">
-                                <div class="p-3">
-                                    <div *ngIf="(weeklyData[day] && weeklyData[day].length > 0); else noData">
-                                        <div *ngFor="let entry of weeklyData[day]; let i = index ">
-                                            <div class="bg-slate-100 p-2 m-1 rounded-md">
-                                                <div class="entry">
-                                                    <div class="flex justify-between">
-                                                        <div>
-                                                            <span class="font-semibold text-sm">{{ entry.issueName
-                                                                }}</span>
-                                                        </div>
-                                                        <div class="flex">
-                                                            <div (click)="deleteIndex(entry,i)" class="cursor-pointer">
-                                                                <img src="../../../../../assets/trash.png" alt=""
-                                                                    class="w-[15px]">
-                                                            </div>
-                                                            <div class="ml-2 cursor-pointer" (click)="update(entry,i)">
-                                                                <svg class="h-[15px] w-[15px] text-red-500" fill="none"
-                                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                                </svg>
+                    <tr *ngFor="let day of days">
 
-                                                            </div>
-                                                        </div>
+                        <td class="p-3">
+                            <div *ngFor="let entry of weeklyData[day]">
+                                {{entry?.name}}
+                            </div>
 
-                                                    </div>
+                        </td>
+                        <td class="p-3">
+                            {{day}}
+                        </td>
+                        <td class="p-3">
+                            <div>
+{{ calculateTotalSpentTimeForDay(weeklyData[day]) }}
+                            </div>
+                        </td>
+                        <td class="w-[300px]">
+                            <div class="p-3">
+                                <div *ngIf="(weeklyData[day] && weeklyData[day].length > 0); else noData">
+                                    <div *ngFor="let entry of weeklyData[day]; let i = index ">
+                                        <div class="bg-slate-100 p-2 m-1 rounded-md">
+                                            <div class="entry">
+                                                <div class="flex justify-between">
                                                     <div>
-                                                        <span class="text-xs">{{ entry.description }}</span>
+                                                        <span class="font-semibold text-sm">{{ entry.issueName
+                                                            }}</span>
                                                     </div>
-                                                    <div class="text-right text-sm font-semibold">
-                                                        <span>{{ entry.spentTame }}</span>
+                                                    <div class="flex">
+                                                        <div (click)="deleteIndex(entry,i)" class="cursor-pointer">
+                                                            <img src="../../../../../assets/trash.png" alt=""
+                                                                class="w-[15px]">
+                                                        </div>
+                                                        <div class="ml-2 cursor-pointer" (click)="update(entry,i)">
+                                                            <svg class="h-[15px] w-[15px] text-red-500" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                            </svg>
+
+                                                        </div>
                                                     </div>
+
+                                                </div>
+                                                <div>
+                                                    <span class="text-xs">{{ entry.description }}</span>
+                                                </div>
+                                                <div class="text-right text-sm font-semibold">
+                                                    <span>{{ entry.spentTame }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <ng-template #noData>
-                                        <div class="text-gray-500">
-                                            No data available
-                                        </div>
-                                    </ng-template>
                                 </div>
-                            </td>
-                        </div>
+                                <ng-template #noData>
+                                    <div class="text-gray-500">
+                                        No data available
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </td>
+
 
                     </tr>
                 </ng-template>

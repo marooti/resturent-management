@@ -3,10 +3,10 @@
 
     <!-- Header -->
     <header class="flex items-center justify-center p-2 border-b border-gray-700 overflow-hidden">
-      
+
         <!-- (click)="toggleSidebar()" -->
         <button class="text-gray-400 focus:outline-none">
-        <img src="../../../../assets/figma.png" alt="" class="w-[35px] h-[30px]">
+            <img src="../../../../assets/figma.png" alt="" class="w-[35px] h-[30px]">
         </button>
     </header>
 
@@ -16,7 +16,7 @@
             <ul class="menu-links">
                 <!-- Dashboard -->
                 <li class="relative">
-                    <a a routerLink="/{{routeService.admin}}" pTooltip="Time log" tooltipPosition="right" >
+                    <a a routerLink="/{{routeService.admin}}" pTooltip="Time log" tooltipPosition="right">
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li class="relative">
-                    <a  routerLink="/admin/time-sheet">
+                    <a routerLink="/admin/time-sheet" pTooltip="Attendance" tooltipPosition="right">
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">
@@ -83,7 +83,7 @@
     <footer class="border-t border-gray-700">
         <button routerLink="/{{routeService.login}}"
             class="flex items-center justify-between w-full p-4 mb-4 hover:bg-gray-700 focus:outline-none">
-            <div class="flex items-center gap-3" >
+            <div class="flex items-center gap-3">
                 <svg class="h-6 w-6 text-white" [ngClass]="{'mr-2': sidebarOpen }" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

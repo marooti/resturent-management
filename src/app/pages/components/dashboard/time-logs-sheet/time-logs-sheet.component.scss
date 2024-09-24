@@ -83,13 +83,16 @@ td {
     }
 
     .p-dropdown-item {
-        border: 1px solid #f1eeee;
+        border: 1px solid #ffffff;
         padding: 6px;
         text-align: justify;
     }
 
-    .p-datatable-scrollable-table>.p-datatable-thead {
+    .p-dropdown:not(.p-disabled).p-focus {
+        box-shadow: 0 0 0 0 #BFDBFE;
+    }
 
+    .p-datatable-scrollable-table>.p-datatable-thead {
         z-index: 0 !important;
     }
 

@@ -89,12 +89,11 @@ export class TimeLogsSheetComponent implements OnInit {
     this.getAllUserProfiles();
     this.getAlldata();
     const today = new Date();
-    const lastSunday = new Date(today.setDate(today.getDate() - today.getDay())); // Last week's Sunday
+    const lastSunday = new Date(today.setDate(today.getDate() - today.getDay()));
     const lastFriday = new Date(lastSunday);
-    lastFriday.setDate(lastSunday.getDate() + 5); // Last week's Friday
+    lastFriday.setDate(lastSunday.getDate() + 5);
 
-    this.rangeDates = [lastSunday, lastFriday]; // Set rangeDat
-    console.log("this is range:", this.rangeDates);
+    this.rangeDates = [lastSunday, lastFriday];
 
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData)
@@ -103,12 +102,6 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   searchRecord() {
-    console.log("this is data :", this.apiData);
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
-
-    const startDate = this.rangeDates[0].toLocaleDateString('en-US', options);
-    const endDate = this.rangeDates[1].toLocaleDateString('en-US', options);
-
     const start = new Date(this.rangeDates[0]);
     const end = new Date(this.rangeDates[1]);
 
@@ -126,8 +119,6 @@ export class TimeLogsSheetComponent implements OnInit {
         acc[item.date.toDateString()] = { data: item.data };
         return acc;
       }, {} as ApiData);
-
-    console.log("this is data :", filteredData);
 
     this.processTimelogData(filteredData);
     this.processTimelo(filteredData);
@@ -171,21 +162,6 @@ export class TimeLogsSheetComponent implements OnInit {
       .then((data) => {
         console.log("Data of data :", data);
         this.apiData = data;
-        // const start = new Date(this.rangeDates[0]);
-        // const end = new Date(this.rangeDates[1]);
-        // type ApiData = { [key: string]: { data: any[] } };
-        // const apiData = this.apiData as ApiData;
-        // const filteredData = Object.keys(apiData)
-        //   .map(key => ({
-        //     date: new Date(key),
-        //     data: apiData[key].data
-        //   }))
-        //   .filter(item => item.date >= start && item.date <= end)
-        //   .reduce((acc: ApiData, item) => {
-        //     acc[item.date.toDateString()] = { data: item.data };
-        //     return acc;
-        //   }, {} as ApiData);
-        // this.apiData = filteredData;
         this.loading = false;
         this.processTimelogData(this.apiData);
         this.processTimelo(this.apiData);
@@ -263,9 +239,9 @@ export class TimeLogsSheetComponent implements OnInit {
 
 
   addTimelog() {
-    // Call the separate validation function
+
     if (!this.validateTimeSpent()) {
-      return; // Exit if validation fails
+      return;
     }
     this.loading = true;
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
@@ -278,7 +254,8 @@ export class TimeLogsSheetComponent implements OnInit {
       issueName: this.issueNameVlaue,
       spentTame: this.timeSpent,
       startTime: time,
-      description: this.description
+      description: this.description,
+      name: this.profileData.name
     };
     for (const [key, value] of Object.entries(data)) {
       if (value === null || value === undefined || value.toString().trim() === '') {
@@ -288,10 +265,9 @@ export class TimeLogsSheetComponent implements OnInit {
     }
 
     if (this.isProcessing) {
-      return;  // Exit if already processing
+      return;
     }
     this.isProcessing = true;
-    // const index = 1;
     this.firestoreService.addTimelog(name, day, data)
       .then(() => {
         this.toaster.showSuccess('Data added successfully');
@@ -309,7 +285,7 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   validateTimeSpent(): boolean {
-    // Updated regex to accept "h", "m", "h m", or "m"
+
     const timeRegex = /^((1[01]|[0-8])h\s*)?([0-5]?[0-8]m)?$/;
 
     if (!this.timeSpent) {
@@ -397,7 +373,8 @@ export class TimeLogsSheetComponent implements OnInit {
       issueName: this.issueNameVlaue,
       spentTame: this.timeSpent,
       startTime: time,
-      description: this.description
+      description: this.description,
+      name: this.profileData.name
     };
     if (this.isProcessing) {
       return;  // Exit if already processing
@@ -440,5 +417,26 @@ export class TimeLogsSheetComponent implements OnInit {
     this.updateBtn = true;
   }
 
+  calculateTotalSpentTimeForDay(entries: any[]): string {
+    let totalHours = 0;
+    let totalMinutes = 0;
+
+    entries.forEach(entry => {
+      const timeString = entry?.spentTame.toLowerCase();
+      const hoursMatch = timeString.match(/(\d+)h/)?.[1] || '0';
+      const minutesMatch = timeString.match(/(\d+)m/)?.[1] || '0';
+
+      totalHours += parseInt(hoursMatch);
+      totalMinutes += parseInt(minutesMatch);
+    });
+
+    // Convert excess minutes into hours
+    totalHours += Math.floor(totalMinutes / 60);
+    totalMinutes = totalMinutes % 60;
+
+    return `${totalHours}h ${totalMinutes}m`;
+  }
+
+ 
 
 }
