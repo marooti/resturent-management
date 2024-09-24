@@ -43,15 +43,18 @@ export class LoginComponent implements OnInit {
         console.log('Timelog data:', data);
         if (password === data.password) {
           this.toaster.showSuccess('Login Successful');
-          this.router.navigate([this.routeService.dashboard]);
-          // this.router.navigate([this.routeService.admin]);
-
-          console.log("this login suucessfully:");
+          if (data.role === 'admin') {
+            this.router.navigate([this.routeService.admin]);
+          }
+          else {
+            this.router.navigate([this.routeService.dashboard]);
+          }
           this.loading = false;
           localStorage.setItem('userProfile', JSON.stringify(data));
         }
         else {
           this.toaster.showError('Login Failed');
+          this.loading = false;
           return;
         }
       })
