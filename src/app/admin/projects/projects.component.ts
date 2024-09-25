@@ -36,6 +36,9 @@ export class ProjectsComponent {
   description: any;
   projects$: Observable<any[]>;
   allProjectName: any;
+  filterData: any;
+  projectfilter: any;
+
   constructor(private projectService: ProjectServiceService, private firestore: Firestore) {
     const projectsCollection = collection(this.firestore, 'projects');
     this.projects$ = collectionData(projectsCollection);
@@ -66,7 +69,15 @@ export class ProjectsComponent {
   getproducts() {
     this.projects$.subscribe(data => {
       this.allProjectName = data;
+      this.filterData = data;
       console.log("All Data:", this.allProjectName);
     });
+  }
+
+  searchRecord() {
+    console.log("Search");
+    const value = this.filterData.filter((data: any) => data.name === this.projectfilter);
+    this.allProjectName = value;
+
   }
 }

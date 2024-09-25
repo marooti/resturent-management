@@ -25,8 +25,25 @@
                 </div>
             </div>
         </div>
-
-        <div class="p-4">
+        <!-- Table Header -->
+        <div class="justify-between flex">
+            <div class="w-[50%] mt-3">
+                <span class="text-2xl font-medium ">All Projects </span>
+            </div>
+            <div class="flex w-[50%] justify-end mt-2">
+                <div class="mr-2">
+                    <p-dropdown [options]="filterData" [(ngModel)]="projectfilter" optionValue="name" optionLabel="name"
+                        placeholder="Select a Employee"></p-dropdown>
+                </div>
+                <div class="pl-3">
+                    <button type="button" (click)="searchRecord()"
+                        class="focus:outline-none text-white bg-[#1c4c74] hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:hover:bg-[#1c4c74] dark:focus:bg-[#1c4c74] h-[35px]">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div>
             <div>
                 <div class="w-full relative h-full">
                     <div class="h-full">
