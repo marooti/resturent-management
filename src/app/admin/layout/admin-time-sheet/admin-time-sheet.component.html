@@ -1,21 +1,35 @@
-<div class="w-full relative h-screen h-[calc(77vh-80px)]">
-    <div>
+<div class="w-full relative h-full" [ngClass]="{'dull-bg': loading}">
+    <div class="h-full">
         <!-- Table Header -->
         <div class="header-section flex justify-content-between align-items-center p-2 border-b-2">
+
             <div class="header-title flex justify-content-between w-[100%]">
                 <div class="flex w-[50%]">
                     <img class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                         style="width: 40px !important;"
                         src="https://st4.depositphotos.com/15648834/23779/v/380/depositphotos_237795814-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
                         alt="Bordered avatar">
-                    <!-- <div class="pl-2 m-auto w-[100%]">
+                    <div class="pl-2 m-auto w-[100%]">
                         <span class="font-medium text-lg">{{profileData?.name}}</span>
-                    </div> -->
+                    </div>
                 </div>
                 <div class="w-[50%] justify-end flex">
                     <div class=" justify-end flex">
-                        <button type="button"
-                            class="text-gray-400 border-2  focus:outline-none  rounded-lg text-sm px-3 me-2 h-[35px]">
+                        <!-- <button type="button"
+                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
+                            Create Task
+                        </button> -->
+                        <!-- <button type="button" *ngIf="!checkingstatus" (click)="checkin()"
+                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Check
+                            In
+                        </button>
+                        <button type="button" *ngIf="checkingstatus" (click)="checkout()"
+                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Check
+                            Out
+                        </button> -->
+
+                        <button type="button" (click)="changeIf()"
+                            class="text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  rounded-lg text-sm px-3 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
                             <svg class="w-11 h-5 text-gray-400 dark:text-white" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -23,6 +37,7 @@
                                     d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
                             </svg>
                         </button>
+
                     </div>
                     <!-- <p-dropdown [options]="employeeDropdown" optionLabel="name"
                         placeholder="Select a Employee"></p-dropdown> -->
@@ -30,8 +45,178 @@
             </div>
         </div>
 
+        <!-- Table Header -->
+        <div class="justify-between flex">
+            <div class="w-[50%] mt-3">
+                <span class="text-2xl font-medium ">Attendance </span>
+            </div>
+            <div class="flex w-[50%] justify-end mt-2">
+                <div class="mr-2">
+                    <p-dropdown [options]="employeeDropdown" [(ngModel)]="employeeName" optionLabel="name"
+                        placeholder="Select a Employee"></p-dropdown>
+                </div>
+                <div class="pl-3">
+                    <button type="button" (click)="searchRecord()"
+                        class="focus:outline-none text-white bg-[#1c4c74] hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:hover:bg-[#1c4c74] dark:focus:bg-[#1c4c74] h-[35px]">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-section flex justify-content-between align-items-center p-2">
+            <div class="header-title flex justify-content-between w-[100%]">
+
+                <div class="flex w-[100%] justify-end">
+                    <div class="w-[200px]">
+                        <!-- <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
+                            inputId="range">
+                        </p-calendar> -->
+                    </div>
+                    <!-- <div class="pl-3">
+                        <button type="button"
+                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
+                            Search
+                        </button>
+                    </div> -->
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Weekly Data Table -->
+        <div class="data-table h-full">
+            <p-table scrollHeight="flex" [value]="[days]" class="p-datatable-gridlines p-datatable-striped">
+                <ng-template pTemplate="header">
+                    <tr class="p-2 bg-[#349ce4]">
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            <span class="font-normal text-md">Name</span>
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            <span class="font-normal text-md">Date</span>
+
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            <span class="font-normal text-md">Check-In</span>
+
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            <span class="font-normal text-md">Check-Out</span>
+
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 300px !important;">
+                            <span class="font-normal text-md">Location</span>
+
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body">
+                    <tr *ngFor="let day of days" class="border-b-2">
+                        <td class="w-[300px !important] p-3">
+                            {{day.name}}
+                        </td>
+                        <td class="w-[300px !important] p-3">
+                            {{day.date}}
+                        </td>
+                        <td class="w-[300px !important] p-3">
+                            {{day.checkInTime }}
+                        </td>
+                        <td class="w-[300px !important] p-3">
+                            {{day.checkOutTime ? day.checkOutTime : '❌'}}
+                        </td>
+                        <td class="w-[300px !important] p-3">
+                            {{day.location}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
 
 
+    </div>
+</div>
 
+
+<div class="container m-auto " style="display: none;">
+    <div class="row m-auto">
+        <div class="col-12 px-4  m-auto" style="width:840px !important; " id="htmlData">
+
+            <div class="pb-2 w-full flex justify-between w-100">
+                <div class="m-auto " style="width: 300px !important;">
+                    <div>
+                        <span class="text-xl font-bold text-color m-auto">
+                            Attendance Report
+                        </span>
+                    </div>
+                </div>
+                <div class="justify-end flex w-full m-auto pl-3">
+                    <div>
+                        <img src="/assets/logo.png" alt="" width="230px" height="40px">
+                    </div>
+                </div>
+            </div>
+            <!-- Report Details is Bellow -->
+            <ng-container>
+                <!-- <ng-container *ngIf="report"> -->
+                <div class="report-detial shadow-1 mb-3 border-round-md bg-slate-100">
+                    <!-- Site Details & shift deatils -->
+                    <div class="site-details">
+                        <div class="col-12 flex justify-between p-3 border-round-md bg-slate-100">
+                            <div class="w-4 flex justify-between w-full">
+                                <div class="w-full">
+                                    <div class="my-2"> <span class="text-xl font-semibold text-900">Attendance
+                                            Report</span>
+                                    </div>
+                                    <div>
+                                        <div class="flex align-items-center mb-1">
+                                            <div>
+                                                <span class="pr-2 text-sm text-color">Name :</span>
+                                            </div>
+                                            <span class="text-color text-sm" *ngIf="days">
+                                                {{days[0]?.name}}
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div>
+            </div>
+            <table class="table table-bordered w-full">
+                <tr class="table-primary" class="header bg-[#1c4c74]" style=" border-radius: 5px;">
+                    <th style="width: 20%;" class="p-3 pt-0 text-white text-lg">Name</th>
+                    <th style="width: 20%;" class="p-3 pt-0 text-white text-lg">Date</th>
+                    <th class="p-3 pt-0 text-white text-lg" style="width: 15%;">Check-in</th>
+                    <th class="p-3 pt-0 text-white text-lg" style="width: 15%;">Check-Out</th>
+                    <th class="p-3 pt-0 text-white text-lg" style="width: 40%;">Location</th>
+                </tr>
+                <ng-container>
+                    <tr style="border-bottom: 1px solid #f0eeee !important;" *ngFor="let data of days">
+                        <th style="width: 20%;" class="p-3 pt-0">
+                            {{data?.name}}
+                        </th>
+                        <th style="width: 20%;" class="p-3 pt-0">
+                            {{data?.date}}
+                        </th>
+                        <th style="width: 15%;" class="p-3 pt-0">
+                            {{data?.checkInTime}}
+                        </th>
+                        <th style="width: 15%;" class="p-3 pt-0">
+                            {{data?.checkOutTime}}
+                        </th>
+                        <th style="width: 40%;" class="p-3 pt-0">
+                            {{data?.location}}
+                        </th>
+
+
+                    </tr>
+                </ng-container>
+            </table>
+        </div>
     </div>
 </div>

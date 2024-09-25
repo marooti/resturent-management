@@ -6,20 +6,18 @@ import { Observable } from 'rxjs';
 })
 export class FirestoreService {
 
-  private collectionName = 'timelog';  // Collection name
+  private collectionName = 'timelog';
   private userCollectionName = 'users'
   userproducts = 'projects'
 
   constructor(private firestore: Firestore) { }
 
   async addTimelog(name: string, day: string, data: any): Promise<void> {
-    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+    const docRef = doc(this.firestore, this.collectionName, name);
 
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
-      let dataName = 'data'
-      // Ensure day and date exist in the data structure
       if (!existingData[day]) {
         existingData[day] = {};
       }
@@ -27,24 +25,21 @@ export class FirestoreService {
         existingData[day]['data'] = [];
       }
 
-      // Append new data to the existing date
       existingData[day]['data'].push(data);
 
       await setDoc(docRef, existingData, { merge: true });
-      console.log('Document updated with ID: ', name);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   }
 
   async daleteTimelog(name: string, day: string, data: any, indexToRemove?: number): Promise<void> {
-    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+    const docRef = doc(this.firestore, this.collectionName, name);
 
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
 
-      // Ensure day and date exist in the data structure
       if (!existingData[day]) {
         existingData[day] = {};
       }
@@ -53,10 +48,8 @@ export class FirestoreService {
       }
 
       if (typeof indexToRemove === 'number') {
-        // Remove the specific index if indexToRemove is provided
         existingData[day]['data'].splice(indexToRemove, 1);
       } else {
-        // Otherwise, append new data to the existing date
         existingData[day]['data'].push(data);
       }
 
@@ -74,13 +67,11 @@ export class FirestoreService {
     data: any,
     indexToUpdate?: number
   ): Promise<void> {
-    const docRef = doc(this.firestore, this.collectionName, name); // Use `name` as `id`
+    const docRef = doc(this.firestore, this.collectionName, name);
 
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
-
-      // Ensure day and date exist in the data structure
       if (!existingData[day]) {
         existingData[day] = {};
       }
@@ -89,10 +80,10 @@ export class FirestoreService {
       }
 
       if (typeof indexToUpdate === 'number') {
-        // Update the specific index if indexToUpdate is provided
+
         existingData[day]['data'][indexToUpdate] = data;
       } else {
-        // Append new data if no index is provided
+
         existingData[day]['data'].push(data);
       }
 
@@ -109,7 +100,7 @@ export class FirestoreService {
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        return docSnapshot.data();  // Return the document data
+        return docSnapshot.data();
       } else {
         console.log('No such document!');
         return null;
@@ -126,7 +117,7 @@ export class FirestoreService {
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        return docSnapshot.data();  // Return the document data
+        return docSnapshot.data();
       } else {
         console.log('No such document!');
         return null;
@@ -143,9 +134,8 @@ export class FirestoreService {
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        return docSnapshot.data();  // Return the document data
+        return docSnapshot.data();
       } else {
-        console.log('No such document!');
         return null;
       }
     } catch (error) {
@@ -160,9 +150,8 @@ export class FirestoreService {
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        return docSnapshot.data();  // Return the document data
+        return docSnapshot.data();
       } else {
-        console.log('No such document!');
         return null;
       }
     } catch (error) {
@@ -172,14 +161,14 @@ export class FirestoreService {
   }
 
   getAllUserProfiles(): Observable<any[]> {
-    const usersCollection = collection(this.firestore, 'products'); // Replace 'users' with your collection name
+    const usersCollection = collection(this.firestore, 'products');
     console.log(usersCollection)
-    return collectionData(usersCollection, { idField: 'id' }); // Add idField to include the document ID with the data
+    return collectionData(usersCollection, { idField: 'id' });
   }
 
 
   async checkin(name: string, day: string, data: any): Promise<void> {
-    const docRef = doc(this.firestore, "attendancePortal", name); // Use `name` as `id`
+    const docRef = doc(this.firestore, "attendancePortal", name);
 
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
@@ -195,7 +184,6 @@ export class FirestoreService {
       existingData[day]['data'].push(data);
 
       await setDoc(docRef, existingData, { merge: true });
-      console.log('Document updated with ID: ', name);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
@@ -203,13 +191,12 @@ export class FirestoreService {
   }
 
   async checkOut(name: string, day: string, data: any): Promise<void> {
-    const docRef = doc(this.firestore, "attendancePortal", name); // Use `name` as `id`
+    const docRef = doc(this.firestore, "attendancePortal", name);
 
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       let existingData = docSnapshot.exists() ? docSnapshot.data() : {};
 
-      // Ensure day and date exist in the data structure
       if (!existingData[day]) {
         existingData[day] = {};
       }
@@ -217,19 +204,15 @@ export class FirestoreService {
         existingData[day]['data'] = [];
       }
 
-      // Check if the entry already exists (assuming each entry has a unique 'id' property)
       const existingIndex = existingData[day]['data'].findIndex((entry: any) => entry.id === data.id);
 
       if (existingIndex !== -1) {
-        // If the entry exists, update it
         existingData[day]['data'][existingIndex] = data;
       } else {
-        // If it doesn't exist, append it
         existingData[day]['data'].push(data);
       }
 
       await setDoc(docRef, existingData, { merge: true });
-      console.log('Document updated with ID: ', name);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
@@ -241,9 +224,8 @@ export class FirestoreService {
     try {
       const docSnapshot: DocumentSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        return docSnapshot.data();  // Return the document data
+        return docSnapshot.data();
       } else {
-        console.log('No such document!');
         return null;
       }
     } catch (error) {
@@ -252,18 +234,17 @@ export class FirestoreService {
     }
   }
 
-  // get all product data 
   async getallData(): Promise<any> {
     const colRef = collection(this.firestore, this.collectionName);
 
     try {
       const querySnapshot: QuerySnapshot = await getDocs(colRef);
       const allData = querySnapshot.docs.map(doc => ({
-        id: doc.id, // Include the document ID
-        ...doc.data(), // Include the document data
+        id: doc.id,
+        ...doc.data(),
       }));
 
-      return allData; // Return all documents' data
+      return allData;
     } catch (error) {
       console.error('Error getting documents: ', error);
       return null;
@@ -271,9 +252,13 @@ export class FirestoreService {
   }
 
   getAllUser(): Observable<any[]> {
-    const usersCollection = collection(this.firestore, 'users'); // Replace 'users' with your collection name
-    console.log(usersCollection)
-    return collectionData(usersCollection, { idField: 'id' }); // Add idField to include the document ID with the data
+    const usersCollection = collection(this.firestore, 'users');
+    return collectionData(usersCollection, { idField: 'id' });
+  }
+
+  getAttendance(): Observable<any[]> {
+    const usersCollection = collection(this.firestore, 'attendancePortal');
+    return collectionData(usersCollection, { idField: 'id' });
   }
 
 

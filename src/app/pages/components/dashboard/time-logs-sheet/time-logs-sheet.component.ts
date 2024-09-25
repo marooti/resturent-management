@@ -74,6 +74,7 @@ export class TimeLogsSheetComponent implements OnInit {
   index: any;
   isProcessing: boolean = false;
   employeeDropdown: any;
+
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     this.dateTime.setDate(this.dateTime.getDate() + 0);
     const today = new Date();
@@ -87,7 +88,6 @@ export class TimeLogsSheetComponent implements OnInit {
 
   ngOnInit() {
     this.getAllUserProfiles();
-    this.getAlldata();
     const today = new Date();
     const lastSunday = new Date(today.setDate(today.getDate() - today.getDay()));
     const lastFriday = new Date(lastSunday);
@@ -125,7 +125,6 @@ export class TimeLogsSheetComponent implements OnInit {
   }
 
   getproducts() {
-    console.log("vfdvf", this.projects$);
     this.projects$.subscribe(data => {
       this.issueName = data;
     });
@@ -135,7 +134,6 @@ export class TimeLogsSheetComponent implements OnInit {
     this.firestoreService.getAllUser().subscribe(
       (data) => {
         this.employeeDropdown = data;
-        console.log("this is user data :", data);
       });
   }
 
@@ -143,12 +141,6 @@ export class TimeLogsSheetComponent implements OnInit {
     this.visible = true;
   }
 
-  getAlldata() {
-    console.log("tbefb");
-    this.firestoreService.getallData().then((data) => {
-      console.log("all data:", data);
-    })
-  }
   fetchTimelogData(name: string) {
     this.loading = true;
     this.visible = false;
@@ -160,7 +152,6 @@ export class TimeLogsSheetComponent implements OnInit {
 
     this.firestoreService.getTimelog(this.profileData.username)
       .then((data) => {
-        console.log("Data of data :", data);
         this.apiData = data;
         this.loading = false;
         this.processTimelogData(this.apiData);
@@ -189,7 +180,6 @@ export class TimeLogsSheetComponent implements OnInit {
 
   processTimelo(data: any) {
     this.processedData = [];
-
     let grandTotalHours = 0;
     let grandTotalMinutes = 0;
 
@@ -237,12 +227,12 @@ export class TimeLogsSheetComponent implements OnInit {
     this.grandTotalTime = grandTotalTime;
   }
 
-
   addTimelog() {
-
     if (!this.validateTimeSpent()) {
       return;
     }
+    const projectCode = this.issueName.filter((data: any) => data?.name === this.issueNameVlaue);
+
     this.loading = true;
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
@@ -255,7 +245,8 @@ export class TimeLogsSheetComponent implements OnInit {
       spentTame: this.timeSpent,
       startTime: time,
       description: this.description,
-      name: this.profileData.name
+      name: this.profileData.name,
+      projectCode: projectCode[0].id
     };
     for (const [key, value] of Object.entries(data)) {
       if (value === null || value === undefined || value.toString().trim() === '') {
@@ -267,6 +258,7 @@ export class TimeLogsSheetComponent implements OnInit {
     if (this.isProcessing) {
       return;
     }
+
     this.isProcessing = true;
     this.firestoreService.addTimelog(name, day, data)
       .then(() => {
@@ -331,20 +323,11 @@ export class TimeLogsSheetComponent implements OnInit {
   // DeleteIndexValue
   deleteIndex(entry: any, index: any) {
     this.loading = true;
-    console.log("this vlaue:", entry, "jdd", index);
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
-    const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
     const day = entry.date;
     const name = this.profileData.username;
     const data = {
-      date: entry.date,
-      issueName: entry.issueName,
-      spentTame: entry.spentTame,
-      startTime: entry.startTime,
-      description: "muhammad imran"
+      date: entry.date
     };
-
-    console.log("this is value:", data, day, name, index);
     this.firestoreService.daleteTimelog(name, day, data, index)
       .then(() => {
         this.toaster.showSuccess('Deleted successfully');
@@ -362,8 +345,7 @@ export class TimeLogsSheetComponent implements OnInit {
   updateUI() {
     this.loading = true;
     const time = this.startTime.toTimeString().split(' ')[0];
-    console.log("spent Time", time);
-    // UpdateIndexValue
+    const projectCode = this.issueName.filter((data: any) => data?.name === this.issueNameVlaue);
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
     const day = formattedDate;
@@ -374,13 +356,13 @@ export class TimeLogsSheetComponent implements OnInit {
       spentTame: this.timeSpent,
       startTime: time,
       description: this.description,
-      name: this.profileData.name
+      name: this.profileData.name,
+      projectCode: projectCode[0].id
     };
     if (this.isProcessing) {
-      return;  // Exit if already processing
+      return;
     }
     this.isProcessing = true;
-    console.log("this is value:", data, day, name, this.dateOf);
     this.firestoreService.updateTimelog(name, day, data, this.index)
       .then(() => {
         this.toaster.showSuccess('Updated successfully');
@@ -401,13 +383,11 @@ export class TimeLogsSheetComponent implements OnInit {
 
   update(data: any, index: any) {
     const timeString = data?.startTime;
-    console.log("this vlaue:", data, "jdd", index, "spent Time", this.startTime);
     this.index = index;
     const [hours, minutes, seconds] = timeString.split(':').map(Number);
     const date = new Date();
     date.setHours(hours, minutes, seconds);
     const dateof = new Date(data.date);
-    console.log("this is value:", date, "this su :", dateof);
     this.startTime = date;
     this.issueNameVlaue = data.issueName;
     this.timeSpent = data.spentTame;
@@ -430,13 +410,10 @@ export class TimeLogsSheetComponent implements OnInit {
       totalMinutes += parseInt(minutesMatch);
     });
 
-    // Convert excess minutes into hours
     totalHours += Math.floor(totalMinutes / 60);
     totalMinutes = totalMinutes % 60;
 
     return `${totalHours}h ${totalMinutes}m`;
   }
-
- 
 
 }

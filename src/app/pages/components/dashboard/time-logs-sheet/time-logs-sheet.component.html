@@ -1,6 +1,5 @@
 <div class="w-full relative h-screen h-[calc(80vh-80px)]" [ngClass]="{'dull-bg': loading}">
     <div>
-        <!-- Table Header -->
         <div class="header-section flex justify-content-between align-items-center p-2 border-b-2">
             <div class="header-title flex justify-content-between w-[100%]">
                 <div class="flex w-[50%]">
@@ -14,10 +13,6 @@
                 </div>
                 <div class="w-[50%] justify-end flex">
                     <div class=" justify-end flex">
-                        <!-- <button type="button"
-                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
-                            Create Task
-                        </button> -->
 
                         <button type="button" (click)="showdialog()"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-[#1c4c74] focus:ring-4 focus:bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-[#1c4c74] dark:hover:bg-[#1c4c74] dark:focus:bg-[#1c4c74] h-[35px]">Time
@@ -33,13 +28,11 @@
                         </button>
 
                     </div>
-                    <!-- <p-dropdown [options]="employeeDropdown" optionLabel="name"
-                        placeholder="Select a Employee"></p-dropdown> -->
+
                 </div>
             </div>
         </div>
 
-        <!-- Table Header -->
         <div class="header-section flex justify-content-between align-items-center p-2">
             <div class="header-title flex justify-content-between w-[100%]">
                 <div class="flex w-[100%] justify-end">
@@ -55,12 +48,9 @@
                         </button>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
-        <!-- Weekly Data Table -->
         <div class="data-table h-full">
             <p-table [value]="[days]" scrollHeight="flex" class="p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
@@ -83,13 +73,11 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body">
-
                     <tr *ngFor="let day of days.slice().reverse()">
                         <td class="p-3">
-                            <div *ngFor="let entry of weeklyData[day]">
-                                {{entry?.name}}
+                            <div>
+                                {{weeklyData[day][0]?.name}}
                             </div>
-
                         </td>
                         <td class="p-3">
                             {{day}}
@@ -107,8 +95,9 @@
                                             <div class="entry">
                                                 <div class="flex justify-between">
                                                     <div>
-                                                        <span class="font-semibold text-sm">{{ entry.issueName
-                                                            }}</span>
+                                                        <span class="font-semibold text-sm">{{ entry.issueName }}
+                                                            <span class="text-red-500">({{entry?.projectCode ?
+                                                                entry?.projectCode: 'No Project Id'}})</span></span>
                                                     </div>
                                                     <div class="flex">
                                                         <div (click)="deleteIndex(entry,i)" class="cursor-pointer">
@@ -144,14 +133,10 @@
                                 </ng-template>
                             </div>
                         </td>
-
-
                     </tr>
                 </ng-template>
             </p-table>
         </div>
-
-
     </div>
 </div>
 
@@ -159,13 +144,6 @@
 <p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }" class="p-3">
     <div class="p-3">
         <span class="text-xl font-semibold block pb-3 border-b-2">Log Time</span>
-        <!-- <div class="align-items-center mt-3">
-            <label class="text-sm ">Employee Name</label>
-            <div class="mt-1">
-                <p-dropdown [options]="employeeDropdown" [(ngModel)]="employeeName" optionLabel="name"
-                    optionValue="name" placeholder="Select a issue" />
-            </div>
-        </div> -->
         <div class="align-items-center mt-3">
             <label class="text-sm ">Project <span class="text-red-500">*</span></label>
             <div class="mt-1 ">

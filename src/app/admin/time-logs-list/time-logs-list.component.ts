@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from '@services/firestore.service';
@@ -10,6 +10,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Observable } from 'rxjs';
+import jsPDF from 'jspdf';
+
 interface TimelogEntry {
   date: string;
   description: string;
@@ -36,6 +38,17 @@ interface Timelog {
   styleUrl: './time-logs-list.component.scss'
 })
 export class TimeLogsListComponent implements OnInit {
+  private _name!: string;
+  @Input()
+  set name(value: string) {
+    this._name = value;
+    this.changeIf();  // Call changeIf() when the value of name changes
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
   allData: any;
   visible: boolean = false;
   issueName: any;
@@ -54,6 +67,9 @@ export class TimeLogsListComponent implements OnInit {
   searchValue = false;
   getAllData: any;
   value: any;
+  profileData: any;
+  locathostData: any;
+
 
   constructor(
     private firestoreService: FirestoreService
@@ -70,6 +86,30 @@ export class TimeLogsListComponent implements OnInit {
     this.getAlldata();
     this.getproducts();
     this.getAllUserProfiles();
+    console.log("on change:", this.name);
+    this.locathostData = localStorage.getItem('userProfile');
+    this.profileData = JSON.parse(this.locathostData);
+  }
+
+  // Method to be called on input change
+  changeIf() {
+    console.log("dbfdb")
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: 'a3',
+    });
+    const htmlData = document.getElementById('htmlData');
+    // console.log("Pdf Image:", htmlData);
+    if (htmlData) {
+      pdf.html(htmlData, {
+        margin: [23, 0, 50, 0],
+        callback: (pdf: any) => {
+          pdf.save('timelogssheet.pdf');
+
+        }
+      });
+    }
 
   }
 
