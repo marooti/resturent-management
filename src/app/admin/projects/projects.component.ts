@@ -1,12 +1,29 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProjectServiceService } from '@services/project-service/project-service.service';
+import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { DialogModule } from 'primeng/dialog';
+import { Observable } from 'rxjs';
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { CommonModule } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [DialogModule, FormsModule],
+  imports: [
+    DialogModule,
+    FormsModule,
+    TableModule,
+    DropdownModule,
+    DialogModule,
+    CalendarModule,
+    FormsModule,
+    CommonModule,
+    ProgressSpinnerModule
+  ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
@@ -17,11 +34,17 @@ export class ProjectsComponent {
   projectId: any;
   projectName: any;
   description: any;
-  constructor(private projectService: ProjectServiceService) { }
+  projects$: Observable<any[]>;
+  allProjectName: any;
+  constructor(private projectService: ProjectServiceService, private firestore: Firestore) {
+    const projectsCollection = collection(this.firestore, 'projects');
+    this.projects$ = collectionData(projectsCollection);
+  }
 
   ngOnInit() {
     this.locathostData = localStorage.getItem('userProfile');
-    this.profileData = JSON.parse(this.locathostData)
+    this.profileData = JSON.parse(this.locathostData);
+    this.getproducts();
   }
 
   postProjectData() {
@@ -38,5 +61,12 @@ export class ProjectsComponent {
         this.visible = false;
       })
       .catch((error) => console.error('Error posting project: ', error));
+  }
+
+  getproducts() {
+    this.projects$.subscribe(data => {
+      this.allProjectName = data;
+      console.log("All Data:", this.allProjectName);
+    });
   }
 }

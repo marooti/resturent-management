@@ -38,16 +38,7 @@ interface Timelog {
   styleUrl: './time-logs-list.component.scss'
 })
 export class TimeLogsListComponent implements OnInit {
-  private _name!: string;
-  @Input()
-  set name(value: string) {
-    this._name = value;
-    this.changeIf();  // Call changeIf() when the value of name changes
-  }
 
-  get name(): string {
-    return this._name;
-  }
 
   allData: any;
   visible: boolean = false;
@@ -69,7 +60,7 @@ export class TimeLogsListComponent implements OnInit {
   value: any;
   profileData: any;
   locathostData: any;
-
+  grandTotalTime: any;
 
   constructor(
     private firestoreService: FirestoreService
@@ -86,7 +77,6 @@ export class TimeLogsListComponent implements OnInit {
     this.getAlldata();
     this.getproducts();
     this.getAllUserProfiles();
-    console.log("on change:", this.name);
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData);
   }

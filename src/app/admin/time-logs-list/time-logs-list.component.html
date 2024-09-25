@@ -41,11 +41,11 @@
         </div>
     </div>
 </div>
+
 <div class="data-table h-full mt-3">
     <div class="mb-3 flex justify-between">
         <div>
             <span class="text-2xl font-medium ">Time Logs List </span>
-            {{name}}
         </div>
         <div class="flex">
             <!-- <div class="border-[0.5px] rounded-md mx-2">
@@ -233,3 +233,178 @@
     </div>
 
 </p-dialog>
+
+
+
+<div class="container m-auto " style="display: none;">
+    <div class="row m-auto">
+        <div class="col-12 px-4  m-auto" style="width:840px !important; " id="htmlData">
+
+            <div class="pb-2 w-full flex justify-between w-100">
+                <div class="m-auto " style="width: 300px !important;">
+                    <div>
+                        <span class="text-xl font-bold text-color m-auto">
+                            Weakly Report
+                        </span>
+                    </div>
+                </div>
+                <div class="justify-end flex w-full m-auto pl-3">
+                    <div>
+                        <img src="/assets/logo.png" alt="" width="230px" height="40px">
+                    </div>
+                </div>
+            </div>
+            <!-- Report Details is Bellow -->
+            <ng-container>
+                <!-- <ng-container *ngIf="report"> -->
+                <div class="report-detial shadow-1 mb-3 border-round-md bg-slate-100">
+                    <!-- Site Details & shift deatils -->
+                    <div class="site-details">
+                        <div class="col-12 flex justify-between p-3 border-round-md bg-slate-100">
+                            <div class="w-4 flex justify-between w-full">
+                                <div class="w-full">
+                                    <div class="my-2"> <span class="text-xl font-semibold text-900">Weakly Report</span>
+                                    </div>
+                                    <div>
+                                        <div class="flex align-items-center mb-1">
+                                            <div>
+                                                <span class="pr-2 text-sm text-color">Date :</span>
+                                            </div>
+                                            <span class="text-color text-sm">
+                                                {{profileData?.name}}
+                                            </span>
+                                        </div>
+                                        <div class="flex align-items-center">
+                                            <div>
+                                                <span class="text-color pr-2 text-sm">Total Time :
+                                                </span>
+                                            </div>
+                                            <span class="text-color text-sm">
+                                                {{grandTotalTime}}
+                                            </span>
+                                        </div>
+                                        <div class="flex align-items-center mb-1">
+                                            <div>
+                                                <span class="text-color pr-2 text-sm ">Date Range :</span>
+                                            </div>
+                                            <!-- <span class="text-color text-sm">
+                                                <ng-container>
+                                                    {{this.rangeDates[0] | date:'mediumDate'}} - {{this.rangeDates[1] |
+                                                    date:'mediumDate'}}
+                                                </ng-container> </span> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div>
+            </div>
+            <p-table scrollHeight="flex" [value]="allData" class="p-datatable-gridlines p-datatable-striped">
+                <ng-template pTemplate="header">
+                    <tr class="p-2 bg-[#349ce4]">
+                        <th class="bg-[#1c4c74] p-3 text-white w-[15%]">
+                            <span class="font-normal text-md">Name</span>
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[15%]">
+                            <span class="font-normal text-md">Date</span>
+
+                        </th>
+                        <th class="bg-[#1c4c74] p-3 text-white w-[15%]">
+                            <span class="font-normal text-md">Total time</span>
+
+                        </th>
+
+                        <th class="bg-[#1c4c74] p-3 text-white">
+                            <span class="font-normal text-md">Description</span>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-log>
+                    <tr *ngIf="!searchValue">
+                        <td class="p-3">
+                            {{getUserName(log.id)}}
+                        </td>
+                        <td class="p-3" *ngFor="let data of getDateKeys(log)">
+                            {{ data}}
+                        </td>
+                        <td class="p-3">
+                            <div>
+                                {{processTimelo(log)}}
+                            </div>
+                        </td>
+
+                        <td class=" p-3">
+                            <div>
+                                <ng-container *ngFor="let dateKey of getDateKeys(log)">
+                                    <ng-container *ngFor="let entry of log[dateKey]?.data; let i = index">
+                                        <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
+                                            (click)="showingDialog(log ,entry, i)">
+                                            <div>
+                                                <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame
+                                                }}
+                                            </div>
+                                            <div>
+                                                <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName
+                                                }}
+                                                <span class="text-red-500">
+                                                    ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span class="font-bold text-sm">Description :</span> {{
+                                                entry.description }}
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </td>
+                    </tr>
+                    <ng-container *ngFor="let data of log?.data">
+                        <tr *ngIf="searchValue">
+                            <td class="p-3">
+                                {{ data.name }}
+                            </td>
+                            <td class="p-3">
+                                {{ data.date }}
+                            </td>
+                            <td class="p-3">
+                                <div>
+                                    {{ calculateTotalTime(data) }}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div>
+                                    <ng-container *ngFor="let entry of data?.data; let i = index">
+                                        <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
+                                            (click)="showingDialog(log ,entry, i)">
+                                            <div>
+                                                <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame
+                                                }}
+                                            </div>
+                                            <div>
+                                                <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName
+                                                }}
+                                                <span class="text-red-500">
+                                                    ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span class="font-bold text-sm">Description :</span> {{
+                                                entry.description }}
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
