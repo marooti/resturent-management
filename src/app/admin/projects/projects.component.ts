@@ -9,6 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FirestoreService } from '@services/firestore.service';
 
 @Component({
   selector: 'app-projects',
@@ -20,7 +21,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     DropdownModule,
     DialogModule,
     CalendarModule,
-    FormsModule,
     CommonModule,
     ProgressSpinnerModule
   ],
@@ -38,8 +38,14 @@ export class ProjectsComponent {
   allProjectName: any;
   filterData: any;
   projectfilter: any;
-
-  constructor(private projectService: ProjectServiceService, private firestore: Firestore) {
+  employeeDropdown: any;
+  employeeName: any;
+  update = false;
+  constructor(
+    private projectService: ProjectServiceService
+    , private firestore: Firestore
+    , private firestoreService: FirestoreService,
+  ) {
     const projectsCollection = collection(this.firestore, 'projects');
     this.projects$ = collectionData(projectsCollection);
   }
@@ -48,14 +54,16 @@ export class ProjectsComponent {
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData);
     this.getproducts();
+    this.getAllUserProfiles();
   }
 
   postProjectData() {
-    const projectId = this.projectId;  // Document ID
+    const projectId = this.projectId;
     const projectData = {
       id: this.projectId,
       name: this.projectName,
       description: this.description,
+      assignTo: this.employeeName,
     };
 
     this.projectService.addProjectData(projectId, projectData)
@@ -80,4 +88,45 @@ export class ProjectsComponent {
     this.allProjectName = value;
 
   }
+
+  getAllUserProfiles() {
+    this.firestoreService.getAllUser().subscribe(
+      (data) => {
+        this.employeeDropdown = data;
+      });
+  }
+
+  deleteField(projectCode: any) {
+    this.projectService.deleteProjectData(projectCode)
+      .then(() => console.log('Project deleted successfully'))
+      .catch((error) => console.error('Error deleting project: ', error));
+  }
+
+  updateProjectData() {
+    const projectId = this.projectId;
+    const projectData = {
+      id: this.projectId,
+      name: this.projectName,
+      description: this.description,
+    };
+
+    this.projectService.addProjectData(projectId, projectData)
+      .then(() => {
+        console.log('Project posted or updated successfully');
+        this.visible = false;
+      })
+      .catch((error) => console.error('Error posting or updating project: ', error));
+  }
+
+  edit(project: any) {
+    console.log("this is project Id:", project);
+    this.projectId = project?.id;
+    this.projectName = project?.name;
+    this.description = project?.description;
+    this.visible = true;
+    this.update = true;
+  }
+
+
+  
 }

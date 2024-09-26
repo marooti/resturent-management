@@ -7,6 +7,7 @@ import { PageNotFoundComponent } from './pages/components/page-not-found/page-no
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminTimeSheetComponent } from './admin/layout/admin-time-sheet/admin-time-sheet.component';
 import { ProjectsComponent } from './admin/projects/projects.component';
+import { AddUsersComponent } from './admin/layout/add-users/add-users.component';
 
 export const routes: Routes = [
     {
@@ -36,7 +37,8 @@ export const routes: Routes = [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: AdminDashboardComponent },
             { path: 'time-sheet', component: AdminTimeSheetComponent },
-            { path: 'projects', component: ProjectsComponent }
+            { path: 'projects', component: ProjectsComponent },
+            { path: 'add-users', component: AddUsersComponent }
         ]
     },
     {

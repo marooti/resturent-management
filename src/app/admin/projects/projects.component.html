@@ -75,16 +75,21 @@
                             <p-table scrollHeight="flex" [value]="[allProjectName]"
                                 class="p-datatable-gridlines p-datatable-striped">
                                 <ng-template pTemplate="header">
-                                    <tr class="p-2 bg-[#349ce4]">
+                                    <tr class="p-2 bg-[#349ce4] shadow-2">
                                         <th class="bg-[#1c4c74] p-3 text-white w-[200px]"
                                             style="min-width: 100px !important;">
                                             <span class="font-normal text-md">Id No</span>
                                         </th>
                                         <th class="bg-[#1c4c74] p-3 text-white w-[200px]"
                                             style="min-width: 100px !important;">
-                                            <span class="font-normal text-md">Name</span>
+                                            <span class="font-normal text-md">Project Name</span>
 
                                         </th>
+                                        <!-- <th class="bg-[#1c4c74] p-3 text-white w-[200px]"
+                                            style="min-width: 100px !important;">
+                                            <span class="font-normal text-md">Assign To</span>
+
+                                        </th> -->
                                         <th class="bg-[#1c4c74] p-3 text-white w-[300px]"
                                             style="min-width: 300px !important;">
                                             <span class="font-normal text-md">Description</span>
@@ -93,15 +98,31 @@
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body">
-                                    <tr *ngFor="let day of allProjectName" class="border-b-2">
+                                    <tr *ngFor="let day of allProjectName" class="border-b-2 shadow-2 bg-gray-50">
                                         <td class="w-[100px !important] p-3">
                                             {{day.id}}
                                         </td>
                                         <td class="w-[100px !important] p-3">
                                             {{day.name}}
                                         </td>
+                                        <!-- <td class="w-[100px !important] p-3">
+                                            {{day.assignTo ? day.assignTo:'❌'}}
+                                        </td> -->
                                         <td class="w-[300px !important] p-3">
-                                            {{day.description }}
+                                            <div class="flex justify-between">
+                                                <div class="w-[90%]">
+                                                    {{day.description ? day.description:'❌'}}
+
+                                                </div>
+                                                <div class="w-[30px]" style="width: 30px !important;">
+                                                    <i class="pi pi-pencil text-sm text-red-500 cursor-pointer"
+                                                        (click)="edit(day)"></i>
+                                                </div>
+                                                <div class="w-[30px]" style="width: 30px !important;">
+                                                    <i class="pi pi-trash text-sm text-red-500 cursor-pointer"
+                                                        (click)="deleteField(day?.id)"></i>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -129,9 +150,17 @@
         </div>
 
         <div class="mt-2">
-            <label class="text-sm ">Project Id <span class="text-red-500">*</span></label>
+            <label class="text-sm ">Project <span class="text-red-500">*</span></label>
             <input type="number" placeholder="Enter the Id" [(ngModel)]="projectId">
         </div>
+
+        <!-- <div class="mt-2">
+            <label class="text-sm ">Assign To <span class="text-red-500">*</span></label>
+            <p-dropdown [options]="employeeDropdown" optionLabel="name" optionValue="name" [(ngModel)]="employeeName"
+                placeholder="Select a Employee"></p-dropdown>
+
+        </div> -->
+
 
         <div class="mt-2">
             <label class="text-sm ">Project Name <span class="text-red-500">*</span></label>
@@ -152,9 +181,14 @@
                 class="focus:outline-none border-1 bg-white rounded-lg text-sm px-3 me-2  h-[35px]">
                 Cancel </button>
 
-            <button type="button" (click)="postProjectData()"
+            <button type="button" (click)="postProjectData()" *ngIf="!update"
                 class="focus:outline-none text-white bg-[#1c4c74]  rounded-lg text-sm px-3 me-2 dark:bg-green-600  h-[35px]">
                 Save
+            </button>
+
+            <button type="button" (click)="updateProjectData()" *ngIf="update"
+                class="focus:outline-none text-white bg-[#1c4c74]  rounded-lg text-sm px-3 me-2 dark:bg-green-600  h-[35px]">
+                Update
             </button>
 
         </div>
