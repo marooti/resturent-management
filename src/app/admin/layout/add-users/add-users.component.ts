@@ -35,13 +35,42 @@ export class AddUsersComponent {
   projectfilter: any;
   projects$: Observable<any[]>
   visible = false;
-
+  update = false;
+  allData: any;
+  username: any;
   gender: any[] = [
     {
       gendar: 'male'
     },
     {
       gendar: 'female'
+    },
+  ]
+
+  department: any[] = [
+    {
+      department: 'Accounts'
+    },
+    {
+      department: 'Mobile Application Development'
+    },
+    {
+      department: 'Digital Marketing'
+    },
+    {
+      department: 'Web Development'
+    },
+    {
+      department: 'Quality Assurance'
+    },
+    {
+      department: 'Human Resource'
+    },
+    {
+      department: 'Wordpress'
+    },
+    {
+      department: 'Management'
     },
   ]
   profileForm = new FormGroup({
@@ -76,6 +105,7 @@ export class AddUsersComponent {
       (data) => {
         console.log("this value:", data);
         this.filterData = data;
+        this.allData = data;
       });
   }
 
@@ -101,14 +131,68 @@ export class AddUsersComponent {
       .then((data) => {
         console.log('Project posted successfully', data);
         this.visible = false;
+        this.profileForm.reset();
+      })
+      .catch((error) => console.error('Error posting project: ', error));
+  }
+
+  deleteProjectData() {
+    const value = this.profileForm.value['role'];
+    const projectId = value;
+
+    this.userService.deleteProjectData(projectId)
+      .then((data) => {
+        console.log('Project posted successfully', data);
+        this.visible = false;
+        this.update = false;
+        this.profileForm.reset();
       })
       .catch((error) => console.error('Error posting project: ', error));
   }
 
   patchForm(data: any) {
+    this.update = true;
     this.visible = true;
     console.log("this is value", data);
     this.profileForm.patchValue(data);
     // this
+  }
+
+  updateProjectData() {
+    console.log(this.profileForm.value['role']);
+    const value = this.profileForm.value['role'];
+    const projectId = value;
+    const projectData = {
+      name: this.profileForm.value['name'],
+      gender: this.profileForm.value['gender'],
+      email: this.profileForm.value['email'],
+      role: this.profileForm.value['role'],
+      phoneNo: this.profileForm.value['phoneNo'],
+      password: this.profileForm.value['password'],
+      department: this.profileForm.value['department'],
+      officeRole: this.profileForm.value['officeRole'],
+      username: this.profileForm.value['role'],
+    };
+
+    this.userService.updateProjectData(projectId, projectData)
+      .then((data) => {
+        console.log('Project updated successfully', data);
+        this.visible = false;
+        this.update = false;
+        this.profileForm.reset();
+      })
+      .catch((error) => console.error('Error posting project: ', error));
+  }
+
+  dialogCancel() {
+    this.profileForm.reset();
+    this.visible = false;
+    this.update = false;
+  }
+
+  search() {
+    console.log("this is value:", this.username);
+    const value = this.allData.filter((data: any) => data.name === this.username);
+    this.filterData = value;
   }
 }

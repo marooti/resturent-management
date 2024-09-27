@@ -48,11 +48,11 @@
             <span class="text-2xl font-medium ">Time Logs List </span>
         </div>
         <div class="flex">
-            <!-- <div class="border-[0.5px] rounded-md mx-2">
+            <div class="border-[0.5px] rounded-md mx-2">
                 <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" [showIcon]="true"
                     inputId="range">
                 </p-calendar>
-            </div> -->
+            </div>
             <div class="mr-2">
                 <p-dropdown [options]="employeeDropdown" [(ngModel)]="employeeName" optionLabel="name"
                     placeholder="Select a Employee"></p-dropdown>
@@ -86,77 +86,40 @@
         <ng-template pTemplate="body" let-log>
             <tr *ngIf="!searchValue">
                 <td class="p-3">
-                    {{getUserName(log.id)}}
-                </td>
-                <td class="p-3" *ngFor="let data of getDateKeys(log)">
-                    {{ data}}
+                    {{log?.name}}
+                    <!-- {{getUserName(log.id)}} -->
                 </td>
                 <td class="p-3">
-                    <div>
-                        {{processTimelo(log)}}
+                    {{log?.date}}
+                </td>
+                <td class="p-3">
+                    <div *ngFor="let time of log.data">
+                        {{time.spentTame}}
                     </div>
                 </td>
 
                 <td class=" p-3">
                     <div>
-                        <ng-container *ngFor="let dateKey of getDateKeys(log)">
-                            <ng-container *ngFor="let entry of log[dateKey]?.data; let i = index">
-                                <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
-                                    (click)="showingDialog(log ,entry, i)">
-                                    <div>
-                                        <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}
-                                    </div>
-                                    <div>
-                                        <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName }}
-                                        <span class="text-red-500">
-                                            ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="font-bold text-sm">Description :</span> {{ entry.description }}
-                                    </div>
+                        <ng-container *ngFor="let entry of log?.data; let i = index">
+                            <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
+                                (click)="showingDialog(log ,entry, i)">
+                                <div>
+                                    <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}
                                 </div>
-                            </ng-container>
+                                <div>
+                                    <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName }}
+                                    <span class="text-red-500">
+                                        ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-sm">Description :</span> {{ entry.description }}
+                                </div>
+                            </div>
                         </ng-container>
                     </div>
                 </td>
             </tr>
-            <ng-container *ngFor="let data of log?.data">
-                <tr *ngIf="searchValue">
-                    <td class="p-3">
-                        {{ data.name }}
-                    </td>
-                    <td class="p-3">
-                        {{ data.date }}
-                    </td>
-                    <td class="p-3">
-                        <div>
-                            {{ calculateTotalTime(data) }}
-                        </div>
-                    </td>
-                    <td class="p-3">
-                        <div>
-                            <ng-container *ngFor="let entry of data?.data; let i = index">
-                                <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
-                                    (click)="showingDialog(log ,entry, i)">
-                                    <div>
-                                        <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame }}
-                                    </div>
-                                    <div>
-                                        <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName }}
-                                        <span class="text-red-500">
-                                            ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span class="font-bold text-sm">Description :</span> {{ entry.description }}
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </td>
-                </tr>
-            </ng-container>
         </ng-template>
     </p-table>
 </div>
@@ -220,7 +183,7 @@
                 class="focus:outline-none border-2 bg-white rounded-lg text-sm px-3 me-2  h-[35px]">
                 Cancel </button>
             <button type="button" (click)="deleteIndex()"
-                class="focus:outline-none text-white bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-green-600 h-[35px]">
+                class="focus:outline-none text-white bg-[#1c4c74]  rounded-lg text-sm px-3 me-2 dark:bg-green-600 h-[35px]">
                 Delete
             </button>
 
@@ -233,8 +196,6 @@
     </div>
 
 </p-dialog>
-
-
 
 <div class="container m-auto " style="display: none;">
     <div class="row m-auto">
@@ -326,83 +287,42 @@
                 <ng-template pTemplate="body" let-log>
                     <tr *ngIf="!searchValue">
                         <td class="p-3">
-                            {{getUserName(log.id)}}
-                        </td>
-                        <td class="p-3" *ngFor="let data of getDateKeys(log)">
-                            {{ data}}
+                            {{log?.name}}
                         </td>
                         <td class="p-3">
-                            <div>
-                                {{processTimelo(log)}}
+                            {{ log?.date}}
+                        </td>
+                        <td class="p-3">
+                            <div *ngFor="let time of log.data">
+                                {{time.spentTame}}
                             </div>
                         </td>
 
                         <td class=" p-3">
                             <div>
-                                <ng-container *ngFor="let dateKey of getDateKeys(log)">
-                                    <ng-container *ngFor="let entry of log[dateKey]?.data; let i = index">
-                                        <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
-                                            (click)="showingDialog(log ,entry, i)">
-                                            <div>
-                                                <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame
-                                                }}
-                                            </div>
-                                            <div>
-                                                <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName
-                                                }}
-                                                <span class="text-red-500">
-                                                    ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span class="font-bold text-sm">Description :</span> {{
-                                                entry.description }}
-                                            </div>
+                                <ng-container *ngFor="let entry of log?.data; let i = index">
+                                    <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
+                                        (click)="showingDialog(log ,entry, i)">
+                                        <div>
+                                            <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame
+                                            }}
                                         </div>
-                                    </ng-container>
+                                        <div>
+                                            <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName
+                                            }}
+                                            <span class="text-red-500">
+                                                ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="font-bold text-sm">Description :</span> {{
+                                            entry.description }}
+                                        </div>
+                                    </div>
                                 </ng-container>
                             </div>
                         </td>
                     </tr>
-                    <ng-container *ngFor="let data of log?.data">
-                        <tr *ngIf="searchValue">
-                            <td class="p-3">
-                                {{ data.name }}
-                            </td>
-                            <td class="p-3">
-                                {{ data.date }}
-                            </td>
-                            <td class="p-3">
-                                <div>
-                                    {{ calculateTotalTime(data) }}
-                                </div>
-                            </td>
-                            <td class="p-3">
-                                <div>
-                                    <ng-container *ngFor="let entry of data?.data; let i = index">
-                                        <div class="bg-slate-100 mb-2 p-2 rounded-md hover:bg-slate-50 cursor-pointer"
-                                            (click)="showingDialog(log ,entry, i)">
-                                            <div>
-                                                <span class="font-bold text-sm">Spent Time :</span> {{ entry.spentTame
-                                                }}
-                                            </div>
-                                            <div>
-                                                <span class="font-bold text-sm">Project Name :</span> {{ entry.issueName
-                                                }}
-                                                <span class="text-red-500">
-                                                    ({{entry?.projectCode ? entry?.projectCode:'No Project Id'}})
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <span class="font-bold text-sm">Description :</span> {{
-                                                entry.description }}
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-container>
                 </ng-template>
             </p-table>
         </div>

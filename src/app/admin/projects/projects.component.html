@@ -33,7 +33,7 @@
             <div class="flex w-[50%] justify-end mt-2">
                 <div class="mr-2">
                     <p-dropdown [options]="filterData" [(ngModel)]="projectfilter" optionValue="name" optionLabel="name"
-                        placeholder="Select a Employee"></p-dropdown>
+                        placeholder="Select a Project"></p-dropdown>
                 </div>
                 <div class="pl-3">
                     <button type="button" (click)="searchRecord()"
@@ -178,7 +178,7 @@
 
         <div class="mt-3 justify-end flex">
             <button type="button" (click)="visible = false"
-                class="focus:outline-none border-1 bg-white rounded-lg text-sm px-3 me-2  h-[35px]">
+                class="focus:outline-none border-2 bg-white rounded-lg text-sm px-3 me-2  h-[35px]">
                 Cancel </button>
 
             <button type="button" (click)="postProjectData()" *ngIf="!update"

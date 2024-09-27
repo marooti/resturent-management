@@ -51,7 +51,7 @@ export class AdminTimeSheetComponent {
   employeeDropdown: any;
   employeeName: any;
   allAttendance: any;
-
+  dateRange: Date[] = [new Date(), new Date()];
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
 
   }
@@ -179,22 +179,17 @@ export class AdminTimeSheetComponent {
         this.loading = false;
         const currentDate = new Date().toDateString();
         this.allAttendance = allAttendance;
+        console.log("this is all data :", allAttendance);
         this.days = allAttendance.filter((data: any) => data.date === currentDate);
         console.log("Formatted All Attendance:", this.days, "today", currentDate);
       }
     );
   }
 
-
-
-
-
   transformTimelogData(data: any): any[] {
     const result: any[] = [];
-
     Object.keys(data).forEach((date) => {
       const dayData = data[date].data;
-
 
       dayData.forEach((entry: any) => {
         result.push({
@@ -233,9 +228,33 @@ export class AdminTimeSheetComponent {
   }
 
   searchRecord() {
-    const filerData = this.allAttendance.filter((data: any) => data?.name === this.employeeName?.name)
-    console.log("this is name:", filerData);
-    this.days = filerData;
+    const startDate = new Date(this.dateRange[0]);
+    const endDate = new Date(this.dateRange[1]);
+
+    // Filter by date range
+    const filteredData = this.allAttendance.filter((data: any) => {
+      const recordDate = new Date(data?.date);
+      return recordDate >= startDate && recordDate <= endDate;
+    });
+
+    // Further filter by employee name if provided
+    let finalData;
+    if (this.employeeName?.name) {
+      finalData = filteredData.filter((data: any) => data?.name === this.employeeName?.name);
+    } else {
+      finalData = filteredData;
+    }
+
+    // Sort the final data by date (ascending)
+    this.days = finalData.sort((a: any, b: any) => {
+      const dateA = new Date(a?.date).getTime();
+      const dateB = new Date(b?.date).getTime();
+      return dateA - dateB;  // Ascending order (for descending, reverse the comparison)
+    });
+
+    console.log("Sorted Filtered Data:", this.days, "Selected Date Range:", this.dateRange);
   }
+
+
 
 }

@@ -22,11 +22,11 @@ export class UserSerivceService {
   }
 
   // Function to post data to Firestore
-  async updateProjectData(id: string, data: any): Promise<void> {
+  async updateProjectData(id: any, data: any): Promise<void> {
     const projectDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
     try {
       // Using { merge: true } will merge the new data with the existing document
-      await setDoc(projectDocRef, { id, ...data }, { merge: true });
+      await setDoc(projectDocRef, { ...data }, { merge: true });
       console.log(`Document with ID ${id} successfully written or updated!`);
     } catch (error) {
       console.error('Error writing or updating document: ', error);
@@ -35,7 +35,7 @@ export class UserSerivceService {
 
 
 
-  async deleteProjectData(id: string): Promise<void> {
+  async deleteProjectData(id: any): Promise<void> {
     const projectDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
     try {
       await deleteDoc(projectDocRef);

@@ -11,17 +11,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
-
-interface TimelogEntry {
-  date: string;
-  description: string;
-  issueName: string;
-  spentTame: string;
-  startTime: string;
-}
-interface Timelog {
-  data: TimelogEntry[];
-}
 @Component({
   selector: 'app-time-logs-list',
   standalone: true,
@@ -53,7 +42,8 @@ export class TimeLogsListComponent implements OnInit {
   timeSpent: any;
   startTime: any;
   employeeDropdown: any;
-  rangeDates: any;
+  rangeDates: Date[] = [new Date(), new Date()];
+
   employeeName: any;
   searchValue = false;
   getAllData: any;
@@ -104,19 +94,34 @@ export class TimeLogsListComponent implements OnInit {
   }
 
   getAlldata() {
-    const currentDate = new Date().toLocaleDateString('en-US', {
-      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-    });
-
     this.firestoreService.getallData().then((data) => {
-      this.getAllData = data;
+      // this.getAllData = data;
+      // console.log("this is data:", this.getAllData);
+      const reorganizedData: any = [];
 
-      this.allData = data.map((entry: any) => {
-        const filteredDateData = entry[currentDate] ? { [currentDate]: entry[currentDate] } : null;
+      for (const entry of data) {
+        Object.keys(entry).forEach(key => {
+          if (key !== 'id') {
+            reorganizedData.push({
+              date: key,
+              name: entry[key].data[0]?.name || [], // Ensure name is properly assigned
+              data: entry[key].data || []
+            });
+          }
+        });
+      }
 
-        return filteredDateData ? { id: entry.id, ...filteredDateData } : null;
-      }).filter(Boolean);
+      // Sort the reorganizedData by date
+      const dateDate = reorganizedData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      this.tableData(dateDate);
+      // this.allData = dateDate
+      // console.log("Sorted data:", this.allData);
     });
+  }
+
+  tableData(data: any) {
+    this.allData = data;
+    this.getAllData = data;
   }
 
   getDateKeys(log: any): string[] {
@@ -130,8 +135,10 @@ export class TimeLogsListComponent implements OnInit {
   }
 
   deleteIndex() {
+    const filterName = this.employeeDropdown.filter((data: any) => data.name === this.namehg?.name);
+
     const day = this.entry.date;
-    const name = this.namehg?.id;
+    const name = filterName[0].username;
     const data = {
       date: this.entry.date,
     };
@@ -146,26 +153,32 @@ export class TimeLogsListComponent implements OnInit {
         console.error('Error adding data: ', error);
       });
   }
-
   updateUI() {
     const time = this.startTime.toTimeString().split(' ')[0];
+    console.log("this is all user data:", this.employeeDropdown);
+    const filterName = this.employeeDropdown.filter((data: any) => data.name === this.namehg?.name);
+    const projectCode = this.issueName.filter((data: any) => data?.name === this.issueNameVlaue);
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
     const formattedDate = this.dateOf.toLocaleDateString('en-US', options);
     const day = formattedDate;
-    const name = this.namehg?.id;
+    const name = filterName[0].username;
     const data = {
       date: formattedDate,
       issueName: this.issueNameVlaue,
       spentTame: this.timeSpent,
       startTime: time,
-      description: this.description
+      description: this.description,
+      name: this.namehg?.name,
+      projectCode: projectCode[0].id
     };
+
+    console.log("this data:", name, "value", day, "value 1", data, "index", this.index, "value:", filterName);
+
     this.firestoreService.updateTimelog(name, day, data, this.index)
       .then(() => {
         this.toaster.showSuccess('Updated successfully');
-        this.getAlldata();
-
         this.visible = false;
+        this.getAlldata();
       })
       .catch(error => {
         console.error('Error adding data: ', error);
@@ -180,11 +193,7 @@ export class TimeLogsListComponent implements OnInit {
       });
   }
 
-  getUserName(username: any) {
-    let name = this.employeeDropdown?.filter((entry: any) => entry?.username === username);
-    return name[0]?.name;
 
-  }
 
   processTimelo(data: any) {
     let grandTotalHours = 0;
@@ -207,21 +216,17 @@ export class TimeLogsListComponent implements OnInit {
   }
 
   search() {
-    this.searchValue = true;
-    this.value = this.employeeDropdown.filter((name: any) => name.id === this.employeeName.username);
-    let valueAll = this.getAllData.filter((name: any) => name.id === this.employeeName.username);
-    let payload = {
-      data: Object.entries(valueAll[0])
-        .filter(([key, value]: [string, Timelog | any]) => key !== 'id' && (value as Timelog)?.data && Array.isArray((value as Timelog).data))
-        .map(([date, value], index) => ({
-          index,
-          date,
-          name: this.value[0]?.name,
-          data: (value as Timelog).data.map((entry: TimelogEntry) => ({ ...entry }))
-        }))
-    };
-
-    this.allData = [payload];
+    const startDate = new Date(this.rangeDates[0]);
+    const endDate = new Date(this.rangeDates[1]);
+    const filteredData = this.getAllData.filter((data: any) => {
+      const recordDate = new Date(data?.date);
+      return recordDate >= startDate && recordDate <= endDate;
+    });
+    if (this.employeeName?.name) {
+      this.allData = filteredData.filter((data: any) => data?.name === this.employeeName?.name);
+    } else {
+      this.allData = filteredData;
+    }
   }
 
   showingDialog(namehg: any, entry: any, index: any) {
@@ -238,27 +243,10 @@ export class TimeLogsListComponent implements OnInit {
     this.entry = entry;
     this.index = index;
     this.visible = true;
+    console.log("this is table value:", namehg, entry, this.index);
   }
 
 
-  calculateTotalTime(data: any): string {
-    let grandTotalHours = 0;
-    let grandTotalMinutes = 0;
 
-    data?.data.forEach((spentTime: any) => {
-      const timeString = spentTime?.spentTame.toLowerCase();
-      const hourMatch = timeString.match(/(\d+)h/)?.[1] || '0';
-      const minuteMatch = timeString.match(/(\d+)m/)?.[1] || '0';
-
-      grandTotalHours += parseInt(hourMatch);
-      grandTotalMinutes += parseInt(minuteMatch);
-    });
-
-    // Convert minutes to hours
-    grandTotalHours += Math.floor(grandTotalMinutes / 60);
-    grandTotalMinutes %= 60;
-
-    return `${grandTotalHours}h ${grandTotalMinutes}m`;
-  }
 
 }
