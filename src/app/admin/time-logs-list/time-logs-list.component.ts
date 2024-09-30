@@ -11,6 +11,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
+import { CarouselModule } from 'primeng/carousel';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-time-logs-list',
   standalone: true,
@@ -21,7 +23,9 @@ import jsPDF from 'jspdf';
     CalendarModule,
     FormsModule,
     CommonModule,
-    InputTextModule
+    InputTextModule,
+    CarouselModule,
+    RouterLink
   ],
   templateUrl: './time-logs-list.component.html',
   styleUrl: './time-logs-list.component.scss'
@@ -52,6 +56,11 @@ export class TimeLogsListComponent implements OnInit {
   locathostData: any;
   grandTotalTime: any;
 
+  userdata: any[]=[];
+  responsiveOptions: any[] | undefined;
+
+
+
   constructor(
     private firestoreService: FirestoreService
     , private firestore: Firestore
@@ -70,6 +79,7 @@ export class TimeLogsListComponent implements OnInit {
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData);
     this.lastMonthDate();
+    this.getAllUserProfilesdata();
   }
 
   lastMonthDate() {
@@ -201,6 +211,7 @@ export class TimeLogsListComponent implements OnInit {
 
 
 
+
   processTimelo(data: any) {
     let grandTotalHours = 0;
     let grandTotalMinutes = 0;
@@ -273,6 +284,36 @@ export class TimeLogsListComponent implements OnInit {
     return `${hours}h ${minutes}m`;
   }
 
+  getAllUserProfilesdata() {
+    this.firestoreService.getAllUser().subscribe(
+      (data) => {
+        console.log("all data profiles:", data);
+        this.userdata = data;
+      });
+  }
 
+  isSelected(data: any): boolean {
+    return this.allData.some((selected = this.allData) => selected.name === data.name);
+  }
+
+  carousel(){
+    this.responsiveOptions = [
+      {
+          breakpoint: '1199px',
+          numVisible: 1,
+          numScroll: 1
+      },
+      {
+          breakpoint: '991px',
+          numVisible: 2,
+          numScroll: 1
+      },
+      {
+          breakpoint: '767px',
+          numVisible: 1,
+          numScroll: 1
+      }
+  ];
+  }
 
 }

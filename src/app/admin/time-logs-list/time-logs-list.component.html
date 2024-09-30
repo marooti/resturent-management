@@ -63,6 +63,42 @@
             </button>
         </div>
     </div>
+
+    <div class="card ">
+        <p-carousel 
+            [value]="userdata" 
+            [numVisible]="6" 
+            [numScroll]="3" 
+            [circular]="false" 
+            [responsiveOptions]="responsiveOptions">
+                <ng-template let-userdata pTemplate="item">
+                    <div class="shadow-lg py-2 pb-7 rounded mx-2 my-7" [ngStyle]="isSelected(userdata) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
+                        <div class="flex flex-col justify-center items-center" >
+                            <img src="../../../assets/male-image.png" alt="" width="150" height="150" >
+                            <span class="text-md font-medium cursor-pointer text-center text-ellipsis overflow-hidden whitespace-nowrap" style="width: 170px;" routerLink="/admin/add-users" > {{userdata.name}}</span>
+                            <span class="text-xs">{{userdata.designation}}</span>
+                        </div>
+                    </div>
+
+                </ng-template>
+        </p-carousel>
+    </div>
+
+
+
+    <!-- <div class="grid grid-cols-5 gap-4 my-4">
+        @for (data of userdata; track $index) {
+            <div class="shadow-md py-2 pb-7 rounded " [ngStyle]="isSelected(data) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
+                <div class="flex flex-col justify-center items-center">
+                    <img src="../../../assets/male-image.png" alt="" width="150" height="150" >
+                    <span class="text-lg font-medium">{{data.name}}</span>
+                    <span class="text-sm">{{data.designation}}</span>
+                </div>
+            </div>
+        
+        }  
+    </div> -->
+
     <p-table scrollHeight="flex" [value]="allData" class="p-datatable-gridlines p-datatable-striped">
         <ng-template pTemplate="header">
             <tr class="p-2 bg-[#349ce4]">

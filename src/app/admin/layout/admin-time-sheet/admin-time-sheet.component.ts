@@ -10,6 +10,9 @@ import { Firestore } from '@angular/fire/firestore';
 import { ToastrService } from '@services/toastr.service';
 import { ProjectSidebarComponent } from '../../../pages/components/project-sidebar/project-sidebar.component';
 import jsPDF from 'jspdf';
+import { CarouselModule } from 'primeng/carousel';
+import { RouterLink } from '@angular/router';
+
 
 interface Attendance {
   [key: string]: {
@@ -33,7 +36,9 @@ interface Attendance {
     CalendarModule,
     FormsModule,
     CommonModule,
-    ProjectSidebarComponent
+    ProjectSidebarComponent,
+    CarouselModule,
+    RouterLink
   ],
   templateUrl: './admin-time-sheet.component.html',
   styleUrl: './admin-time-sheet.component.scss'
@@ -52,6 +57,10 @@ export class AdminTimeSheetComponent {
   employeeName: any;
   allAttendance: any;
   dateRange: any;
+  
+  userdata: any[]=[];
+  responsiveOptions: any[] | undefined;
+
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
 
   }
@@ -65,6 +74,7 @@ export class AdminTimeSheetComponent {
     this.fetchTimelogData(this.profileData.username);
     this.getAllUserProfiles();
     this.lastMonthDate();
+    this.getAllUserProfilesdata();
   }
 
   lastMonthDate() {
@@ -266,6 +276,36 @@ export class AdminTimeSheetComponent {
     console.log("Sorted Filtered Data:", this.days, "Selected Date Range:", this.dateRange);
   }
 
+  getAllUserProfilesdata() {
+    this.firestoreService.getAllUser().subscribe(
+      (data) => {
+        console.log("all data profiles:", data);
+        this.userdata = data;
+      });
+  }
 
+  isSelected(data: any): boolean {
+    return this.days.some((selected = this.days) => selected.name === data.name);
+  }
+
+  carousel(){
+    this.responsiveOptions = [
+      {
+          breakpoint: '1199px',
+          numVisible: 1,
+          numScroll: 1
+      },
+      {
+          breakpoint: '991px',
+          numVisible: 2,
+          numScroll: 1
+      },
+      {
+          breakpoint: '767px',
+          numVisible: 1,
+          numScroll: 1
+      }
+  ];
+  }
 
 }

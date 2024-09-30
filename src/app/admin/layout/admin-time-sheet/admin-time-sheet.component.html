@@ -68,6 +68,26 @@
             </div>
         </div>
 
+        <div class="card ">
+            <p-carousel 
+                [value]="userdata" 
+                [numVisible]="6" 
+                [numScroll]="3" 
+                [circular]="false" 
+                [responsiveOptions]="responsiveOptions">
+                    <ng-template let-userdata pTemplate="item">
+                        <div class="shadow-lg py-2 pb-7 px-2 rounded mx-2 my-7" [ngStyle]="isSelected(userdata) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
+                            <div class="flex flex-col justify-center items-center " >
+                                <img src="../../../assets/male-image.png" alt="" width="150" height="150" >
+                                <span class="text-md font-medium cursor-pointer text-center text-ellipsis overflow-hidden whitespace-nowrap" style="width: 170px;"  routerLink="/admin/add-users">{{userdata.name}}</span>
+                                <span class="text-xs ">{{userdata.designation}}</span>
+                            </div>
+                        </div>
+    
+                    </ng-template>
+            </p-carousel>
+        </div>
+
         <div class="header-section flex justify-content-between align-items-center p-2">
             <div class="header-title flex justify-content-between w-[100%]">
 
