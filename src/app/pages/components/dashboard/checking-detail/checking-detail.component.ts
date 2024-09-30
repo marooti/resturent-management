@@ -32,7 +32,8 @@ export class CheckingDetailComponent implements OnInit {
   loading: boolean = false;
   locathostData: any;
   checkingstatus: boolean = false;
-  days: any[] = []
+  days: any[] = [];
+  rangeDates: any;
   profileData: any;
   todayDate: any;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
@@ -44,6 +45,10 @@ export class CheckingDetailComponent implements OnInit {
     this.checking;
     const currentDate = new Date();
     const time = currentDate.toTimeString().split(' ')[0];
+    const lastSunday = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastFriday = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+    this.rangeDates = [lastSunday, lastFriday];
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
   }

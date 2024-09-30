@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FirestoreService } from '@services/firestore.service';
 import { ProjectServiceService } from '@services/project-service/project-service.service';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserSerivceService } from '@services/user-service/user-serivce.service';
+import { ToastrService } from '@services/toastr.service';
 
 @Component({
   selector: 'app-add-users',
@@ -29,6 +30,7 @@ import { UserSerivceService } from '@services/user-service/user-serivce.service'
   styleUrl: './add-users.component.scss'
 })
 export class AddUsersComponent {
+  profileForm!: FormGroup
   profileData: any;
   locathostData: any;
   filterData: any;
@@ -73,21 +75,13 @@ export class AddUsersComponent {
       department: 'Management'
     },
   ]
-  profileForm = new FormGroup({
-    name: new FormControl(''),
-    gender: new FormControl(''),
-    officeRole: new FormControl(''),
-    department: new FormControl(''),
-    phoneNo: new FormControl(''),
-    email: new FormControl(''),
-    role: new FormControl(''),
-    password: new FormControl(''),
-  });
+
 
   ngOnInit() {
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData);
     this.getAllUserProfiles();
+    this.createForm();
   }
 
   constructor(
@@ -95,9 +89,24 @@ export class AddUsersComponent {
     , private firestore: Firestore
     , private firestoreService: FirestoreService
     , private userService: UserSerivceService
+    , private fb: FormBuilder
+    , private toaster: ToastrService
   ) {
     const projectsCollection = collection(this.firestore, 'projects');
     this.projects$ = collectionData(projectsCollection);
+  }
+
+  createForm() {
+    this.profileForm = this.fb.group({
+      name: [undefined, [Validators.required]],
+      gender: [undefined, [Validators.required]],
+      officeRole: [undefined, [Validators.required]],
+      department: [undefined, [Validators.required]],
+      phoneNo: [undefined, [Validators.required]],
+      email: [undefined, [Validators.required]],
+      role: [undefined, [Validators.required]],
+      password: [undefined, [Validators.required]],
+    });
   }
 
   getAllUserProfiles() {
@@ -113,8 +122,19 @@ export class AddUsersComponent {
 
   postProjectData() {
     console.log(this.profileForm.value['role']);
-    const value = this.profileForm.value['role'];
-    const projectId = value;
+
+    if (this.profileForm.invalid) {
+      this.toaster.showError('Please fill out all required fields');
+      return;
+    }
+    const mail = this.profileForm.value['email'],
+      emailAlready = this.allData.filter((data: any) => data.email == mail);
+    if (emailAlready) {
+      this.toaster.showError('This Email Already exist');
+      return;
+
+    }
+    const projectId = this.profileForm.value['email'];
     const projectData = {
       name: this.profileForm.value['name'],
       gender: this.profileForm.value['gender'],
@@ -130,6 +150,7 @@ export class AddUsersComponent {
     this.userService.addUserData(projectId, projectData)
       .then((data) => {
         console.log('Project posted successfully', data);
+        this.toaster.showSuccess('User Created successfully');
         this.visible = false;
         this.profileForm.reset();
       })
@@ -188,6 +209,10 @@ export class AddUsersComponent {
     this.profileForm.reset();
     this.visible = false;
     this.update = false;
+  }
+
+  get f(): { [key: string]: AbstractControl } {
+    return this.profileForm.controls;
   }
 
   search() {

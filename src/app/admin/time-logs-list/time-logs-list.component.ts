@@ -42,7 +42,7 @@ export class TimeLogsListComponent implements OnInit {
   timeSpent: any;
   startTime: any;
   employeeDropdown: any;
-  rangeDates: Date[] = [new Date(), new Date()];
+  rangeDates: any;
 
   employeeName: any;
   searchValue = false;
@@ -69,6 +69,15 @@ export class TimeLogsListComponent implements OnInit {
     this.getAllUserProfiles();
     this.locathostData = localStorage.getItem('userProfile');
     this.profileData = JSON.parse(this.locathostData);
+    this.lastMonthDate();
+  }
+
+  lastMonthDate() {
+    const today = new Date();
+    const lastSunday = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastFriday = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    this.rangeDates = [lastSunday, lastFriday];
+
   }
 
   // Method to be called on input change
@@ -95,8 +104,6 @@ export class TimeLogsListComponent implements OnInit {
 
   getAlldata() {
     this.firestoreService.getallData().then((data) => {
-      // this.getAllData = data;
-      // console.log("this is data:", this.getAllData);
       const reorganizedData: any = [];
 
       for (const entry of data) {
@@ -104,18 +111,17 @@ export class TimeLogsListComponent implements OnInit {
           if (key !== 'id') {
             reorganizedData.push({
               date: key,
-              name: entry[key].data[0]?.name || [], // Ensure name is properly assigned
+              name: entry[key].data[0]?.name || [],
               data: entry[key].data || []
             });
           }
         });
       }
 
-      // Sort the reorganizedData by date
       const dateDate = reorganizedData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
       this.tableData(dateDate);
-      // this.allData = dateDate
-      // console.log("Sorted data:", this.allData);
+
     });
   }
 

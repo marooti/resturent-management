@@ -89,9 +89,8 @@ export class TimeLogsSheetComponent implements OnInit {
   ngOnInit() {
     this.getAllUserProfiles();
     const today = new Date();
-    const lastSunday = new Date(today.setDate(today.getDate() - today.getDay()));
-    const lastFriday = new Date(lastSunday);
-    lastFriday.setDate(lastSunday.getDate() + 5);
+    const lastSunday = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastFriday = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
     this.rangeDates = [lastSunday, lastFriday];
 

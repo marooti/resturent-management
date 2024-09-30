@@ -48,17 +48,17 @@
         <div class="header-section flex justify-content-between align-items-center p-2">
             <div class="header-title flex justify-content-between w-[100%]">
                 <div class="flex w-[100%] justify-end">
-                    <div class="w-[200px]">
-                        <!-- <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
-                            inputId="range">
-                        </p-calendar> -->
+                    <div class="border-[0.5px] rounded-md">
+                        <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true"
+                            [showIcon]="true" inputId="range">
+                        </p-calendar>
                     </div>
-                    <!-- <div class="pl-3">
+                    <div class="pl-3">
                         <button type="button"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
                             Search
                         </button>
-                    </div> -->
+                    </div>
                 </div>
 
             </div>
@@ -106,7 +106,7 @@
                             {{day.checkOutTime ? day.checkOutTime : '❌'}}
                         </td>
                         <td class="w-[300px !important] p-3">
-                        {{day.location}}
+                            {{day.location}}
                         </td>
                     </tr>
                 </ng-template>
