@@ -46,6 +46,7 @@ export class CheckingDetailComponent implements OnInit {
     const time = currentDate.toTimeString().split(' ')[0];
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
+    this.getlocation();
   }
 
   getlocation() {
@@ -54,16 +55,22 @@ export class CheckingDetailComponent implements OnInit {
         (position: GeolocationPosition): void => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+          const accuracy = position.coords.accuracy;
+          console.log(`Latitude: ${latitude}, Longitude: ${longitude}, accuracy: ${accuracy}`);
           const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
           fetch(url).then(response => response.json()).then(data => {
             if (data && data.address) {
               const locationName = `${data.address.city || ''}, ${data.address.country || ''}`;
-              console.log("Location Name:", data.display_name);
+              console.log("Location Name:", data.address);
             } else {
               console.error("Unable to find location.");
             }
-          })
+          }),
+          {
+            enableHighAccuracy: true, // Request high accuracy
+            timeout: 1000, // Optional: Set a timeout to prevent long wait times
+            maximumAge: 0,  // Optional: Force the device to not use cached positions
+          }
         },
         (error: GeolocationPositionError): void => {
           console.error("Error getting location:", error.message);
@@ -77,7 +84,8 @@ export class CheckingDetailComponent implements OnInit {
   checkin() {
     this.loading = true;
     const currentDate = new Date();
-    const time = currentDate.toTimeString().split(' ')[0];
+    // const time = currentDate.toTimeString().split(' ')[0];
+    const time = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const date = currentDate.toDateString();
 
     this.checkingstatus = true;
@@ -102,7 +110,9 @@ export class CheckingDetailComponent implements OnInit {
   checkout() {
     this.loading = true;
     const currentDate = new Date();
-    const time = currentDate.toTimeString().split(' ')[0];
+    // const time = currentDate.toTimeString().split(' ')[0];
+    const time = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
     const date = currentDate.toDateString();
     const choutTime = this.days.find(product => product.date == date);
     if (choutTime?.checkOutTime) {

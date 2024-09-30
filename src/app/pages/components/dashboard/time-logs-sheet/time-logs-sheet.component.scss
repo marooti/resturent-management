@@ -128,3 +128,13 @@ td {
         background: #1c4c74 !important;
     }
 }
+
+
+.limitline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+ width: 94%;
+}
