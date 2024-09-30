@@ -129,8 +129,9 @@
                     {{log?.date}}
                 </td>
                 <td class="p-3">
-                    <div *ngFor="let time of log.data">
-                        {{time.spentTame}}
+                    <div>
+                        <!-- {{time.spentTame}} {{time | json}} -->
+                        {{ calculateTotalTime(log.data) }}
                     </div>
                 </td>
 
@@ -329,8 +330,8 @@
                             {{ log?.date}}
                         </td>
                         <td class="p-3">
-                            <div *ngFor="let time of log.data">
-                                {{time.spentTame}}
+                            <div >
+                                {{ calculateTotalTime(log.data) }}
                             </div>
                         </td>
 

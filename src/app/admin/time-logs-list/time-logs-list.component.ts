@@ -263,6 +263,26 @@ export class TimeLogsListComponent implements OnInit {
     console.log("this is table value:", namehg, entry, this.index);
   }
 
+  // Helper function to convert time like '7h', '30m' into minutes
+  convertToMinutes(time: string): number {
+    const hourMatch = time.match(/(\d+)h/);
+    const minuteMatch = time.match(/(\d+)m/);
+
+    let hours = hourMatch ? parseInt(hourMatch[1], 10) : 0;
+    let minutes = minuteMatch ? parseInt(minuteMatch[1], 10) : 0;
+
+    return hours * 60 + minutes;
+  }
+
+  // Function to calculate the total spent time
+  calculateTotalTime(logs: any[]): string {
+    let totalMinutes = logs.reduce((acc, log) => acc + this.convertToMinutes(log.spentTame), 0);
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours}h ${minutes}m`;
+  }
 
   getAllUserProfilesdata() {
     this.firestoreService.getAllUser().subscribe(
