@@ -100,11 +100,12 @@ export class AddUsersComponent {
     this.profileForm = this.fb.group({
       name: [undefined, [Validators.required]],
       gender: [undefined, [Validators.required]],
-      officeRole: [undefined, [Validators.required]],
+      designation: [undefined, [Validators.required]],
       department: [undefined, [Validators.required]],
       phoneNo: [undefined, [Validators.required]],
       email: [undefined, [Validators.required]],
-      role: [undefined, [Validators.required]],
+      role: [undefined],
+      username: [undefined, [Validators.required]],
       password: [undefined, [Validators.required]],
     });
   }
@@ -121,7 +122,7 @@ export class AddUsersComponent {
 
 
   postProjectData() {
-    console.log(this.profileForm.value['role']);
+    console.log(this.profileForm.value['username']);
 
     if (this.profileForm.invalid) {
       this.toaster.showError('Please fill out all asterisk fields');
@@ -137,7 +138,7 @@ export class AddUsersComponent {
       return;
 
     }
-    const roleMail = this.profileForm.value['role'];
+    const roleMail = this.profileForm.value['username'];
     console.log("this is mail", mail);
     const roleMailAlready: any = this.allData.filter((data: any) => data.role === roleMail);
     if (roleMailAlready.length === null) {
@@ -145,7 +146,7 @@ export class AddUsersComponent {
       return;
 
     }
-    const projectId = this.profileForm.value['role'];
+    const projectId = this.profileForm.value['username'];
     const projectData = {
       name: this.profileForm.value['name'],
       gender: this.profileForm.value['gender'],
@@ -154,8 +155,8 @@ export class AddUsersComponent {
       phoneNo: this.profileForm.value['phoneNo'],
       password: this.profileForm.value['password'],
       department: this.profileForm.value['department'],
-      officeRole: this.profileForm.value['officeRole'],
-      username: this.profileForm.value['role'],
+      designation: this.profileForm.value['designation'],
+      username: this.profileForm.value['username'],
     };
 
     this.userService.addUserData(projectId, projectData)
@@ -169,7 +170,7 @@ export class AddUsersComponent {
   }
 
   deleteProjectData() {
-    const value = this.profileForm.value['role'];
+    const value = this.profileForm.value['username'];
     const projectId = value;
 
     this.userService.deleteProjectData(projectId)
@@ -192,8 +193,8 @@ export class AddUsersComponent {
 
   updateProjectData() {
     console.log("updted")
-    console.log(this.profileForm.value['role']);
-    const value = this.profileForm.value['role'];
+    console.log(this.profileForm.value['username']);
+    const value = this.profileForm.value['username'];
     if (this.profileForm.invalid) {
       this.toaster.showError('Please fill out all asterisk fields');
       return;
@@ -209,7 +210,7 @@ export class AddUsersComponent {
       return;
 
     }
-    const roleMail = this.profileForm.value['role'];
+    const roleMail = this.profileForm.value['username'];
     console.log("this is mail", mail);
     const roleMailAlready: any = this.allData.filter((data: any) => data.role === roleMail);
     if (roleMailAlready.length === 2) {
@@ -226,13 +227,13 @@ export class AddUsersComponent {
       phoneNo: this.profileForm.value['phoneNo'],
       password: this.profileForm.value['password'],
       department: this.profileForm.value['department'],
-      officeRole: this.profileForm.value['officeRole'],
-      username: this.profileForm.value['role'],
+      designation: this.profileForm.value['designation'],
+      username: this.profileForm.value['username'],
     };
 
     this.userService.updateProjectData(projectId, projectData)
       .then((data) => {
-        console.log('Project updated successfully', data);
+
         this.toaster.showSuccess('User Updated successfully');
 
         this.visible = false;
