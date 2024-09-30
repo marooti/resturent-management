@@ -41,6 +41,8 @@ export class LoginComponent implements OnInit {
       .then((data) => {
         let password = this.loginForm.controls['password'].value;
         console.log('Timelog data:', data);
+        this.loading = false;
+
         if (password === data.password) {
           this.toaster.showSuccess('Login Successful');
           if (data.role === 'admin') {
@@ -66,8 +68,11 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       let userName = this.loginForm.controls['email'].value;
       this.fetchTimelogData(userName);
+      this.loading = false;
+
 
     } else {
+      this.loading = false;
       this.toaster.showError('Login Failed');
     }
   }

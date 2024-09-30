@@ -51,7 +51,7 @@ export class AdminTimeSheetComponent {
   employeeDropdown: any;
   employeeName: any;
   allAttendance: any;
-  dateRange: Date[] = [new Date(), new Date()];
+  dateRange: any;
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
 
   }
@@ -64,6 +64,15 @@ export class AdminTimeSheetComponent {
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
     this.getAllUserProfiles();
+    this.lastMonthDate();
+  }
+
+  lastMonthDate() {
+    const today = new Date();
+    const lastSunday = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastFriday = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    this.dateRange = [lastSunday, lastFriday];
+
   }
 
   getAllUserProfiles() {
@@ -180,7 +189,9 @@ export class AdminTimeSheetComponent {
         const currentDate = new Date().toDateString();
         this.allAttendance = allAttendance;
         console.log("this is all data :", allAttendance);
-        this.days = allAttendance.filter((data: any) => data.date === currentDate);
+        const dateDate = allAttendance.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        this.days = dateDate;
         console.log("Formatted All Attendance:", this.days, "today", currentDate);
       }
     );
