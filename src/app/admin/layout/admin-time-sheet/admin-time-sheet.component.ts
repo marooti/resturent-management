@@ -75,6 +75,7 @@ export class AdminTimeSheetComponent {
     this.getAllUserProfiles();
     this.lastMonthDate();
     this.getAllUserProfilesdata();
+    this.carousel();
   }
 
   lastMonthDate() {
@@ -292,7 +293,7 @@ export class AdminTimeSheetComponent {
     this.responsiveOptions = [
       {
           breakpoint: '1199px',
-          numVisible: 1,
+          numVisible: 4,
           numScroll: 1
       },
       {
