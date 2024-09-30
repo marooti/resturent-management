@@ -63,10 +63,9 @@ export class ProjectsComponent {
       id: this.projectId,
       name: this.projectName,
       description: this.description,
-      assignTo: this.employeeName,
     };
 
-    this.projectService.addProjectData(projectId, projectData)
+    this.projectService.postProjectData(projectId, projectData)
       .then((data) => {
         console.log('Project posted successfully', data);
         this.visible = false;
@@ -110,7 +109,7 @@ export class ProjectsComponent {
       description: this.description,
     };
 
-    this.projectService.addProjectData(projectId, projectData)
+    this.projectService.updateProjectData(projectId, projectData)
       .then(() => {
         console.log('Project posted or updated successfully');
         this.visible = false;
@@ -128,5 +127,5 @@ export class ProjectsComponent {
   }
 
 
-  
+
 }

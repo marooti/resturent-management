@@ -11,26 +11,26 @@ export class ProjectServiceService {
 
   constructor(private firestore: Firestore) { }
 
+  async postProjectData(id: any, data: any): Promise<void> {
+    const projectDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
+    try {
+      // Using { merge: true } will merge the new data with the existing document
+      await setDoc(projectDocRef, { ...data });
+      console.log(`Document with ID ${id} psoted written or updated!`);
+    } catch (error) {
+      console.error('Error writing or post document: ', error);
+    }
+  }
+
+
   // Function to post data to Firestore
-  async addProjectData(id: string, data: any): Promise<void> {
+  async updateProjectData(id: string, data: any): Promise<void> {
     const projectDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
     try {
       await setDoc(projectDocRef, { id, ...data }, { merge: true });
       console.log(`Document with ID ${id} successfully written!`);
     } catch (error) {
       console.error('Error writing document: ', error);
-    }
-  }
-
-  // Function to post data to Firestore
-  async updateProjectData(id: string, data: any): Promise<void> {
-    const projectDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
-    try {
-      // Using { merge: true } will merge the new data with the existing document
-      await setDoc(projectDocRef, { id, ...data }, { merge: true });
-      console.log(`Document with ID ${id} successfully written or updated!`);
-    } catch (error) {
-      console.error('Error writing or updating document: ', error);
     }
   }
 
