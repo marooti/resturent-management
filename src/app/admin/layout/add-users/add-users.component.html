@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="flex">
-            <div class="flex flex-wrap justify-between w-[100%]">
+            <div class="flex flex-wrap  w-[100%]">
 
                 <div *ngFor="let data of filterData" (click)="patchForm(data)"
                     class="flex mr-2 justify-between mt-3 shadow-2 border-2 p-3 rounded-md lg:w-[32.33%] md:w-[48%] w-[100%] hover:bg-sky-500 hover:text-white cursor-pointer">
@@ -107,10 +107,15 @@
                 <p-dropdown [options]="gender" formControlName="gender" optionValue="gendar" optionLabel="gendar"
                     placeholder="Select a Gender"></p-dropdown>
             </div>
+            <div class="mt-2">
+                <label class="text-sm ">Role <span class="text-red-500">*</span></label>
+                <p-dropdown [options]="role" formControlName="role" optionValue="role" optionLabel="role"
+                    placeholder="Select a Role"></p-dropdown>
+            </div>
 
             <div class="mt-2">
-                <label class="text-sm ">Role in Office<span class="text-red-500">*</span></label>
-                <input type="text" placeholder="Enter the office role" formControlName="officeRole">
+                <label class="text-sm ">Designation<span class="text-red-500">*</span></label>
+                <input type="text" placeholder="Enter the office role" formControlName="designation">
             </div>
 
             <div class="mt-2">
@@ -124,18 +129,23 @@
                 <input type="text" placeholder="Enter the phone no" formControlName="phoneNo">
             </div>
 
-            <div class="mt-2">
+            <div class="mt-2" *ngIf="!update">
                 <label class="text-sm ">Email <span class="text-red-500">*</span></label>
                 <input type="text" placeholder="Enter the email" formControlName="email">
             </div>
 
+            <div class="mt-2" *ngIf="update">
+                <label class="text-sm ">Email <span class="text-red-500">*</span></label>
+                <input type="text" placeholder="Enter the email" formControlName="email" readonly>
+            </div>
+
             <div class="mt-2" *ngIf="!update">
                 <label class="text-sm ">User-Name <span class="text-red-500">*</span></label>
-                <input type="text" placeholder="Enter the user name" formControlName="role">
+                <input type="text" placeholder="Enter the user name" formControlName="username">
             </div>
             <div class="mt-2" *ngIf="update">
                 <label class="text-sm ">User-Name <span class="text-red-500">*</span></label>
-                <input type="text" placeholder="Enter the user name" formControlName="role" readonly>
+                <input type="text" placeholder="Enter the user name" formControlName="username" readonly>
             </div>
 
             <div class="mt-2">
