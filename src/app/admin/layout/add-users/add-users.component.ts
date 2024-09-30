@@ -127,13 +127,20 @@ export class AddUsersComponent {
       this.toaster.showError('Please fill out all required fields');
       return;
     }
-    const mail = this.profileForm.value['email'],
-      emailAlready = this.allData.filter((data: any) => data.email == mail);
-    if (emailAlready) {
+    const mail = this.profileForm.value['email'];
+    console.log("this is mail", mail);
+    const emailAlready = this.allData.filter((data: any) => data.email === mail);
+    console.log("this is mail afre", emailAlready);
+
+    if (emailAlready[0] != null) {
       this.toaster.showError('This Email Already exist');
       return;
 
     }
+    else {
+
+    }
+
     const projectId = this.profileForm.value['email'];
     const projectData = {
       name: this.profileForm.value['name'],
