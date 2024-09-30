@@ -107,9 +107,14 @@
                 <p-dropdown [options]="gender" formControlName="gender" optionValue="gendar" optionLabel="gendar"
                     placeholder="Select a Gender"></p-dropdown>
             </div>
+            <div class="mt-2">
+                <label class="text-sm ">Role <span class="text-red-500">*</span></label>
+                <p-dropdown [options]="role" formControlName="role" optionValue="role" optionLabel="role"
+                    placeholder="Select a Role"></p-dropdown>
+            </div>
 
             <div class="mt-2">
-                <label class="text-sm ">Role in Office<span class="text-red-500">*</span></label>
+                <label class="text-sm ">Designation<span class="text-red-500">*</span></label>
                 <input type="text" placeholder="Enter the office role" formControlName="designation">
             </div>
 
@@ -136,7 +141,7 @@
 
             <div class="mt-2" *ngIf="!update">
                 <label class="text-sm ">User-Name <span class="text-red-500">*</span></label>
-                <input type="text" placeholder="Enter the user name" formControlName="role">
+                <input type="text" placeholder="Enter the user name" formControlName="username">
             </div>
             <div class="mt-2" *ngIf="update">
                 <label class="text-sm ">User-Name <span class="text-red-500">*</span></label>

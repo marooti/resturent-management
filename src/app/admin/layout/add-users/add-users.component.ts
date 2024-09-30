@@ -47,6 +47,14 @@ export class AddUsersComponent {
     {
       gendar: 'female'
     },
+  ];
+  role: any[] = [
+    {
+      role: 'admin'
+    },
+    {
+      role: 'user'
+    },
   ]
 
   department: any[] = [
@@ -104,7 +112,7 @@ export class AddUsersComponent {
       department: [undefined, [Validators.required]],
       phoneNo: [undefined, [Validators.required]],
       email: [undefined, [Validators.required]],
-      role: [undefined],
+      role: [undefined, [Validators.required]],
       username: [undefined, [Validators.required]],
       password: [undefined, [Validators.required]],
     });
@@ -123,7 +131,7 @@ export class AddUsersComponent {
 
   postProjectData() {
     console.log(this.profileForm.value['username']);
-
+    console.log("Form Value:", this.profileForm.value);
     if (this.profileForm.invalid) {
       this.toaster.showError('Please fill out all asterisk fields');
       return;
@@ -133,19 +141,20 @@ export class AddUsersComponent {
     const emailAlready: any = this.allData.filter((data: any) => data.email === mail);
     console.log("this is mail afre", mail);
 
-    if (emailAlready.length === 1) {
+    if (emailAlready[0]?.email === this.profileForm.value['email']) {
       this.toaster.showError('This Email Already exist');
       return;
 
     }
     const roleMail = this.profileForm.value['username'];
-    console.log("this is mail", mail);
-    const roleMailAlready: any = this.allData.filter((data: any) => data.role === roleMail);
-    if (roleMailAlready.length === null) {
+    const roleMailAlready: any = this.allData.filter((data: any) => data.username === roleMail);
+    console.log("this is mail", roleMailAlready);
+    if (roleMailAlready[0]?.username === this.profileForm.value['username']) {
       this.toaster.showError('This User Already');
       return;
 
     }
+
     const projectId = this.profileForm.value['username'];
     const projectData = {
       name: this.profileForm.value['name'],
@@ -205,19 +214,20 @@ export class AddUsersComponent {
     const emailAlready: any = this.allData.filter((data: any) => data.email === mail);
     console.log("this is mail", emailAlready);
 
-    if (emailAlready.length === 2) {
+    if (emailAlready[1]?.email === this.profileForm.value['email']) {
       this.toaster.showError('This Email Already exist');
       return;
 
     }
     const roleMail = this.profileForm.value['username'];
-    console.log("this is mail", mail);
-    const roleMailAlready: any = this.allData.filter((data: any) => data.role === roleMail);
-    if (roleMailAlready.length === 2) {
+    const roleMailAlready: any = this.allData.filter((data: any) => data.username === roleMail);
+    console.log("this is mail", roleMailAlready);
+    if (roleMailAlready[1]?.username === this.profileForm.value['username']) {
       this.toaster.showError('This User Already');
       return;
 
     }
+
     const projectId = value;
     const projectData = {
       name: this.profileForm.value['name'],
