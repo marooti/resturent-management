@@ -57,8 +57,8 @@ export class AdminTimeSheetComponent {
   employeeName: any;
   allAttendance: any;
   dateRange: any;
-  
-  userdata: any[]=[];
+
+  userdata: any[] = [];
   responsiveOptions: any[] | undefined;
 
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
@@ -199,7 +199,13 @@ export class AdminTimeSheetComponent {
         const currentDate = new Date().toDateString();
         this.allAttendance = allAttendance;
         console.log("this is all data :", allAttendance);
-        const dateDate = allAttendance.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const startDate = new Date(this.dateRange[0]);
+        const endDate = new Date(this.dateRange[1]);
+        const filteredData = allAttendance.filter((data: any) => {
+          const recordDate = new Date(data?.date);
+          return recordDate >= startDate && recordDate <= endDate;
+        });
+        const dateDate = filteredData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
         this.days = dateDate;
         console.log("Formatted All Attendance:", this.days, "today", currentDate);
@@ -288,24 +294,24 @@ export class AdminTimeSheetComponent {
     return this.days.some((selected = this.days) => selected.name === data.name);
   }
 
-  carousel(){
+  carousel() {
     this.responsiveOptions = [
       {
-          breakpoint: '1199px',
-          numVisible: 1,
-          numScroll: 1
+        breakpoint: '1199px',
+        numVisible: 1,
+        numScroll: 1
       },
       {
-          breakpoint: '991px',
-          numVisible: 2,
-          numScroll: 1
+        breakpoint: '991px',
+        numVisible: 2,
+        numScroll: 1
       },
       {
-          breakpoint: '767px',
-          numVisible: 1,
-          numScroll: 1
+        breakpoint: '767px',
+        numVisible: 1,
+        numScroll: 1
       }
-  ];
+    ];
   }
 
 }

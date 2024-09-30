@@ -56,7 +56,7 @@ export class TimeLogsListComponent implements OnInit {
   locathostData: any;
   grandTotalTime: any;
 
-  userdata: any[]=[];
+  userdata: any[] = [];
   responsiveOptions: any[] | undefined;
 
 
@@ -127,7 +127,12 @@ export class TimeLogsListComponent implements OnInit {
           }
         });
       }
-
+      const startDate = new Date(this.rangeDates[0]);
+      const endDate = new Date(this.rangeDates[1]);
+      const filteredData = reorganizedData.filter((data: any) => {
+        const recordDate = new Date(data?.date);
+        return recordDate >= startDate && recordDate <= endDate;
+      });
       const dateDate = reorganizedData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
       this.tableData(dateDate);
@@ -284,6 +289,11 @@ export class TimeLogsListComponent implements OnInit {
     return `${hours}h ${minutes}m`;
   }
 
+  totalTime(data: any) {
+    console.log("this is all data", data);
+    return data;
+  }
+
   getAllUserProfilesdata() {
     this.firestoreService.getAllUser().subscribe(
       (data) => {
@@ -296,24 +306,66 @@ export class TimeLogsListComponent implements OnInit {
     return this.allData.some((selected = this.allData) => selected.name === data.name);
   }
 
-  carousel(){
+  carousel() {
     this.responsiveOptions = [
       {
-          breakpoint: '1199px',
-          numVisible: 1,
-          numScroll: 1
+        breakpoint: '1199px',
+        numVisible: 1,
+        numScroll: 1
       },
       {
-          breakpoint: '991px',
-          numVisible: 2,
-          numScroll: 1
+        breakpoint: '991px',
+        numVisible: 2,
+        numScroll: 1
       },
       {
-          breakpoint: '767px',
-          numVisible: 1,
-          numScroll: 1
+        breakpoint: '767px',
+        numVisible: 1,
+        numScroll: 1
       }
-  ];
+    ];
   }
+
+
+  totalHours: number = 0;
+
+  calculateTotalSpentTime(logEntries: any[]): string {
+    let totalHours = 0;
+    let totalMinutes = 0;
+
+    // Iterate over each top-level log entry
+    logEntries.forEach(log => {
+      if (log.data && Array.isArray(log.data)) {
+        // Iterate over each item in the 'data' array
+        log.data.forEach((item: any) => {
+          const time = item.spentTame;
+
+          if (time) {
+            // Match and parse hours (e.g., '7h' or '1h')
+            const hourMatch = time.match(/(\d+)h/);
+            if (hourMatch) {
+              const hours = parseInt(hourMatch[1], 10); // Convert to number
+              totalHours += hours; // Sum up the hours
+            }
+
+            // Match and parse minutes (e.g., '30m')
+            const minuteMatch = time.match(/(\d+)m/);
+            if (minuteMatch) {
+              const minutes = parseInt(minuteMatch[1], 10); // Convert to number
+              totalMinutes += minutes; // Sum up the minutes
+            }
+          }
+        });
+      }
+    });
+
+    // Convert minutes to hours if totalMinutes >= 60
+    totalHours += Math.floor(totalMinutes / 60);
+    totalMinutes = totalMinutes % 60; // Remainder minutes after converting to hours
+
+    return `${totalHours}h ${totalMinutes}m`; // Return the formatted time string
+  }
+
+
 
 }

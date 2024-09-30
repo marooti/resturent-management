@@ -65,22 +65,21 @@
     </div>
 
     <div class="card ">
-        <p-carousel 
-            [value]="userdata" 
-            [numVisible]="6" 
-            [numScroll]="3" 
-            [circular]="false" 
+        <p-carousel [value]="userdata" [numVisible]="6" [numScroll]="3" [circular]="false"
             [responsiveOptions]="responsiveOptions">
-                <ng-template let-userdata pTemplate="item">
-                    <div class="shadow-lg py-2 pb-7 rounded mx-2 my-7" [ngStyle]="isSelected(userdata) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
-                        <div class="flex flex-col justify-center items-center" >
-                            <img src="../../../assets/male-image.png" alt="" width="150" height="150" >
-                            <span class="text-md font-medium cursor-pointer text-center text-ellipsis overflow-hidden whitespace-nowrap" style="width: 170px;" routerLink="/admin/add-users" > {{userdata.name}}</span>
-                            <span class="text-xs">{{userdata.designation}}</span>
-                        </div>
+            <ng-template let-userdata pTemplate="item">
+                <div class="shadow-lg py-2 pb-7 rounded mx-2 my-7"
+                    [ngStyle]="isSelected(userdata) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
+                    <div class="flex flex-col justify-center items-center">
+                        <img src="../../../assets/male-image.png" alt="" width="150" height="150">
+                        <span
+                            class="text-md font-medium cursor-pointer text-center text-ellipsis overflow-hidden whitespace-nowrap"
+                            style="width: 170px;" routerLink="/admin/add-users"> {{userdata.name}}</span>
+                        <span class="text-xs">{{userdata.designation}}</span>
                     </div>
+                </div>
 
-                </ng-template>
+            </ng-template>
         </p-carousel>
     </div>
 
@@ -261,12 +260,13 @@
                         <div class="col-12 flex justify-between p-3 border-round-md bg-slate-100">
                             <div class="w-4 flex justify-between w-full">
                                 <div class="w-full">
-                                    <div class="my-2"> <span class="text-xl font-semibold text-900">Weakly Report</span>
+                                    <div class="my-2"> <span class="text-xl font-semibold text-900">Monthly
+                                            Report</span>
                                     </div>
                                     <div>
                                         <div class="flex align-items-center mb-1">
                                             <div>
-                                                <span class="pr-2 text-sm text-color">Date :</span>
+                                                <span class="pr-2 text-sm text-color">Name :</span>
                                             </div>
                                             <span class="text-color text-sm">
                                                 {{profileData?.name}}
@@ -278,18 +278,19 @@
                                                 </span>
                                             </div>
                                             <span class="text-color text-sm">
-                                                {{grandTotalTime}}
+                                                <!-- {{allData | json}} -->
+                                                {{ calculateTotalSpentTime(allData) }}
                                             </span>
                                         </div>
                                         <div class="flex align-items-center mb-1">
                                             <div>
                                                 <span class="text-color pr-2 text-sm ">Date Range :</span>
                                             </div>
-                                            <!-- <span class="text-color text-sm">
+                                            <span class="text-color text-sm">
                                                 <ng-container>
                                                     {{this.rangeDates[0] | date:'mediumDate'}} - {{this.rangeDates[1] |
                                                     date:'mediumDate'}}
-                                                </ng-container> </span> -->
+                                                </ng-container> </span>
                                         </div>
 
                                     </div>
@@ -330,7 +331,7 @@
                             {{ log?.date}}
                         </td>
                         <td class="p-3">
-                            <div >
+                            <div>
                                 {{ calculateTotalTime(log.data) }}
                             </div>
                         </td>
