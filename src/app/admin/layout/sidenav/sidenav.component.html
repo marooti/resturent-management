@@ -17,7 +17,7 @@
             <ul class="menu-links">
                 <!-- Dashboard -->
                 <li class="relative">
-                    <a a routerLink="/{{routeService.admin}}" pTooltip="Time log" tooltipPosition="right">
+                    <a a routerLink="/{{routeService.admin}}" [pTooltip]="tooltipdashbored" tooltipPosition="right">
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">
@@ -34,9 +34,14 @@
                             </div>
                         </button>
                     </a>
+                    <ng-template #tooltipdashbored>
+                        <div class="flex align-items-center p-1">
+                            <span class="text-sm"> Time log </span>
+                        </div>
+                    </ng-template>
                 </li>
                 <li class="relative">
-                    <a routerLink="/admin/time-sheet" pTooltip="Attendance" tooltipPosition="right">
+                    <a routerLink="/admin/time-sheet" [pTooltip]="tooltipattendance" tooltipPosition="right">
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">
@@ -55,10 +60,15 @@
                             </div>
                         </button>
                     </a>
+                    <ng-template #tooltipattendance>
+                        <div class="flex align-items-center p-1">
+                            <span class="text-sm">Attendance</span>
+                        </div>
+                    </ng-template>
                 </li>
 
                 <li class="relative">
-                    <a routerLink="/admin/projects" pTooltip="Create Project" tooltipPosition="right">
+                    <a routerLink="/admin/projects" [pTooltip]="tooltipproject" tooltipPosition="right">
                         <div class="flex items-center justify-center hover:bg-gray-700 p-4">
                             <!-- <img src="../../../../assets/project.png" alt="" class="w-[25px] h-[25px]"> -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="29" height="37" viewBox="0 0 22 22" fill="white" >
@@ -66,10 +76,15 @@
                             </svg>
                         </div>
                     </a>
+                    <ng-template #tooltipproject>
+                        <div class="flex align-items-center p-1">
+                            <span class="text-sm">Create Project</span>
+                        </div>
+                    </ng-template>
                 </li>
 
                 <li class="relative">
-                    <a routerLink="/admin/add-users" pTooltip="Add Employee" tooltipPosition="right">
+                    <a routerLink="/admin/add-users" [pTooltip]="tooltipemployee" tooltipPosition="right">
                         <button
                             class="flex items-center justify-between w-full p-4 hover:bg-gray-700 focus:outline-none">
                             <div class="flex items-center gap-3">
@@ -88,6 +103,11 @@
                             </div>
                         </button>
                     </a>
+                    <ng-template #tooltipemployee>
+                        <div class="flex align-items-center p-1">
+                            <span class="text-sm">Add Employee</span>
+                        </div>
+                    </ng-template>
                 </li>
 
 
