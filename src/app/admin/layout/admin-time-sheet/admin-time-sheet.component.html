@@ -76,7 +76,8 @@
                     <div class="shadow-lg py-2 pb-7 px-2 rounded mx-2 my-7"
                         [ngStyle]="isSelected(userdata) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
                         <div class="flex flex-col justify-center items-center ">
-                            <img src="../../../assets/male-image.png" alt="" width="150" height="150">
+                            <img src="../../../assets/male-image.png" alt="" width="150" height="150" *ngIf="userdata.gender === 'male'">
+                            <img src="../../../assets/female-image.png" alt="" width="150" height="150" class="p-5" *ngIf="userdata.gender === 'female'">
                             <span
                                 class="text-md font-medium cursor-pointer text-center text-ellipsis overflow-hidden whitespace-nowrap"
                                 style="width: 170px;" routerLink="/admin/add-users">{{userdata.name}}</span>

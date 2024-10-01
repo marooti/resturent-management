@@ -304,7 +304,15 @@ export class TimeLogsListComponent implements OnInit {
   }
 
   isSelected(data: any): boolean {
-    return this.allData.some((selected = this.allData) => selected.name === data.name);
+    const currentDate = new Date().toDateString(); 
+    const filteredData = this.allData.some((selected = this.allData) =>  new Date(selected.date).toDateString() === currentDate );
+    if (!filteredData) {
+      return this.allData.some((selected = this.allData) =>  selected.name === data.name);
+      
+    } else{
+      return this.allData.some((selected = this.allData) =>  selected.name === data.name && new Date(selected.date).toDateString() === currentDate );
+
+    }
   }
 
   carousel() {

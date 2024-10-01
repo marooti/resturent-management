@@ -44,16 +44,16 @@
             </div>
         </div>
         <div class="flex">
-            <div class="flex flex-wrap  w-[100%]">
+            <div class="flex flex-wrap  w-[100%] ml-4 ">
 
                 <div *ngFor="let data of filterData" (click)="patchForm(data)"
-                    class="flex mr-2 justify-between mt-3 shadow-2 border-2 p-3 rounded-md lg:w-[32.33%] md:w-[48%] w-[100%] hover:bg-sky-500 hover:text-white cursor-pointer">
-                    <div class="w-[60%]">
+                    class="flex  mr-2 justify-between mt-3 shadow-2 border-2 p-3 rounded-md lg:w-[32.33%] md:w-[48%] w-[100%] hover:bg-sky-500 hover:text-white cursor-pointer">
+                    <div class="w-[60%] ">
                         <div>
                             <span class="text-xl font-medium">{{data?.name}}</span>
                         </div>
                         <div>
-                            <span class="text-sm">Front-End Developer</span>
+                            <span class="text-sm">{{data.designation}}</span>
                         </div>
                         <div class="mt-2">
                             <span class="text-[14px] font-medium mr-2">Phone</span><span
