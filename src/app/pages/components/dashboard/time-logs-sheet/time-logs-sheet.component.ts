@@ -280,7 +280,7 @@ export class TimeLogsSheetComponent implements OnInit {
     const timeRegex = /^((1[01]|[0-8])h\s*)?([0-5]?[0-8]m)?$/;
 
     if (!this.timeSpent) {
-      this.toaster.showError('Time is required.');
+      this.toaster.showError('Please fill out all asterisk fields');
       this.loading = false;
       return false;
     } else if (!timeRegex.test(this.timeSpent.trim())) {
@@ -365,6 +365,7 @@ export class TimeLogsSheetComponent implements OnInit {
     this.firestoreService.updateTimelog(name, day, data, this.index)
       .then(() => {
         this.toaster.showSuccess('Updated successfully');
+
         this.visible = false;
         this.isProcessing = false;
         this.loading = false;
