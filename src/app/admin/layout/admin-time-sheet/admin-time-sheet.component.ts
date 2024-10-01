@@ -292,7 +292,16 @@ export class AdminTimeSheetComponent {
   }
 
   isSelected(data: any): boolean {
-    return this.days.some((selected = this.days) => selected.name === data.name);
+    // return this.days.some((selected = this.days) => selected.name === data.name);
+    const currentDate = new Date().toDateString(); 
+    const filteredData = this.days.some((selected = this.days) =>  new Date(selected.date).toDateString() === currentDate );
+    if (!filteredData) {
+      return this.days.some((selected = this.days) =>  selected.name === data.name);
+      
+    } else{
+      return this.days.some((selected = this.days) =>  selected.name === data.name && new Date(selected.date).toDateString() === currentDate );
+
+    }
   }
 
   carousel() {
