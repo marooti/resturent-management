@@ -54,9 +54,7 @@ export class FirestoreService {
       }
 
       await setDoc(docRef, existingData, { merge: true });
-      console.log('Document updated with ID: ', name);
     } catch (error) {
-      console.error('Error adding or updating document: ', error);
     }
   }
 
@@ -88,7 +86,6 @@ export class FirestoreService {
       }
 
       await setDoc(docRef, existingData, { merge: true });
-      console.log('Document updated with ID: ', name);
     } catch (error) {
       console.error('Error adding or updating document: ', error);
     }
@@ -102,7 +99,6 @@ export class FirestoreService {
       if (docSnapshot.exists()) {
         return docSnapshot.data();
       } else {
-        console.log('No such document!');
         return null;
       }
     } catch (error) {
@@ -119,7 +115,6 @@ export class FirestoreService {
       if (docSnapshot.exists()) {
         return docSnapshot.data();
       } else {
-        console.log('No such document!');
         return null;
       }
     } catch (error) {
