@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { RouteService } from '@services/route.service';
 import { TooltipModule } from 'primeng/tooltip';
 @Component({
@@ -18,6 +18,7 @@ export class SidenavComponent {
   sidebarOpen = false;
   tooltipVisible = false;
   constructor(
+    private router: Router,
     public routeService: RouteService,
   ) { }
 
@@ -31,8 +32,10 @@ export class SidenavComponent {
   hideTooltip() {
     this.tooltipVisible = false;
   }
+
   logout() {
-    // Add your logout logic here
-    console.log('Logged out');
+    localStorage.clear();
+    this.router.navigate([`/${this.routeService.login}`]);
   }
+
 }

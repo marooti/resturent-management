@@ -1,5 +1,5 @@
 export enum RoutesEnum {
-    LOGIN = 'login',
+    LOGIN = '',
     SIGNUP = 'signup',
     FORGOT_PASSWORD = 'forgot-password',
     DASHBOARD = 'dashboard',

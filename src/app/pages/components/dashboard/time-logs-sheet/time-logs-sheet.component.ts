@@ -77,6 +77,11 @@ export class TimeLogsSheetComponent implements OnInit {
   index: any;
   isProcessing: boolean = false;
   employeeDropdown: any;
+  totalMonthlyValue: any;
+  currentHours: any;
+  dailyTotalHorse: any;
+  weaklyTotalHorse: any;
+  weaklyHours: any;
 
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
     this.dateTime.setDate(this.dateTime.getDate() + 0);
@@ -122,6 +127,10 @@ export class TimeLogsSheetComponent implements OnInit {
         return acc;
       }, {} as ApiData);
 
+    console.log("Total Hours:", filteredData);
+    this.filterData();
+    // this.monthlyReport();
+    // this.WeaklyReport(filteredData);
     this.processTimelogData(filteredData);
     this.processTimelo(filteredData);
   }
@@ -158,6 +167,8 @@ export class TimeLogsSheetComponent implements OnInit {
         this.loading = false;
         this.processTimelogData(this.apiData);
         this.processTimelo(this.apiData);
+        this.filterData();
+        this.WeaklyTotalReport()
       })
       .catch((error) => {
         this.loading = false;
@@ -184,7 +195,7 @@ export class TimeLogsSheetComponent implements OnInit {
     this.processedData = [];
     let grandTotalHours = 0;
     let grandTotalMinutes = 0;
-
+    console.log("Days:", data);
     for (const date in data) {
       if (data.hasOwnProperty(date)) {
         const entry = data[date];
@@ -211,7 +222,6 @@ export class TimeLogsSheetComponent implements OnInit {
         grandTotalMinutes += totalMinutes;
         const totalSpendTime = `${totalHours}h ${totalMinutes}m`;
 
-
         const formattedEntry = {
           date: date,
           totalSpendTime: totalSpendTime.trim(),
@@ -226,6 +236,7 @@ export class TimeLogsSheetComponent implements OnInit {
     grandTotalMinutes = grandTotalMinutes % 60;
 
     const grandTotalTime = `${grandTotalHours}h ${grandTotalMinutes}m`;
+    this.totalMonthlyValue = this.tolalhourPercent(grandTotalTime);
     this.grandTotalTime = grandTotalTime;
   }
 
@@ -320,7 +331,6 @@ export class TimeLogsSheetComponent implements OnInit {
       });
     }
   }
-
 
   // DeleteIndexValue
   deleteIndex(entry: any, index: any) {
@@ -418,5 +428,209 @@ export class TimeLogsSheetComponent implements OnInit {
 
     return `${totalHours}h ${totalMinutes}m`;
   }
+
+  tolalhourPercent(grandTotalTime: any) {
+    let totalHoursRequired = 160;
+    let workedHours = this.convertTimeToHours(grandTotalTime);
+    let value = (workedHours / totalHoursRequired) * 100;
+    this.totalMonthlyValue = Math.round(value);
+    return this.totalMonthlyValue;
+    // console.log("This is total percentage of hours worked:", this.totalMonthlyValue);
+  }
+
+  convertTimeToHours(timeString: string): number {
+    const timeParts = timeString.match(/(\d+h)?\s*(\d+m)?/);
+    let totalHours = 0;
+
+    if (timeParts) {
+      const hours = timeParts[1] ? parseInt(timeParts[1].replace('h', '')) : 0;
+      const minutes = timeParts[2] ? parseInt(timeParts[2].replace('m', '')) : 0;
+      totalHours = hours + (minutes / 60);
+    }
+
+    return totalHours;
+  }
+
+
+
+
+  filterData() {
+    let dateRange = [new Date(), new Date()];
+    const start = new Date(dateRange[0].toDateString());
+    const end = new Date(dateRange[1].toDateString());
+
+    console.log("this is firstDate:", dateRange, "This is last:", start, end);
+
+    type ApiData = { [key: string]: { data: any[] } };
+
+    const apiData = this.apiData as ApiData;
+
+    const filteredData = Object.keys(apiData)
+      .map(key => ({
+        date: new Date(key),
+        data: apiData[key].data
+      }))
+      .filter(item => item.date >= start && item.date <= end)
+      .reduce((acc: ApiData, item) => {
+        acc[item.date.toDateString()] = { data: item.data };
+        return acc;
+      }, {} as ApiData);
+
+    console.log("Total Hours:", filteredData);
+    this.dailyReport(filteredData);
+    // this.processTimelogData(filteredData);
+    // this.processTimelo(filteredData);
+  }
+
+
+
+
+  dailyReport(data: any) {
+    this.processedData = [];
+    let grandTotalHours = 0;
+    let grandTotalMinutes = 0;
+    console.log("Days:", data);
+    for (const date in data) {
+      if (data.hasOwnProperty(date)) {
+        const entry = data[date];
+
+        let totalHours = 0;
+        let totalMinutes = 0;
+
+        entry.data.forEach((log: any) => {
+          const timeString = log.spentTame.toLowerCase();
+          const hourMatch = timeString.match(/(\d+)h/);
+          const minuteMatch = timeString.match(/(\d+)m/);
+
+          if (hourMatch) {
+            totalHours += parseFloat(hourMatch[1]);
+          }
+          if (minuteMatch) {
+            totalMinutes += parseFloat(minuteMatch[1]);
+          }
+        });
+
+        totalHours += Math.floor(totalMinutes / 60);
+        totalMinutes = totalMinutes % 60;
+        grandTotalHours += totalHours;
+        grandTotalMinutes += totalMinutes;
+        const totalSpendTime = `${totalHours}h ${totalMinutes}m`;
+
+        const formattedEntry = {
+          date: date,
+          totalSpendTime: totalSpendTime.trim(),
+          data: entry.data,
+        };
+
+        this.processedData.push(formattedEntry);
+      }
+    }
+
+    grandTotalHours += Math.floor(grandTotalMinutes / 60);
+    grandTotalMinutes = grandTotalMinutes % 60;
+
+    this.dailyTotalHorse = `${grandTotalHours}h ${grandTotalMinutes}m`;
+    this.currentHours = this.dailyPercent(this.dailyTotalHorse,);
+    console.log("daily Hours:", this.currentHours, "Hors:", this.dailyTotalHorse);
+    // this.grandTotalTime = grandTotalTime;
+
+  }
+
+  dailyPercent(grandTotalTime: any) {
+    let totalHoursRequired = 9;
+    let workedHours = this.convertTimeToHours(grandTotalTime);
+    let value = (workedHours / totalHoursRequired) * 100;
+    this.currentHours = Math.round(value);
+    return this.currentHours;
+    // console.log("This is total percentage of hours worked:", this.totalMonthlyValue);
+  }
+
+
+  WeaklyTotalReport() {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 4);
+    const start = new Date(startOfWeek.toDateString());
+    const end = new Date(endOfWeek.toDateString());
+    type ApiData = { [key: string]: { data: any[] } };
+    const apiData = this.apiData as ApiData;
+    const filteredData = Object.keys(apiData)
+      .map(key => ({
+        date: new Date(key),
+        data: apiData[key].data
+      }))
+      .filter(item => item.date >= start && item.date <= end)
+      .reduce((acc: ApiData, item) => {
+        acc[item.date.toDateString()] = { data: item.data };
+        return acc;
+      }, {} as ApiData);
+
+    console.log("Filtered data for the week (Monday to Friday):", filteredData);
+    this.weaklyReport(filteredData);
+  }
+
+  weaklyReport(data: any) {
+    this.processedData = [];
+    let grandTotalHours = 0;
+    let grandTotalMinutes = 0;
+    console.log("Days:", data);
+    for (const date in data) {
+      if (data.hasOwnProperty(date)) {
+        const entry = data[date];
+
+        let totalHours = 0;
+        let totalMinutes = 0;
+
+        entry.data.forEach((log: any) => {
+          const timeString = log.spentTame.toLowerCase();
+          const hourMatch = timeString.match(/(\d+)h/);
+          const minuteMatch = timeString.match(/(\d+)m/);
+
+          if (hourMatch) {
+            totalHours += parseFloat(hourMatch[1]);
+          }
+          if (minuteMatch) {
+            totalMinutes += parseFloat(minuteMatch[1]);
+          }
+        });
+
+        totalHours += Math.floor(totalMinutes / 60);
+        totalMinutes = totalMinutes % 60;
+        grandTotalHours += totalHours;
+        grandTotalMinutes += totalMinutes;
+        const totalSpendTime = `${totalHours}h ${totalMinutes}m`;
+
+        const formattedEntry = {
+          date: date,
+          totalSpendTime: totalSpendTime.trim(),
+          data: entry.data,
+        };
+
+        this.processedData.push(formattedEntry);
+      }
+    }
+
+    grandTotalHours += Math.floor(grandTotalMinutes / 60);
+    grandTotalMinutes = grandTotalMinutes % 60;
+
+    this.weaklyTotalHorse = `${grandTotalHours}h ${grandTotalMinutes}m`;
+    this.weaklyHours = this.weaklyPercent(this.dailyTotalHorse,);
+    console.log("daily Hours:", this.currentHours, "Hors:", this.dailyTotalHorse);
+    // this.grandTotalTime = grandTotalTime;
+
+  }
+
+  weaklyPercent(grandTotalTime: any) {
+    let totalHoursRequired = 40;
+    let workedHours = this.convertTimeToHours(grandTotalTime);
+    let value = (workedHours / totalHoursRequired) * 100;
+    this.weaklyHours = Math.round(value);
+    return this.weaklyHours;
+    // console.log("This is total percentage of hours worked:", this.totalMonthlyValue);
+  }
+
 
 }
