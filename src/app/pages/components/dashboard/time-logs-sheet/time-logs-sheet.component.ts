@@ -401,7 +401,7 @@ export class TimeLogsSheetComponent implements OnInit {
     let totalHours = 0;
     let totalMinutes = 0;
 
-    entries.forEach(entry => {
+    entries?.forEach(entry => {
       const timeString = entry?.spentTame.toLowerCase();
       const hoursMatch = timeString.match(/(\d+)h/)?.[1] || '0';
       const minutesMatch = timeString.match(/(\d+)m/)?.[1] || '0';
