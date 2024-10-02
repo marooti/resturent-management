@@ -12,6 +12,8 @@ import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { CheckingDetailComponent } from "../checking-detail/checking-detail.component";
 import { ToastrService } from '@services/toastr.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule } from 'primeng/progressbar';
+
 interface TimelogEntry {
   date: any; // Use appropriate type if you know it (e.g., Date or Timestamp)
   issueName: string;
@@ -39,7 +41,8 @@ interface WeeklyData {
     FormsModule,
     CommonModule,
     ProgressSpinnerModule,
-    CheckingDetailComponent
+    CheckingDetailComponent,
+    ProgressBarModule
   ],
   templateUrl: './time-logs-sheet.component.html',
   styleUrls: ['./time-logs-sheet.component.scss']
