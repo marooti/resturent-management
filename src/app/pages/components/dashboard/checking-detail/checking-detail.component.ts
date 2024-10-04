@@ -66,7 +66,7 @@ export class CheckingDetailComponent implements OnInit {
           fetch(url).then(response => response.json()).then(data => {
             if (data && data.address) {
               const locationName = `${data.address.city || ''}, ${data.address.country || ''}`;
-              console.log("Location Name:", data.address);
+              console.log("Location Name:", locationName);
             } else {
               console.error("Unable to find location.");
             }
