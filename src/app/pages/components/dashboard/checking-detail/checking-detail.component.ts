@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -9,7 +9,10 @@ import { ProjectSidebarComponent } from "../../project-sidebar/project-sidebar.c
 import { FirestoreService } from '@services/firestore.service';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { ToastrService } from '@services/toastr.service';
-
+import { ProgressBarModule } from 'primeng/progressbar';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { catchError, map, of, tap } from 'rxjs';
+declare var google: any;
 @Component({
   selector: 'app-checking-detail',
   standalone: true,
@@ -20,12 +23,19 @@ import { ToastrService } from '@services/toastr.service';
     CalendarModule,
     FormsModule,
     CommonModule,
-    ProjectSidebarComponent
+    ProjectSidebarComponent,
+    ProgressBarModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   templateUrl: './checking-detail.component.html',
   styleUrl: './checking-detail.component.scss'
 })
 export class CheckingDetailComponent implements OnInit {
+  visible = false;
+  submitted = false;
+  profileForm!: FormGroup
+  apiKey = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDrY9pu8WvYAe78IxlHB4nG7QbHZzM8bMU&libraries=places&language=en'
   checking: any[] = [
     { date: 12 - 12 - 24, time: 12 - 50 }
   ];
@@ -36,7 +46,28 @@ export class CheckingDetailComponent implements OnInit {
   rangeDates: any;
   profileData: any;
   todayDate: any;
-  constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
+  locationName: any;
+  apiLoaded: any;
+  currentAddress: any;
+  dateTime = new Date();
+  issueName: any[] = [
+    {
+      name: 'Check In'
+    },
+    {
+      name: 'Check Out'
+    },
+    {
+      name: 'Both'
+    }
+  ]
+  constructor(
+    private http: HttpClient,
+    private firestoreService: FirestoreService,
+    private firestore: Firestore,
+    private fb: FormBuilder,
+    private toaster: ToastrService
+  ) {
 
   }
   ngOnInit() {
@@ -51,40 +82,100 @@ export class CheckingDetailComponent implements OnInit {
     this.rangeDates = [lastSunday, lastFriday];
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
-    this.getlocation();
+    this.getCurrentLocationAndAddressd()
+    // this.getLocation();
+    this.createForm();
+
   }
 
-  getlocation() {
+  createForm() {
+    this.profileForm = this.fb.group({
+      name: [undefined, [Validators.required]],
+      date: [undefined, [Validators.required]],
+      check_in: [undefined],
+      check_out: [undefined],
+      description: [undefined]
+    });
+  }
+
+  getCurrentLocationAndAddressd(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position: GeolocationPosition): void => {
+        (position: GeolocationPosition) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          const accuracy = position.coords.accuracy;
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}, accuracy: ${accuracy}`);
-          const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-          fetch(url).then(response => response.json()).then(data => {
-            if (data && data.address) {
-              const locationName = `${data.address.city || ''}, ${data.address.country || ''}`;
-              console.log("Location Name:", locationName);
-            } else {
-              console.error("Unable to find location.");
-            }
-          }),
-          {
-            enableHighAccuracy: true, // Request high accuracy
-            timeout: 1000, // Optional: Set a timeout to prevent long wait times
-            maximumAge: 0,  // Optional: Force the device to not use cached positions
-          }
+          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
+          // Call the method to get the address from latitude and longitude
+          this.getLocation(latitude, longitude)
+            .then(locationName => {
+              this.locationName = this.locationName;
+              console.log("Current Location Address:", locationName);
+              // You can set this address to a variable if needed
+              this.currentAddress = locationName;
+            })
+            .catch(error => {
+              console.error("Error getting address:", error);
+            });
         },
-        (error: GeolocationPositionError): void => {
+        (error: GeolocationPositionError) => {
           console.error("Error getting location:", error.message);
+        },
+        {
+          enableHighAccuracy: true, // Request high accuracy
+          maximumAge: 0,  // Optional: Force the device to not use cached positions
         }
       );
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
   }
+
+
+  getLocation(latitude: number, longitude: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      const latlng = new google.maps.LatLng(31.4185265, 74.2666945);
+
+      geocoder.geocode({ location: latlng }, (results: any, status: any) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            const locationName = results[0].formatted_address;
+            resolve(locationName);
+            console.log('Location Name:', locationName);
+          } else {
+            reject('No results found');
+          }
+        } else {
+          reject('Geocoding failed: ' + status);
+        }
+      });
+    });
+  }
+
+
+
+  getAddressFromLatLng(latitude: number, longitude: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      const latlng = new google.maps.LatLng(latitude, longitude);
+      geocoder.geocode({ 'location': latlng }, (results: any, status: any) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            const formattedAddress = results[0].formatted_address;
+            resolve(formattedAddress);
+            console.log("Formatted Address:", formattedAddress);
+          } else {
+            reject('No results found');
+          }
+        } else {
+          reject('Geocoder failed due to: ' + status);
+        }
+      });
+    });
+  }
+
+
 
   checkin() {
     this.loading = true;
@@ -98,8 +189,12 @@ export class CheckingDetailComponent implements OnInit {
       checkInTime: time,
       name: this.profileData.name,
       checkOutTime: '',
+      location: this.currentAddress,
       date: date,
     }
+
+    console.log("HYT:", this.currentAddress);
+    // return
     this.firestoreService.checkin(this.profileData.username, date, data)
       .then(() => {
         this.toaster.showSuccess('Successfully Check-In');
@@ -117,6 +212,7 @@ export class CheckingDetailComponent implements OnInit {
     const currentDate = new Date();
     // const time = currentDate.toTimeString().split(' ')[0];
     const time = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    console.log("this is location name:", this.locationName, "nd", time);
 
     const date = currentDate.toDateString();
     const choutTime = this.days.find(product => product.date == date);
@@ -130,6 +226,7 @@ export class CheckingDetailComponent implements OnInit {
       name: this.profileData.name,
       checkOutTime: time,
       date: date,
+      location: this.locationName,
     }
 
     this.firestoreService.checkOut(this.profileData.username, date, data)
@@ -193,4 +290,22 @@ export class CheckingDetailComponent implements OnInit {
     return result;
   }
 
+  onsubmit() {
+    this.submitted = true;
+    if (this.profileForm.invalid) {
+      this.toaster.showError('Please fill out all asterisk fields');
+      return;
+    }
+    let value = this.profileForm.value['check_in'].toTimeString()?.split(' ')[0];
+    console.log("this is value:", value);
+  }
+
+  get f(): { [key: string]: AbstractControl } {
+    return this.profileForm.controls;
+  }
+
+  cancelFrom() {
+    this.visible = false;
+    this.profileForm.reset();
+  }
 }

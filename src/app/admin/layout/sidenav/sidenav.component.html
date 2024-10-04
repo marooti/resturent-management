@@ -141,7 +141,7 @@
 
     <!-- Logout Button -->
     <footer class="border-t border-gray-700">
-        <button routerLink="/{{routeService.login}}"
+        <button (click)="logout()" 
             class="flex items-center justify-between w-full p-4 mb-4 hover:bg-gray-700 focus:outline-none">
             <div class="flex items-center gap-3">
                 <svg class="h-6 w-6 text-white" [ngClass]="{'mr-2': sidebarOpen }" fill="none" viewBox="0 0 24 24"

@@ -298,7 +298,6 @@ export class TimeLogsListComponent implements OnInit {
   getAllUserProfilesdata() {
     this.firestoreService.getAllUser().subscribe(
       (data) => {
-        console.log("all data profiles:", data);
         this.userdata = data;
       });
   }
@@ -343,7 +342,7 @@ export class TimeLogsListComponent implements OnInit {
     let totalMinutes = 0;
 
     // Iterate over each top-level log entry
-    logEntries.forEach(log => {
+    logEntries?.forEach(log => {
       if (log.data && Array.isArray(log.data)) {
         // Iterate over each item in the 'data' array
         log.data.forEach((item: any) => {

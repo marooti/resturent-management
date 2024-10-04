@@ -14,10 +14,10 @@
                 </div>
                 <div class="w-[50%] justify-end flex">
                     <div class=" justify-end flex">
-                        <!-- <button type="button"
+                        <button type="button" (click)="visible = true"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
-                            Create Task
-                        </button> -->
+                            Request
+                        </button>
                         <button type="button" *ngIf="!checkingstatus" (click)="checkin()"
                             class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Check
                             In
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-
+        <div id="map"></div>
         <!-- Table Header -->
         <div class="header-section flex justify-content-between align-items-center p-2">
             <div class="header-title flex justify-content-between w-[100%]">
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Weekly Data Table -->
-        <div class="data-table h-full">
+        <div class="data-table h-full mt-3">
             <p-table scrollHeight="flex" [value]="[days]" class="p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
                     <tr class="p-2 bg-[#349ce4]">
@@ -77,11 +77,11 @@
                             <span class="font-normal text-md">Date</span>
 
                         </th>
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 100px !important;">
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 150px !important;">
                             <span class="font-normal text-md">Check-In</span>
 
                         </th>
-                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 100px !important;">
+                        <th class="bg-[#1c4c74] p-3 text-white w-[300px]" style="min-width: 150px !important;">
                             <span class="font-normal text-md">Check-Out</span>
 
                         </th>
@@ -106,13 +106,88 @@
                             {{day.checkOutTime ? day.checkOutTime : '❌'}}
                         </td>
                         <td class="w-[300px !important] p-3">
-                            {{day.location}}
+                            {{day.location ? day.location : '❌'}}
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
-
-
     </div>
 </div>
+
+
+
+
+<p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }" class="p-3">
+    <form [formGroup]="profileForm">
+        <div class="p-3">
+            <span class="text-xl font-semibold block pb-3 border-b-2">Attendance Request</span>
+            <div class="mt-2">
+                <label class="text-sm ">Required fields are marked with an asterisk <span
+                        class="text-red-500">*</span></label>
+            </div>
+            <div class="align-items-center mt-3">
+                <label class="text-sm ">Project <span class="text-red-500">*</span></label>
+                <div class="mt-1 mb-1">
+                    <p-dropdown [options]="issueName" optionValue="name" formControlName="name" optionLabel="name"
+                        placeholder="Select a Project" />
+
+                </div>
+                <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                    <div *ngIf="!f['name'].value" class="error text-sm text-red-500">
+                        Field is required
+                    </div>
+                </div>
+
+            </div>
+            <div class="align-items-center mt-3">
+                <label class="text-sm ">Date <span class="text-red-500">*</span></label>
+                <div class="mt-1 border-[0.5px] rounded-md mb-1">
+                    <p-calendar [maxDate]="dateTime" formControlName="date" [readonlyInput]="true" inputId="range">
+                    </p-calendar>
+                </div>
+                <div *ngIf="submitted && f['date'].errors" class="invalid-feedback">
+                    <div *ngIf="!f['date'].value" class="error text-sm text-red-500">
+                        Field is required
+                    </div>
+                </div>
+            </div>
+            <div class="align-items-center mt-3">
+                <label class="text-sm ">Check In <span class="text-red-500">*</span></label>
+                <div class="mt-1 border-[0.5px] rounded-md">
+                    <p-calendar inputId="calendar-timeonly" formControlName="check_in" hourFormat="12" class="w-[100%]"
+                        placeholder="Enter Check In Time" [timeOnly]="true"></p-calendar>
+                </div>
+            </div>
+
+            <div class="align-items-center mt-3">
+                <label class="text-sm ">Check Out <span class="text-red-500">*</span></label>
+                <div class="mt-1 border-[0.5px] rounded-md">
+                    <p-calendar inputId="calendar-timeonly" formControlName="check_out" hourFormat="12" class="w-[100%]"
+                        placeholder="Enter Check Out Time" [timeOnly]="true"></p-calendar>
+                </div>
+            </div>
+
+            <div class="align-items-center mt-3">
+                <label class="text-sm ">Description </label>
+                <div class="mt-1">
+                    <textarea id="message" rows="4"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Write your thoughts here..." formControlName="description"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-3 justify-end flex">
+                <button type="button" (click)="cancelFrom()"
+                    class="focus:outline-none border-1 bg-white rounded-lg text-sm px-3 me-2  h-[35px]">
+                    Cancel </button>
+                <button type="button" (click)="onsubmit()"
+                    class="focus:outline-none text-white bg-[#1c4c74] rounded-lg text-sm px-3 me-2 dark:bg-green-600 h-[35px]">
+                    Create
+                </button>
+
+            </div>
+        </div>
+    </form>
+
+</p-dialog>

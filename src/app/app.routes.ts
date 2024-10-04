@@ -8,31 +8,38 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminTimeSheetComponent } from './admin/layout/admin-time-sheet/admin-time-sheet.component';
 import { ProjectsComponent } from './admin/projects/projects.component';
 import { AddUsersComponent } from './admin/layout/add-users/add-users.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
     {
         path: RoutesEnum.LOGIN,
-        loadComponent: () => import('./pages/components/public/login/login.component').then(m => m.LoginComponent)
+        loadComponent: () => import('./pages/components/public/login/login.component').then(m => m.LoginComponent),
+        // canActivate: [AuthGuard]
     },
     {
         path: RoutesEnum.SIGNUP,
-        loadComponent: () => import('./pages/components/public/signup/signup.component').then(m => m.SignupComponent)
+        loadComponent: () => import('./pages/components/public/signup/signup.component').then(m => m.SignupComponent),
+        // canActivate: [AuthGuard]
     },
     {
         path: RoutesEnum.FORGOT_PASSWORD,
-        loadComponent: () => import('./pages/components/public/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+        loadComponent: () => import('./pages/components/public/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+        // canActivate: [AuthGuard]
     },
     {
         path: RoutesEnum.DASHBOARD,
-        loadComponent: () => import('./pages/components/dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent)
+        loadComponent: () => import('./pages/components/dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: RoutesEnum.CHECKING_DETAIL,
-        loadComponent: () => import('./pages/components/checkingtime/checking-layout/checking-layout.component').then(m => m.CheckingLayoutComponent)
+        loadComponent: () => import('./pages/components/checkingtime/checking-layout/checking-layout.component').then(m => m.CheckingLayoutComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: RoutesEnum.ADMIN,
         loadComponent: () => import('./admin/layout/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
+        canActivate: [AuthGuard],
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: AdminDashboardComponent },

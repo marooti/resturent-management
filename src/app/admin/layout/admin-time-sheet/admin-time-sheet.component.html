@@ -15,18 +15,6 @@
                 </div>
                 <div class="w-[50%] justify-end flex">
                     <div class=" justify-end flex">
-                        <!-- <button type="button"
-                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
-                            Create Task
-                        </button> -->
-                        <!-- <button type="button" *ngIf="!checkingstatus" (click)="checkin()"
-                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Check
-                            In
-                        </button>
-                        <button type="button" *ngIf="checkingstatus" (click)="checkout()"
-                            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">Check
-                            Out
-                        </button> -->
 
                         <button type="button" (click)="changeIf()"
                             class="text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  rounded-lg text-sm px-3 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
@@ -73,15 +61,18 @@
             <p-carousel [value]="userdata" [numVisible]="6" [numScroll]="3" [circular]="false"
                 [responsiveOptions]="responsiveOptions">
                 <ng-template let-userdata pTemplate="item">
-                    <div class="shadow-lg py-2 pb-7 px-2 rounded mx-2 my-7"
+                    <div class="py-2 pb-7 px-2 rounded border-2 mx-2 my-7" (click)="search(userdata?.name)"
                         [ngStyle]="isSelected(userdata) ? {'background-color': '#1c4c74', 'color': 'white'} : {}">
                         <div class="flex flex-col justify-center items-center ">
-                            <img src="../../../assets/male-image.png" alt="" width="150" height="150" *ngIf="userdata.gender === 'male'">
-                            <img src="../../../assets/female-image.png" alt="" width="150" height="150" class="p-5" *ngIf="userdata.gender === 'female'">
+                            <img src="../../../assets/male-image.png" alt="" width="150" height="150"
+                                *ngIf="userdata.gender === 'male'">
+                            <img src="../../../assets/female-image.png" alt="" width="150" height="150" class="p-5"
+                                *ngIf="userdata.gender === 'female'">
                             <span
                                 class="text-md font-medium cursor-pointer text-center text-ellipsis overflow-hidden whitespace-nowrap"
                                 style="width: 170px;" routerLink="/admin/add-users">{{userdata.name}}</span>
-                            <span class="text-xs ">{{userdata.designation}}</span>
+                            <span class="text-xs text-center text-ellipsis overflow-hidden whitespace-nowrap"
+                                style="width: 170px;">{{userdata.designation}}</span>
                         </div>
                     </div>
 

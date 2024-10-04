@@ -293,13 +293,13 @@ export class AdminTimeSheetComponent {
 
   isSelected(data: any): boolean {
     // return this.days.some((selected = this.days) => selected.name === data.name);
-    const currentDate = new Date().toDateString(); 
-    const filteredData = this.days.some((selected = this.days) =>  new Date(selected.date).toDateString() === currentDate );
+    const currentDate = new Date().toDateString();
+    const filteredData = this.days.some((selected = this.days) => new Date(selected.date).toDateString() === currentDate);
     if (!filteredData) {
-      return this.days.some((selected = this.days) =>  selected.name === data.name);
-      
-    } else{
-      return this.days.some((selected = this.days) =>  selected.name === data.name && new Date(selected.date).toDateString() === currentDate );
+      return this.days.some((selected = this.days) => selected.name === data.name);
+
+    } else {
+      return this.days.some((selected = this.days) => selected.name === data.name && new Date(selected.date).toDateString() === currentDate);
 
     }
   }
@@ -307,9 +307,9 @@ export class AdminTimeSheetComponent {
   carousel() {
     this.responsiveOptions = [
       {
-          breakpoint: '1199px',
-          numVisible: 4,
-          numScroll: 1
+        breakpoint: '1199px',
+        numVisible: 4,
+        numScroll: 1
       },
       {
         breakpoint: '991px',
@@ -322,6 +322,35 @@ export class AdminTimeSheetComponent {
         numScroll: 1
       }
     ];
+  }
+
+
+  search(name: any) {
+    const startDate = new Date(this.dateRange[0]);
+    const endDate = new Date(this.dateRange[1]);
+
+    // Filter by date range
+    const filteredData = this.allAttendance.filter((data: any) => {
+      const recordDate = new Date(data?.date);
+      return recordDate >= startDate && recordDate <= endDate;
+    });
+
+    // Further filter by employee name if provided
+    let finalData;
+    if (name) {
+      finalData = filteredData.filter((data: any) => data?.name === name);
+    } else {
+      finalData = filteredData;
+    }
+
+    // Sort the final data by date (ascending)
+    this.days = finalData.sort((a: any, b: any) => {
+      const dateA = new Date(a?.date).getTime();
+      const dateB = new Date(b?.date).getTime();
+      return dateA - dateB;  // Ascending order (for descending, reverse the comparison)
+    });
+
+    console.log("Sorted Filtered Data:", this.days, "Selected Date Range:", this.dateRange);
   }
 
 }

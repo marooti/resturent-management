@@ -51,50 +51,56 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4 mb-4">
-            <div class="bg-[#A4DDED] p-3  shadow-md	 rounded-md ">
-                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="37" viewBox="0 0 22 22" fill="black" >
-                    <path d="M6 14h6v-6c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6zm16 0c0 5.523-4.478 10-10 10s-10-4.477-10-10 4.478-10 10-10 10 4.477 10 10zm-2 0c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8 8-3.589 8-8zm-6-11.819v-2.181h-4v2.181c1.408-.238 2.562-.243 4 0zm6.679 3.554l1.321-1.321-1.414-1.414-1.407 1.407c.536.402 1.038.844 1.5 1.328z"/>
+        <div class="grid grid-cols-3 gap-4 mb-4 mt-3">
+            <div class="bg-[#1c405e] p-3 rounded-md text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="37" viewBox="0 0 22 22" fill="white">
+                    <path
+                        d="M6 14h6v-6c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6zm16 0c0 5.523-4.478 10-10 10s-10-4.477-10-10 4.478-10 10-10 10 4.477 10 10zm-2 0c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8 8-3.589 8-8zm-6-11.819v-2.181h-4v2.181c1.408-.238 2.562-.243 4 0zm6.679 3.554l1.321-1.321-1.414-1.414-1.407 1.407c.536.402 1.038.844 1.5 1.328z" />
                 </svg>
                 <div class="flex flex-col gap-1 mt-2">
-                <span class="text-sm font-medium ">Today Time Log: 3h</span>
-                <div class="text-xs font-medium ">
-                    <p-progressBar [value]="10">
-                        <ng-template pTemplate="content" let-value> 
-                        <span></span>        
-                        </ng-template>
-                    </p-progressBar>
-                </div>
+                    <span class="text-sm font-medium ">Today Time Log: <span class="text-red-500">( {{dailyTotalHorse}}
+                            )</span></span>
+                    <div class="text-xs font-medium ">
+                        <p-progressBar [value]="currentHours">
+                            <ng-template pTemplate="content" let-value>
+                                <span></span>
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
                 </div>
             </div>
-            <div class="bg-[#A4DDED] p-3  shadow-md	 rounded-md ">
-                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="37" viewBox="0 0 22 22" fill="black" >
-                    <path d="M6 14h6v-6c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6zm16 0c0 5.523-4.478 10-10 10s-10-4.477-10-10 4.478-10 10-10 10 4.477 10 10zm-2 0c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8 8-3.589 8-8zm-6-11.819v-2.181h-4v2.181c1.408-.238 2.562-.243 4 0zm6.679 3.554l1.321-1.321-1.414-1.414-1.407 1.407c.536.402 1.038.844 1.5 1.328z"/>
+            <div class="bg-[#1c405e] p-3 rounded-md text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="37" viewBox="0 0 22 22" fill="white">
+                    <path
+                        d="M6 14h6v-6c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6zm16 0c0 5.523-4.478 10-10 10s-10-4.477-10-10 4.478-10 10-10 10 4.477 10 10zm-2 0c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8 8-3.589 8-8zm-6-11.819v-2.181h-4v2.181c1.408-.238 2.562-.243 4 0zm6.679 3.554l1.321-1.321-1.414-1.414-1.407 1.407c.536.402 1.038.844 1.5 1.328z" />
                 </svg>
                 <div class="flex flex-col gap-1 mt-2">
-                <span class="text-sm font-medium ">Weekly Time Log: 3h</span>
-                <div class="text-xs font-medium ">
-                    <p-progressBar [value]="10">
-                        <ng-template pTemplate="content" let-value> 
-                        <span></span>        
-                        </ng-template>
-                    </p-progressBar>
-                </div>
+                    <span class="text-sm font-medium ">Weekly Time Log: <span class="text-red-500">(
+                            {{weaklyTotalHorse}} )</span> </span>
+                    <div class="text-xs font-medium ">
+                        <p-progressBar [value]="weaklyHours">
+                            <ng-template pTemplate="content" let-value>
+                                <span></span>
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
                 </div>
             </div>
-            <div class="bg-[#A4DDED] p-3  shadow-md	 rounded-md ">
-                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="37" viewBox="0 0 22 22" fill="black" >
-                    <path d="M6 14h6v-6c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6zm16 0c0 5.523-4.478 10-10 10s-10-4.477-10-10 4.478-10 10-10 10 4.477 10 10zm-2 0c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8 8-3.589 8-8zm-6-11.819v-2.181h-4v2.181c1.408-.238 2.562-.243 4 0zm6.679 3.554l1.321-1.321-1.414-1.414-1.407 1.407c.536.402 1.038.844 1.5 1.328z"/>
+            <div class="bg-[#1c405e] p-3  rounded-md text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="29" class="text-white" height="37" viewBox="0 0 22 22"
+                    fill="white">
+                    <path class="text-white"
+                        d="M6 14h6v-6c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6zm16 0c0 5.523-4.478 10-10 10s-10-4.477-10-10 4.478-10 10-10 10 4.477 10 10zm-2 0c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8 8-3.589 8-8zm-6-11.819v-2.181h-4v2.181c1.408-.238 2.562-.243 4 0zm6.679 3.554l1.321-1.321-1.414-1.414-1.407 1.407c.536.402 1.038.844 1.5 1.328z" />
                 </svg>
                 <div class="flex flex-col gap-1 mt-2">
-                <span class="text-sm font-medium ">Monthly Time Log: 3h</span>
-                <div class="text-xs font-medium ">
-                    <p-progressBar [value]="10">
-                        <ng-template pTemplate="content" let-value> 
-                        <span></span>        
-                        </ng-template>
-                    </p-progressBar>
-                </div>
+                    <span class="text-sm font-medium ">Monthly Time Log: <span class="text-red-500">( {{grandTotalTime}} )</span> </span>
+                    <div class="text-xs font-medium">
+                        <p-progressBar [value]="totalMonthlyValue">
+                            <ng-template pTemplate="content" let-value>
+                                <span></span>
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
                 </div>
             </div>
 
