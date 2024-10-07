@@ -61,6 +61,8 @@ export class CheckingDetailComponent implements OnInit {
       name: 'Both'
     }
   ]
+requestselected: any;
+
   constructor(
     private http: HttpClient,
     private firestoreService: FirestoreService,
@@ -85,7 +87,11 @@ export class CheckingDetailComponent implements OnInit {
     this.getCurrentLocationAndAddressd()
     // this.getLocation();
     this.createForm();
+  }
 
+  onchange(type: any){
+    console.log('request type', type)
+    this.requestselected = type;
   }
 
   createForm() {
@@ -296,9 +302,30 @@ export class CheckingDetailComponent implements OnInit {
       this.toaster.showError('Please fill out all asterisk fields');
       return;
     }
-    let value = this.profileForm.value['check_in'].toTimeString()?.split(' ')[0];
-    console.log("this is value:", value);
-  }
+    // let value = this.profileForm.value['check_in'].toTimeString()?.split(' ')[0];
+    let value = this.profileForm.value;
+    if(value.check_in){
+      const data = {
+        checkInTime: value.check_in.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
+        name: this.profileData.name,
+        checkOutTime: value.check_out,
+        location: this.currentAddress,
+        date: value.date,
+      }
+      console.log("this is value:", data);
+    } else{
+      const data = {
+        checkInTime: value.check_in,
+        name: this.profileData.name,
+        checkOutTime: value.check_out.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
+        location: this.currentAddress,
+        date: value.date,
+      }
+      console.log("this is value:", data);
+
+    }
+
+     }
 
   get f(): { [key: string]: AbstractControl } {
     return this.profileForm.controls;

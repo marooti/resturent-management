@@ -15,6 +15,10 @@
                 </div>
                 <div class="w-[50%] justify-end flex">
                     <div class=" justify-end flex">
+                        <button type="button" (click)="visible = true"
+                        class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
+                        Request View
+                    </button>
 
                         <button type="button" (click)="changeIf()"
                             class="text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  rounded-lg text-sm px-3 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
@@ -238,3 +242,39 @@
         </div>
     </div>
 </div>
+
+
+<p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '75rem' }" class="p-3">
+    <div class="flex justify-between p-3 items-center">
+        <span class="font-bold text-lg">Approvel Request</span>
+        <button type="button" 
+        class="text-gray-400 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100  rounded-lg text-sm px-3 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 h-[35px]">
+        <i class="pi pi-refresh"></i>
+    </button>
+
+    </div>
+<div class="p-3">
+
+    <table class="table table-bordered w-full" >
+        <ng-container >
+            <tr class="items-center" >
+                <td> <div class="m-2 bg-red-600	 text-white p-2 text-xs rounded-md" style="width: fit-content;">Missing Attendance</div> </td>
+                <td><span class="px-2">Sehrish Ghaffar - 19 seeking appeoval for attendance of 02 Oct 2024, Check-out Time: 7:00 AM</span></td>
+                <td>
+                    <div class="flex gap-2 mx-2">
+                        <button class="bg-emerald-500 text-white px-7 py-2 rounded-full">Accept</button>
+                    <button class="bg-red-500 text-white px-8 py-2 rounded-full">Reject</button> 
+                    </div>
+                   
+                </td>
+            </tr>
+        </ng-container>
+    </table>
+
+    <div class="mt-3 justify-end flex">
+        <button type="button" (click)="cancelFrom()"
+            class="focus:outline-none text-white bg-[#1c4c74] hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-sm px-3 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 h-[35px]">
+            Cancel </button>
+    </div>
+</div>
+</p-dialog>

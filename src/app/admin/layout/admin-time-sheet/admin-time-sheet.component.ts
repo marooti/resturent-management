@@ -60,6 +60,8 @@ export class AdminTimeSheetComponent {
 
   userdata: any[] = [];
   responsiveOptions: any[] | undefined;
+  visible = false;
+
 
   constructor(private firestoreService: FirestoreService, private firestore: Firestore, private toaster: ToastrService) {
 
@@ -351,6 +353,10 @@ export class AdminTimeSheetComponent {
     });
 
     console.log("Sorted Filtered Data:", this.days, "Selected Date Range:", this.dateRange);
+  }
+
+  cancelFrom() {
+    this.visible = false;
   }
 
 }
