@@ -240,6 +240,7 @@ requestselected: any;
       location: choutTime?.location,
       date: date,
     }
+console.log("checkout time check:", data)
 
     this.firestoreService.checkOut(this.profileData.username, date, data)
       .then(() => {
