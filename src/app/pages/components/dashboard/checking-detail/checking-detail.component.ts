@@ -48,6 +48,7 @@ export class CheckingDetailComponent implements OnInit {
   todayDate: any;
   locationName: any;
   apiLoaded: any;
+  requestselected: any
   currentAddress: any;
   dateTime = new Date();
   issueName: any[] = [
@@ -83,8 +84,12 @@ export class CheckingDetailComponent implements OnInit {
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
     this.getCurrentLocationAndAddressd();
-    this.getLocation();
+    // this.getLocation();
     this.createForm();
+  }
+  onchange(type: any) {
+    console.log('request type', type)
+    this.requestselected = type;
 
   }
 
@@ -99,13 +104,13 @@ export class CheckingDetailComponent implements OnInit {
   }
 
   getCurrentLocationAndAddressd(): void {
-    
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          console.log("concoles",`Latitude: ${latitude}, Longitude: ${longitude}`);
+          console.log("concoles", `Latitude: ${latitude}, Longitude: ${longitude}`);
 
           // Call the method to get the address from latitude and longitude
           this.getLocation()
