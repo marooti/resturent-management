@@ -84,7 +84,8 @@ requestselected: any;
     this.rangeDates = [lastSunday, lastFriday];
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
-    this.getCurrentLocationAndAddressd()
+    this.getCurrentLocationAndAddressd();
+
     // this.getLocation();
     this.createForm();
   }
@@ -141,13 +142,14 @@ requestselected: any;
   getLocation(latitude: number, longitude: number): Promise<string> {
     return new Promise((resolve, reject) => {
       const geocoder = new google.maps.Geocoder();
-      const latlng = new google.maps.LatLng(31.4185265, 74.2666945);
+      const latlng = new google.maps.LatLng(latitude, longitude);
 
       geocoder.geocode({ location: latlng }, (results: any, status: any) => {
         if (status === google.maps.GeocoderStatus.OK) {
           if (results[0]) {
             const locationName = results[0].formatted_address;
             resolve(locationName);
+            this.currentAddress = locationName;
             console.log('Location Name:', locationName);
           } else {
             reject('No results found');
@@ -200,6 +202,8 @@ requestselected: any;
     }
 
     console.log("HYT:", this.currentAddress);
+    console.log("checkin time data", data);
+
     // return
     this.firestoreService.checkin(this.profileData.username, date, data)
       .then(() => {
@@ -222,6 +226,8 @@ requestselected: any;
 
     const date = currentDate.toDateString();
     const choutTime = this.days.find(product => product.date == date);
+    
+
     if (choutTime?.checkOutTime) {
       this.toaster.showError('you are already checkout');
       this.loading = false;
@@ -231,15 +237,14 @@ requestselected: any;
       checkInTime: choutTime?.checkInTime,
       name: this.profileData.name,
       checkOutTime: time,
+      location: choutTime?.location,
       date: date,
-      location: this.locationName,
     }
 
     this.firestoreService.checkOut(this.profileData.username, date, data)
       .then(() => {
         this.toaster.showSuccess('Successfully Checkout');
         this.loading = false;
-
         this.fetchTimelogData(this.profileData.username);
       })
       .catch(error => {
@@ -255,7 +260,9 @@ requestselected: any;
     this.firestoreService.getAttendanceRecord(name)
       .then((data) => {
         const transformedData = this.transformTimelogData(data);
-        this.days = transformedData;
+        const transformedDatainsort = transformedData.sort((a,b)=> new Date(b.date).getTime() - new Date(a.date).getTime())
+        console.log("transformeddata", transformedDatainsort)
+        this.days = transformedDatainsort;
         const choutTime = this.days.find(product => product.date == this.todayDate);
         if (choutTime) {
           this.checkingstatus = true;
