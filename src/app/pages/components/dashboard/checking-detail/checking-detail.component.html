@@ -127,10 +127,10 @@
                         class="text-red-500">*</span></label>
             </div>
             <div class="align-items-center mt-3">
-                <label class="text-sm ">Project <span class="text-red-500">*</span></label>
+                <label class="text-sm ">Request Type <span class="text-red-500">*</span></label>
                 <div class="mt-1 mb-1">
                     <p-dropdown [options]="issueName" optionValue="name" formControlName="name" optionLabel="name"
-                        placeholder="Select a Project" />
+                        placeholder="Select a Type" (onChange)="onchange(profileForm.value.name)"/>
 
                 </div>
                 <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
@@ -152,7 +152,7 @@
                     </div>
                 </div>
             </div>
-            <div class="align-items-center mt-3">
+            <div class="align-items-center mt-3" *ngIf="requestselected === 'Check In' || requestselected === 'Both'">
                 <label class="text-sm ">Check In <span class="text-red-500">*</span></label>
                 <div class="mt-1 border-[0.5px] rounded-md">
                     <p-calendar inputId="calendar-timeonly" formControlName="check_in" hourFormat="12" class="w-[100%]"
@@ -160,7 +160,7 @@
                 </div>
             </div>
 
-            <div class="align-items-center mt-3">
+            <div class="align-items-center mt-3" *ngIf="requestselected === 'Check Out' || requestselected === 'Both'">
                 <label class="text-sm ">Check Out <span class="text-red-500">*</span></label>
                 <div class="mt-1 border-[0.5px] rounded-md">
                     <p-calendar inputId="calendar-timeonly" formControlName="check_out" hourFormat="12" class="w-[100%]"
