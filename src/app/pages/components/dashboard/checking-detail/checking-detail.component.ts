@@ -82,8 +82,8 @@ export class CheckingDetailComponent implements OnInit {
     this.rangeDates = [lastSunday, lastFriday];
     this.todayDate = currentDate.toDateString();
     this.fetchTimelogData(this.profileData.username);
-    this.getCurrentLocationAndAddressd()
-    // this.getLocation();
+    this.getCurrentLocationAndAddressd();
+    this.getLocation();
     this.createForm();
 
   }
@@ -99,15 +99,16 @@ export class CheckingDetailComponent implements OnInit {
   }
 
   getCurrentLocationAndAddressd(): void {
+    
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+          console.log("concoles",`Latitude: ${latitude}, Longitude: ${longitude}`);
 
           // Call the method to get the address from latitude and longitude
-          this.getLocation(latitude, longitude)
+          this.getLocation()
             .then(locationName => {
               this.locationName = this.locationName;
               console.log("Current Location Address:", locationName);
@@ -132,7 +133,7 @@ export class CheckingDetailComponent implements OnInit {
   }
 
 
-  getLocation(latitude: number, longitude: number): Promise<string> {
+  getLocation(): Promise<string> {
     return new Promise((resolve, reject) => {
       const geocoder = new google.maps.Geocoder();
       const latlng = new google.maps.LatLng(31.4185265, 74.2666945);
@@ -142,7 +143,7 @@ export class CheckingDetailComponent implements OnInit {
           if (results[0]) {
             const locationName = results[0].formatted_address;
             resolve(locationName);
-            console.log('Location Name:', locationName);
+            console.log('Location Name:', results[0]);
           } else {
             reject('No results found');
           }
